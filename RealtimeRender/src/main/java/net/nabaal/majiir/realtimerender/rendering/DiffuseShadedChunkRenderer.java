@@ -96,6 +96,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		case STATIONARY_WATER:
 			return computeShadedColor(setAlpha(new Color(getBiomeWaterColor(chunkSnapshot, x, z)), 192), 0.7);
 		case LONG_GRASS:
+			return setAlpha(computeShadedColor(new Color(getBiomeGrassColor(chunkSnapshot, x, z)), 0.6), 96);
 		case CROPS:
 			return new Color(0, 0xBB, 0, 48);
 		case VINE:

@@ -82,6 +82,10 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		case WOOD:
 			return new Color(0xc69430);
 		case SAND:
+			if (isUnderWater(chunkSnapshot, x, y, z)) {
+				return new Color(0x964B00); // DIRT
+			}
+			return new Color(0xDDDDAA);
 		case SANDSTONE:
 			return new Color(0xDDDDAA);
 		case STONE:

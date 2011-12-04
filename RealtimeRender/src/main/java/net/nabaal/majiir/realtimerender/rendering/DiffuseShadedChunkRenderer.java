@@ -95,7 +95,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 			return new Color(0x7f7777);
 		case STATIONARY_WATER:
 			Color waterColor = computeShadedColor(setAlpha(new Color(getBiomeWaterColor(chunkSnapshot, x, z)), 208), 0.7);
-			if (Material.getMaterial(chunkSnapshot.getBlockTypeId(x, y + 1, z)) == Material.STATIONARY_WATER) {
+			if (isUnderWater(chunkSnapshot, x, y, z)) {
 				waterColor = setAlpha(waterColor, 32);
 			}
 			return waterColor;
@@ -115,6 +115,10 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 			//RealtimeRender.getLogger().warning(String.format("RealtimeRender: missing color for material '%s'!", material.toString()));
 			return new Color(0xFF00FF);
 		}
+	}
+
+	private static boolean isUnderWater(ChunkSnapshot chunkSnapshot, int x, int y, int z) {
+		return Material.getMaterial(chunkSnapshot.getBlockTypeId(x, y + 1, z)) == Material.STATIONARY_WATER;
 	}
 	
 	public static Color setAlpha(Color color, int a) {

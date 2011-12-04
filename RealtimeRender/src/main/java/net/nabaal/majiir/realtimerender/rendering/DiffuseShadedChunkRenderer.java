@@ -51,7 +51,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 					g.setColor(color);
 					g.fillRect(x, z, 1, 1);
 					
-					if (isTerrain(material)) {
+					if (TerrainHelper.isTerrain(material)) {
 						double shading = computeDiffuseShading(chunkSnapshot, x, z);
 						if (shading >= 0) {
 							g.setColor(computeShadeColor(shading));
@@ -177,21 +177,8 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 			y--;
 			int id = chunkSnapshot.getBlockTypeId(x, y, z);
 			material = Material.getMaterial(id);
-		} while (!isTerrain(material) && (y > 0));
+		} while (!TerrainHelper.isTerrain(material) && (y > 0));
 		return y;
-	}
-	
-	private static boolean isTerrain(Material material) {
-		switch (material) {
-		case GRASS:
-		case DIRT:
-		case SAND:
-		case SANDSTONE:
-		case STONE:
-			return true;
-		default:
-			return false;
-		}
 	}
 	
 	public static int getBiomeFoliageColor(ChunkSnapshot chunkSnapshot, int x, int y, int z) {

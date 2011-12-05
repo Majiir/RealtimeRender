@@ -30,8 +30,12 @@ public class CompositeImageBuilder extends ImageProvider {
 				return null;
 			}
 			tile = tile.subCoordinate(levels);
+			
+			int width = image.getWidth() >> levels;
+			int height = image.getHeight() >> levels;
+			
 			// TODO: Evaluate repercussions of subimage reference
-			return image.getSubimage(tile.getX(), tile.getY(), image.getWidth() >> levels, image.getHeight() >> levels);
+			return image.getSubimage(tile.getX() * width, tile.getY() * height, width, height);
 		}		
 		
 	}

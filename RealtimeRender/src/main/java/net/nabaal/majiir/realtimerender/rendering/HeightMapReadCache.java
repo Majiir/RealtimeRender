@@ -9,9 +9,9 @@ import net.nabaal.majiir.realtimerender.image.ReadCache;
 public class HeightMapReadCache extends HeightMapChunkProvider implements ReadCache {
 
 	private final ConcurrentMap<Coordinate, HeightMapChunk> chunks = new ConcurrentHashMap<Coordinate, HeightMapChunk>();
-	private final HeightMapChunkProvider source;
+	private final HeightMap source;
 	
-	public HeightMapReadCache(HeightMapChunkProvider source) {
+	public HeightMapReadCache(HeightMap source) {
 		this.source = source;
 	}
 	
@@ -25,7 +25,14 @@ public class HeightMapReadCache extends HeightMapChunkProvider implements ReadCa
 		if (chunks.containsKey(chunkLocation)) {
 			return chunks.get(chunkLocation);
 		}
-		HeightMapChunk chunk = source.getHeightMapChunk(chunkLocation);
+		
+		HeightMapChunk chunk;
+		if (source instanceof HeightMapChunkProvider) {
+			chunk = ((HeightMapChunkProvider)source).getHeightMapChunk(chunkLocation);
+		} else {
+			chunk = new HeightMapChunk(chunkLocation, source);
+		}
+		
 		if (chunk != null) {
 			chunks.put(chunkLocation, chunk);
 		}
@@ -39,7 +46,18 @@ public class HeightMapReadCache extends HeightMapChunkProvider implements ReadCa
 		} else {
 			chunks.remove(chunkLocation);
 		}
-		source.setHeightMapChunk(chunkLocation, chunk);
+		
+		if (source instanceof HeightMapChunkProvider) {
+			((HeightMapChunkProvider)source).setHeightMapChunk(chunkLocation, chunk);
+		} else {
+			// TODO: Cleaner
+			for (int x = 0; x < 16; x++) {
+				for (int y = 0; y < 16; y++) {
+					Coordinate block = chunkLocation.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK));
+					source.setHeight(block, chunk.getHeight(block));
+				}
+			}
+		}
 	}
 
 }

@@ -10,16 +10,26 @@ import net.nabaal.majiir.realtimerender.image.WriteCache;
 public class HeightMapWriteCache extends HeightMapChunkProvider implements WriteCache {
 
 	private final ConcurrentMap<Coordinate, HeightMapChunk> chunks = new ConcurrentHashMap<Coordinate, HeightMapChunk>();
-	private final HeightMapChunkProvider source;
+	private final HeightMap source;
 	
-	public HeightMapWriteCache(HeightMapChunkProvider source) {
+	public HeightMapWriteCache(HeightMap source) {
 		this.source = source;
 	}
 	
 	@Override
 	public void commit() {
 		for (Map.Entry<Coordinate, HeightMapChunk> entry : chunks.entrySet()) {
-			source.setHeightMapChunk(entry.getKey(), entry.getValue());
+			if (source instanceof HeightMapChunkProvider) {
+				((HeightMapChunkProvider)source).setHeightMapChunk(entry.getKey(), entry.getValue());
+			} else {
+				// TODO: Cleaner
+				for (int x = 0; x < 16; x++) {
+					for (int y = 0; y < 16; y++) {
+						Coordinate block = entry.getKey().zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK));
+						source.setHeight(block, entry.getValue().getHeight(block));
+					}
+				}
+			}
 		}
 	}
 
@@ -28,7 +38,12 @@ public class HeightMapWriteCache extends HeightMapChunkProvider implements Write
 		if (chunks.containsKey(chunkLocation)) {
 			return chunks.get(chunkLocation);
 		}
-		return source.getHeightMapChunk(chunkLocation);
+		
+		if (source instanceof HeightMapChunkProvider) {
+			return ((HeightMapChunkProvider)source).getHeightMapChunk(chunkLocation);
+		} else {
+			return new HeightMapChunk(chunkLocation, source);
+		}
 	}
 
 	@Override

@@ -21,6 +21,10 @@ public class ImageHeightMap extends HeightMapChunkProvider {
 		BufferedImage image = imageProvider.getImage(chunkLocation);
 		HeightMapChunk chunk = new HeightMapChunk(chunkLocation);
 		
+		if (image == null) {
+			return chunk;
+		}
+		
 		// TODO: Enumerate over coordinates
 		for (int x = 0; x < 16; x++) {
 			for (int y = 0; y < 16; y++) {

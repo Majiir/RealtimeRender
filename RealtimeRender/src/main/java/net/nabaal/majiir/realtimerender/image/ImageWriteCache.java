@@ -11,7 +11,7 @@ import net.nabaal.majiir.realtimerender.Coordinate;
 
 
 // TODO: Size-check all operations.
-public class ImageWriteCache extends ImageProvider {
+public class ImageWriteCache extends ImageProvider implements WriteCache {
 
 	private final ConcurrentMap<Coordinate, BufferedImage> images = new ConcurrentHashMap<Coordinate, BufferedImage>();
 	private final ImageProvider source;
@@ -47,6 +47,7 @@ public class ImageWriteCache extends ImageProvider {
 		return tiles;
 	}
 	
+	@Override
 	public void commit() {
 		// TODO: Cleaner (more thread-safe/atomic) method
 		for (Entry<Coordinate, BufferedImage> entry : images.entrySet()) {

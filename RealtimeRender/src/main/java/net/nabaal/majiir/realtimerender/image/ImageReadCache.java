@@ -10,7 +10,7 @@ import net.nabaal.majiir.realtimerender.Coordinate;
 
 
 // TODO: Size-check all operations.
-public class ImageReadCache extends ImageProvider {
+public class ImageReadCache extends ImageProvider implements ReadCache {
 
 	private final ConcurrentMap<Coordinate, BufferedImage> images = new ConcurrentHashMap<Coordinate, BufferedImage>();
 	private final ImageProvider source;

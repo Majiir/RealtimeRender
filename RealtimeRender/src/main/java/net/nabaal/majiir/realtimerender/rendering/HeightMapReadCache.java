@@ -4,8 +4,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
+import net.nabaal.majiir.realtimerender.image.ReadCache;
 
-public class HeightMapReadCache extends HeightMapChunkProvider {
+public class HeightMapReadCache extends HeightMapChunkProvider implements ReadCache {
 
 	private final ConcurrentMap<Coordinate, HeightMapChunk> chunks = new ConcurrentHashMap<Coordinate, HeightMapChunk>();
 	private final HeightMapChunkProvider source;

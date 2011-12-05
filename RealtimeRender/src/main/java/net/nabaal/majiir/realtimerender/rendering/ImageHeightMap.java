@@ -30,7 +30,7 @@ public class ImageHeightMap extends HeightMapChunkProvider {
 			for (int y = 0; y < 16; y++) {
 				Color color = new Color(image.getRGB(x, y));
 				int height = color.getBlue();
-				if (height > 127) { // TODO: Better constants and valid-height detection
+				if (!HeightMap.isValid(height)) { // TODO: Better constants and valid-height detection
 					height = NO_HEIGHT_INFORMATION;
 				}
 				chunk.setHeight(chunkLocation.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK)), height);

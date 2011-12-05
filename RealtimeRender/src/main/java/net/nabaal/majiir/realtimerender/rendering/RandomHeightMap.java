@@ -2,7 +2,7 @@ package net.nabaal.majiir.realtimerender.rendering;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
 
-public class RandomHeightMap implements HeightMap { 
+public class RandomHeightMap extends HeightMap { 
 	
 	@Override
 	public int getHeight(Coordinate point) {

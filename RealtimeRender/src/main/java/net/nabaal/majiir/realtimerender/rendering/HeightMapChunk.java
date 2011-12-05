@@ -2,7 +2,7 @@ package net.nabaal.majiir.realtimerender.rendering;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
 
-public final class HeightMapChunk implements HeightMap {
+public final class HeightMapChunk extends HeightMap {
 
 	private final int[][] heights = new int[16][16];
 	private final Coordinate chunk;

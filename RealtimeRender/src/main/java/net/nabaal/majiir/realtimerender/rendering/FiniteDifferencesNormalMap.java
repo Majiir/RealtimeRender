@@ -27,12 +27,12 @@ public class FiniteDifferencesNormalMap implements NormalMap {
 		
 		int h;
 		h = heightMap.getHeight(point.plus(new Coordinate(-1, 0, Coordinate.LEVEL_BLOCK)));
-		if (h < HeightMap.NO_HEIGHT_INFORMATION) { // TODO: Replace with HeightMap.isValid() or something
+		if (HeightMap.isValid(h)) {
 			dx += (y - h);
 			dx_c += 1;
 		}
 		h = heightMap.getHeight(point.plus(new Coordinate(1, 0, Coordinate.LEVEL_BLOCK)));
-		if (h < HeightMap.NO_HEIGHT_INFORMATION) { // TODO: In rest of file
+		if (HeightMap.isValid(h)) {
 			dx += (h - y);
 			dx_c += 1;
 		}
@@ -42,12 +42,12 @@ public class FiniteDifferencesNormalMap implements NormalMap {
 		dx /= dx_c;
 		
 		h = heightMap.getHeight(point.plus(new Coordinate(0, -1, Coordinate.LEVEL_BLOCK)));
-		if (h < 128) {
+		if (HeightMap.isValid(h)) {
 			dz += (y - h);
 			dz_c += 1;
 		}
 		h = heightMap.getHeight(point.plus(new Coordinate(0, 1, Coordinate.LEVEL_BLOCK)));
-		if (h < 128) {
+		if (HeightMap.isValid(h)) {
 			dz += (h - y);
 			dz_c += 1;
 		}

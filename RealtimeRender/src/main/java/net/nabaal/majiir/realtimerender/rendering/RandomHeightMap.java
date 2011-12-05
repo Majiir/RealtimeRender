@@ -1,6 +1,6 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
-import net.nabaal.majiir.realtimerender.image.Coordinate;
+import net.nabaal.majiir.realtimerender.Coordinate;
 
 public class RandomHeightMap implements HeightMap { 
 	

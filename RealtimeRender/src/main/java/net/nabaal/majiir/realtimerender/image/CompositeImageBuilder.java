@@ -5,6 +5,8 @@ import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.nabaal.majiir.realtimerender.Coordinate;
+
 
 public class CompositeImageBuilder extends ImageProvider {
 

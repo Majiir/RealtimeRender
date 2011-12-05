@@ -3,7 +3,7 @@ package net.nabaal.majiir.realtimerender.rendering;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import net.nabaal.majiir.realtimerender.image.Coordinate;
+import net.nabaal.majiir.realtimerender.Coordinate;
 
 public class HeightMapReadCache extends HeightMapChunkProvider {
 

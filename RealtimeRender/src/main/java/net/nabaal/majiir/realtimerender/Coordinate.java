@@ -1,4 +1,4 @@
-package net.nabaal.majiir.realtimerender.image;
+package net.nabaal.majiir.realtimerender;
 
 import org.bukkit.ChunkSnapshot;
 

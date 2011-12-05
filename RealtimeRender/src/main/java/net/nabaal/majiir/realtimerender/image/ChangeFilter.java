@@ -3,6 +3,8 @@ package net.nabaal.majiir.realtimerender.image;
 import java.awt.image.BufferedImage;
 import java.util.Set;
 
+import net.nabaal.majiir.realtimerender.Coordinate;
+
 
 public class ChangeFilter extends ImageProvider {
 

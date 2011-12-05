@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Set;
 
+import net.nabaal.majiir.realtimerender.Coordinate;
+
 
 public abstract class ImageProvider {
 	

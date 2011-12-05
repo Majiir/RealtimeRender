@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import net.nabaal.majiir.realtimerender.image.Coordinate;
+import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.image.ImageProvider;
 
 public class ImageHeightMap implements HeightMap {

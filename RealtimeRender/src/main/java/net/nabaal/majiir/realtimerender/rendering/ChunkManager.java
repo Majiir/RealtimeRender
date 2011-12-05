@@ -6,9 +6,9 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.bukkit.ChunkSnapshot;
 
+import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.RenderChunkTask;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
-import net.nabaal.majiir.realtimerender.image.Coordinate;
 
 public class ChunkManager {
 	

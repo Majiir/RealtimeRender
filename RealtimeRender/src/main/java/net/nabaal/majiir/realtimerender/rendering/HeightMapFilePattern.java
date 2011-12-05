@@ -2,7 +2,7 @@ package net.nabaal.majiir.realtimerender.rendering;
 
 import java.io.File;
 
-import net.nabaal.majiir.realtimerender.image.Coordinate;
+import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.image.FilePattern;
 
 public class HeightMapFilePattern implements FilePattern {

@@ -8,6 +8,8 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
+import net.nabaal.majiir.realtimerender.Coordinate;
+
 
 public class FileImageProvider extends ImageProvider {
 

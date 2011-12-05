@@ -1,6 +1,6 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
-import net.nabaal.majiir.realtimerender.image.Coordinate;
+import net.nabaal.majiir.realtimerender.Coordinate;
 
 import org.jscience.mathematics.vector.Float64Vector;
 

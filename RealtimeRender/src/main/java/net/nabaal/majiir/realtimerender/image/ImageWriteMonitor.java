@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import net.nabaal.majiir.realtimerender.Coordinate;
+
 
 public class ImageWriteMonitor extends ImageProvider {
 

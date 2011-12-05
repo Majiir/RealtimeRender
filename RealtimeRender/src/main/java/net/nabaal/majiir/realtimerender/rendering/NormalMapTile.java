@@ -2,7 +2,7 @@ package net.nabaal.majiir.realtimerender.rendering;
 
 import org.jscience.mathematics.vector.Float64Vector;
 
-import net.nabaal.majiir.realtimerender.image.Coordinate;
+import net.nabaal.majiir.realtimerender.Coordinate;
 
 public final class NormalMapTile implements NormalMap {
 

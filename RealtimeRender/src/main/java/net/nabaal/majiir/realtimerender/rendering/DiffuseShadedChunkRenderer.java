@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
-import net.nabaal.majiir.realtimerender.image.Coordinate;
 import net.nabaal.majiir.realtimerender.image.ImageProvider;
 
 import org.bukkit.ChunkSnapshot;

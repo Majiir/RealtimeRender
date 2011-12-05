@@ -2,7 +2,6 @@ package net.nabaal.majiir.realtimerender;
 
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 import net.nabaal.majiir.realtimerender.image.CompositeImageBuilder;
-import net.nabaal.majiir.realtimerender.image.Coordinate;
 import net.nabaal.majiir.realtimerender.image.FileImageProvider;
 import net.nabaal.majiir.realtimerender.image.ImageProvider;
 import net.nabaal.majiir.realtimerender.image.ImageReadCache;

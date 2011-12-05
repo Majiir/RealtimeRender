@@ -7,20 +7,17 @@ import org.bukkit.ChunkSnapshot;
 
 public class HeightMapRenderer implements ChunkRenderer {
 
-	private final ImageHeightMap heightMap;
+	private final HeightMap heightMap;
 	
-	public HeightMapRenderer(ImageHeightMap heightMap) {
+	public HeightMapRenderer(HeightMap heightMap) {
 		this.heightMap = heightMap;
 	}
 	
 	@Override
 	public void render(ChunkSnapshot snapshot) {
-		Coordinate chunk = Coordinate.fromSnapshot(snapshot);
-		HeightMapChunk hmc = new HeightMapChunk(chunk);
-		
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
-				hmc.setHeight(
+				heightMap.setHeight(
 					Coordinate
 					.fromSnapshot(snapshot)
 					.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK)
@@ -32,9 +29,6 @@ public class HeightMapRenderer implements ChunkRenderer {
 				);
 			}
 		}
-		
-		heightMap.setChunk(chunk, hmc);
-		
 	}
 
 }

@@ -15,6 +15,7 @@ public class HeightMapReadCache extends HeightMapChunkProvider implements ReadCa
 		this.source = source;
 	}
 	
+	@Override
 	public void clear() {
 		chunks.clear();
 	}

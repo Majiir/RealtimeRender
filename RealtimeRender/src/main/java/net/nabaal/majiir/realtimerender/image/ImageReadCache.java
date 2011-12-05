@@ -51,6 +51,7 @@ public class ImageReadCache extends ImageProvider implements ReadCache {
 		return tiles;
 	}
 	
+	@Override
 	public void clear() {
 		images.clear();
 	}

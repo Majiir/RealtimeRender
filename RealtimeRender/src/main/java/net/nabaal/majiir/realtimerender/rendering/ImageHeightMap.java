@@ -29,7 +29,7 @@ public class ImageHeightMap extends HeightMapChunkProvider {
 		for (int x = 0; x < 16; x++) {
 			for (int y = 0; y < 16; y++) {
 				Color color = new Color(image.getRGB(x, y));
-				int height = color.getBlue();
+				int height = color.getBlue() - 128;
 				if (!HeightMap.isValid(height)) { // TODO: Better constants and valid-height detection
 					height = NO_HEIGHT_INFORMATION;
 				}
@@ -55,9 +55,11 @@ public class ImageHeightMap extends HeightMapChunkProvider {
 				
 				Color color;
 				if (height == NO_HEIGHT_INFORMATION) {
-					color = new Color(0, 0, 128);
+					color = new Color(0, 0, 64);
+				} else if (!HeightMap.isValid(height)) {
+					color = new Color(0, 0, 0);
 				} else {
-					color = new Color(0, 0, height);
+					color = new Color(0, 0, height + 128);
 				}
 				
 				graphics.setColor(color);

@@ -31,6 +31,7 @@ public class HeightMapWriteCache extends HeightMapChunkProvider implements Write
 				}
 			}
 		}
+		chunks.clear();
 	}
 
 	@Override

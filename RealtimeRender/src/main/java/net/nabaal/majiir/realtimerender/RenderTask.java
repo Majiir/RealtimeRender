@@ -15,7 +15,9 @@ import net.nabaal.majiir.realtimerender.rendering.DiffuseShadedChunkRenderer;
 import net.nabaal.majiir.realtimerender.rendering.FiniteDifferencesNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.HeightMap;
 import net.nabaal.majiir.realtimerender.rendering.HeightMapFilePattern;
+import net.nabaal.majiir.realtimerender.rendering.HeightMapReadCache;
 import net.nabaal.majiir.realtimerender.rendering.HeightMapRenderer;
+import net.nabaal.majiir.realtimerender.rendering.HeightMapWriteCache;
 import net.nabaal.majiir.realtimerender.rendering.ImageHeightMap;
 import net.nabaal.majiir.realtimerender.rendering.NormalMap;
 import net.nabaal.majiir.realtimerender.rendering.TileFilePattern;
@@ -43,22 +45,20 @@ public class RenderTask implements Runnable {
 		
 		// STAGE ONE: PREPROCESS (HEIGHT MAP)
 		
-		fp = new FileImageProvider(plugin.getDataFolder(), new HeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
-		ip = fp;
-		rc = new ImageReadCache(ip);
-		ip = rc;
-		//ip = new ChangeFilter(ip); // TODO: Test!
+		ip = new FileImageProvider(plugin.getDataFolder(), new HeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
+		ip = new ImageReadCache(ip);
 		wc = new ImageWriteCache(ip);
 		ip = wc;
 		ip = new CompositeImageBuilder(ip, Coordinate.OFFSET_CHUNK_TILE);
-		//ip = new ImageNullMonitor(ip, Coordinate.SIZE_CHUNK);
-		ip = new ImageReadCache(ip);
-		ImageHeightMap ihm = new ImageHeightMap(ip);
-		hm = ihm;
+		hm = new ImageHeightMap(ip);
+		HeightMapWriteCache hwc = new HeightMapWriteCache(hm);
+		hm = hwc;
+		hm = new HeightMapReadCache(hm);
 		
-		renderer = new HeightMapRenderer(ihm);
+		renderer = new HeightMapRenderer(hm);
 		
 		plugin.getChunkManager().render(renderer);
+		hwc.commit();
 		wc.commit();
 		
 		// STAGE TWO: DRAWING

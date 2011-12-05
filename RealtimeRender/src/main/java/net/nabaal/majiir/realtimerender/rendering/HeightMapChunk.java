@@ -9,10 +9,9 @@ public final class HeightMapChunk implements HeightMap {
 	
 	public HeightMapChunk(Coordinate location, HeightMap source) {
 		this.chunk = location;
-		Coordinate chunkOrigin = chunk.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK);
 		for (int x = 0; x < 16; x++) {
 			for (int y = 0; y < 16; y++) {
-				this.heights[x][y] = source.getHeight(chunkOrigin.plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK)));
+				this.heights[x][y] = source.getHeight(chunk.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK)));
 			}
 		}
 	}
@@ -24,6 +23,19 @@ public final class HeightMapChunk implements HeightMap {
 				this.heights[x][y] = HeightMap.NO_HEIGHT_INFORMATION;
 			}
 		}
+	}
+	
+	public HeightMapChunk(HeightMapChunk other) {
+		this.chunk = other.getLocation();
+		for (int x = 0; x < 16; x++) {
+			for (int y = 0; y < 16; y++) {
+				this.heights[x][y] = other.getHeight(chunk.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK)));
+			}
+		}
+	}
+	
+	public Coordinate getLocation() {
+		return this.chunk;
 	}
 
 	@Override

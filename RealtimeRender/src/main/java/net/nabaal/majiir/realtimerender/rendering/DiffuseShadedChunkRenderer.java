@@ -99,24 +99,79 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 	private static Color getSimpleMaterialColor(Material material) {
 		switch (material) {
 			case AIR:			return new Color(0, 0, 0, 0);
-			case TORCH:			return new Color(0xFF, 0xFF, 0x40, 223);
-			case DIRT:
-			case LOG:
-			case SOIL:			return new Color(0x964B00);
-			case BROWN_MUSHROOM:
-			case WOOD:			return new Color(0xc69430);
-			case SAND:			return new Color(0xDDDDAA);
-			case SANDSTONE:		return new Color(0xDDDDAA);
-			case STONE:			return new Color(0x777788);
-			case BEDROCK:		return new Color(0x555566);
-			case CLAY:			return new Color(0xaaaabb);
-			case GRAVEL:
-			case BRICK:			return new Color(0x7f7777);
-			case CROPS:			return new Color(0, 0xBB, 0, 48);
+			case STONE:			return new Color(128, 128, 128);
 			case VINE:			return new Color(0, 0xDD, 0, 32);
-			case RED_ROSE:
-			case REDSTONE_WIRE:	return new Color(0xAA, 0, 0, 192);
 			case YELLOW_FLOWER:	return new Color(0xDD, 0xDD, 0, 192);
+			
+			
+			// BEGIN EDITS
+			
+			
+			
+			
+			
+			case DIRT:				return new Color(134, 96, 67);
+			case COBBLESTONE: 		return new Color(100, 100, 100);
+			case WOOD:				return new Color(157, 128, 79);
+			case SAPLING:			return new Color(120, 205, 120, 64);
+			case BEDROCK: 			return new Color(84, 84, 84);
+			case STATIONARY_LAVA:
+			case LAVA:				return new Color(255, 90, 0);
+			case SAND:				return new Color(218, 210, 158);
+			case GRAVEL:			return new Color(136, 126, 126);
+			case GOLD_ORE:			return new Color(143, 140, 125);
+			case IRON_ORE:			return new Color(136, 130, 127);
+			case COAL_ORE:			return new Color(115, 115, 115);
+			case LOG: 				return new Color(102,81,51);
+			case LAPIS_ORE:			return new Color(102,112,134,255);
+			case LAPIS_BLOCK:		return new Color(29,71,165,255);
+			case DISPENSER: 		return new Color(107,107,107,255);
+			case SANDSTONE: 		return new Color(218,210,158,255);
+			case NOTE_BLOCK: 		return new Color(100,67,50,255);
+			case GOLD_BLOCK: 		return new Color(255,237,140,255);
+			case IRON_BLOCK: 		return new Color(217,217,217,255);
+			case DOUBLE_STEP: 		return new Color(200,200,200,255);
+			case STEP: 				return new Color(200,200,200,255);
+			case BRICK: 			return new Color(86,35,23,255);   
+			case TNT: 				return new Color(255,0,0,255);
+			case BOOKSHELF:		return new Color(191,169,116,255);
+			case MOSSY_COBBLESTONE: return new Color(127,174,125,255);
+			case OBSIDIAN: return new Color(17,13,26,255);   
+			case TORCH: return new Color(255,225,96,208); 
+			case FIRE: return new Color(224,174,21,255); 
+			case WOOD_STAIRS: return new Color(191,169,116,255);
+			case CHEST: return new Color(191,135,2,255);
+			case REDSTONE_WIRE: return new Color(111,1,1,255);    
+			case DIAMOND_ORE: return new Color(129,140,143,255);
+			case DIAMOND_BLOCK: return new Color(45,166,152,255); 
+			case WORKBENCH: return new Color(169,107,0,255);  
+			case CROPS: return new Color(144,188,39,128); 
+			case SOIL: return new Color(134,96,67,255);  
+			case FURNACE: return new Color(188,188,188,255);
+			case BURNING_FURNACE: return new Color(221,221,221,255); 
+			case RAILS: return new Color(120,120,120,128);
+			case COBBLESTONE_STAIRS: return new Color(120,120,120,128);
+			case STONE_PLATE: return new Color(120,120,120,255);
+			case REDSTONE_ORE: return new Color(143,125,125,255);
+			case GLOWING_REDSTONE_ORE: return new Color(163,145,145,255);
+			case REDSTONE_TORCH_OFF: return new Color(181,140,64,32);  
+			case REDSTONE_TORCH_ON: return new Color(255,0,0,176);    
+			case STONE_BUTTON: return new Color(128,128,128,16); 
+			case SNOW: return new Color(205,205,205,255);
+			case ICE: return new Color(120,120,255,120);
+			case SNOW_BLOCK: return new Color(205,205,205,255);
+			case CACTUS: return new Color(85,107,47,255);  
+			case CLAY: return new Color(144,152,168,255);
+			case SUGAR_CANE: return new Color(193,234,150,255);
+			case JUKEBOX: return new Color(125,66,44,255);  
+			case FENCE: return new Color(88,54,22,200);   
+			case PUMPKIN: return new Color(227,144,29,255); 
+			case NETHERRACK: return new Color(194,115,115,255);
+			case SOUL_SAND: return new Color(121,97,82,255);  
+			case GLOWSTONE: return new Color(255,188,94,255); 
+			case PORTAL: return new Color(60,13,106,127);  
+			case JACK_O_LANTERN: return new Color(227,144,29,255); 
+			case CAKE_BLOCK: return new Color(228,205,206,255);
 			
 			default: return null;
 		}

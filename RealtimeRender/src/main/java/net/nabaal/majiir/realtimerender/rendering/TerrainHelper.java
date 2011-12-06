@@ -22,6 +22,9 @@ public final class TerrainHelper {
 		Material.GRASS,
 		Material.GRAVEL,
 		Material.STONE,
+		Material.SNOW,
+		Material.MYCEL,
+		Material.NETHERRACK,
 	}));
 	
 	public static boolean isTerrain(Material material) {

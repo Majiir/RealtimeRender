@@ -65,59 +65,60 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 	}
 	
 	public static Color getMaterialColor(Material material, ChunkSnapshot chunkSnapshot, int x, int y, int z) {
+		
+		Color color = getSimpleMaterialColor(material);
+		
+		if (color == null) {
+		
+			switch (material) {
+			case LEAVES:
+				color = computeShadedColor(setAlpha(new Color(getBiomeFoliageColor(chunkSnapshot, x, y, z)), 96), 0.55);
+				break;
+			case GRASS:
+				color = computeShadedColor(new Color(getBiomeGrassColor(chunkSnapshot, x, z)), 0.9);
+				break;
+			case STATIONARY_WATER:
+				color = computeShadedColor(setAlpha(new Color(getBiomeWaterColor(chunkSnapshot, x, z)), 192), 0.7);
+				if (isUnderWater(chunkSnapshot, x, y, z)) {
+					color = setAlpha(color, 32);
+				}
+				break;
+			case LONG_GRASS:
+				color = setAlpha(computeShadedColor(new Color(getBiomeGrassColor(chunkSnapshot, x, z)), 0.5), 96);
+				break;
+			default:
+				//RealtimeRender.getLogger().warning(String.format("RealtimeRender: missing color for material '%s'!", material.toString()));
+				color = new Color(0xFF00FF);
+			}
+		
+		}
+		
+		return color;
+	}
+	
+	private static Color getSimpleMaterialColor(Material material) {
 		switch (material) {
-		case AIR:
-			return new Color(0, 0, 0, 0);
-		case LEAVES:
-			return computeShadedColor(setAlpha(new Color(getBiomeFoliageColor(chunkSnapshot, x, y, z)), 96), 0.55);
-		case TORCH:
-			return new Color(0xFF, 0xFF, 0x40, 223);
-		case GRASS:
-			return computeShadedColor(new Color(getBiomeGrassColor(chunkSnapshot, x, z)), 0.9);
-		case DIRT:
-		case LOG:
-		case SOIL:
-			return new Color(0x964B00);
-		case BROWN_MUSHROOM:
-		case WOOD:
-			return new Color(0xc69430);
-		case SAND:
-			if (isUnderWater(chunkSnapshot, x, y, z)) {
-				return new Color(0x964B00); // DIRT
-			}
-			return new Color(0xDDDDAA);
-		case SANDSTONE:
-			return new Color(0xDDDDAA);
-		case STONE:
-			return new Color(0x777788);
-		case BEDROCK:
-			return new Color(0x555566);
-		case CLAY:
-			return new Color(0xaaaabb);
-		case GRAVEL:
-		case BRICK:
-			return new Color(0x7f7777);
-		case STATIONARY_WATER:
-			Color waterColor = computeShadedColor(setAlpha(new Color(getBiomeWaterColor(chunkSnapshot, x, z)), 192), 0.7);
-			if (isUnderWater(chunkSnapshot, x, y, z)) {
-				waterColor = setAlpha(waterColor, 32);
-			}
-			return waterColor;
-		case LONG_GRASS:
-			return setAlpha(computeShadedColor(new Color(getBiomeGrassColor(chunkSnapshot, x, z)), 0.5), 96);
-		case CROPS:
-			return new Color(0, 0xBB, 0, 48);
-		case VINE:
-			return new Color(0, 0xDD, 0, 32);
-		case RED_ROSE:
-		case REDSTONE_WIRE:
-			return new Color(0xAA, 0, 0, 192);
-		case YELLOW_FLOWER:
-			return new Color(0xDD, 0xDD, 0, 192);
-		default:
-			// TODO: Fix logging implementation; no hardcoded plugin name.
-			//RealtimeRender.getLogger().warning(String.format("RealtimeRender: missing color for material '%s'!", material.toString()));
-			return new Color(0xFF00FF);
+			case AIR:			return new Color(0, 0, 0, 0);
+			case TORCH:			return new Color(0xFF, 0xFF, 0x40, 223);
+			case DIRT:
+			case LOG:
+			case SOIL:			return new Color(0x964B00);
+			case BROWN_MUSHROOM:
+			case WOOD:			return new Color(0xc69430);
+			case SAND:			return new Color(0xDDDDAA);
+			case SANDSTONE:		return new Color(0xDDDDAA);
+			case STONE:			return new Color(0x777788);
+			case BEDROCK:		return new Color(0x555566);
+			case CLAY:			return new Color(0xaaaabb);
+			case GRAVEL:
+			case BRICK:			return new Color(0x7f7777);
+			case CROPS:			return new Color(0, 0xBB, 0, 48);
+			case VINE:			return new Color(0, 0xDD, 0, 32);
+			case RED_ROSE:
+			case REDSTONE_WIRE:	return new Color(0xAA, 0, 0, 192);
+			case YELLOW_FLOWER:	return new Color(0xDD, 0xDD, 0, 192);
+			
+			default: return null;
 		}
 	}
 

@@ -102,14 +102,6 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 			case STONE:			return new Color(128, 128, 128);
 			case VINE:			return new Color(0, 0xDD, 0, 32);
 			case YELLOW_FLOWER:	return new Color(0xDD, 0xDD, 0, 192);
-			
-			
-			// BEGIN EDITS
-			
-			
-			
-			
-			
 			case DIRT:				return new Color(134, 96, 67);
 			case COBBLESTONE: 		return new Color(100, 100, 100);
 			case WOOD:				return new Color(157, 128, 79);

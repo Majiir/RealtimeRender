@@ -19,6 +19,7 @@ public class EnqueueAndRenderTask implements Runnable {
 		Future<?> f = RealtimeRender.getExecutor().submit(new RenderTask(plugin));
 		
 		if (wait) {
+			Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 			try {
 				f.get();
 			} catch (Exception e) {

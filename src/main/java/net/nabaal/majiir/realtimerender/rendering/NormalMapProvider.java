@@ -9,8 +9,8 @@ public abstract class NormalMapProvider implements NormalMap {
 	public abstract NormalMapTile getNormalMapTile(Coordinate tile);
 	
 	@Override
-	public final Float64Vector getNormal(Coordinate point) {
-		return this.getNormalMapTile(point.zoomOut(4)).getNormal(point);
+	public final Float64Vector getNormal(Coordinate block) {
+		return this.getNormalMapTile(block.zoomOut(Coordinate.OFFSET_BLOCK_CHUNK)).getNormal(block);
 	}
 
 }

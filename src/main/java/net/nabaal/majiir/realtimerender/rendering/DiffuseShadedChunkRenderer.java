@@ -99,7 +99,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 	private static Color getSimpleMaterialColor(Material material) {
 		switch (material) {
 			case AIR:			return new Color(0, 0, 0, 0);
-			case STONE:			return new Color(128, 128, 128);
+			case STONE:			return new Color(128, 132, 136);
 			case VINE:			return new Color(0, 0xDD, 0, 32);
 			case YELLOW_FLOWER:	return new Color(0xDD, 0xDD, 0, 192);
 			case DIRT:				return new Color(134, 96, 67);
@@ -108,7 +108,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 			case SAPLING:			return new Color(120, 205, 120, 64);
 			case BEDROCK: 			return new Color(84, 84, 84);
 			case STATIONARY_LAVA:
-			case LAVA:				return new Color(255, 90, 0);
+			case LAVA:				return new Color(255, 108, 16);
 			case SAND:				return new Color(218, 210, 158);
 			case GRAVEL:			return new Color(136, 126, 126);
 			case GOLD_ORE:			return new Color(143, 140, 125);
@@ -149,8 +149,8 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 			case REDSTONE_TORCH_OFF: return new Color(181,140,64,32);  
 			case REDSTONE_TORCH_ON: return new Color(255,0,0,176);    
 			case STONE_BUTTON: return new Color(128,128,128,16); 
-			case SNOW: return new Color(205,205,205,255);
-			case ICE: return new Color(120,120,255,120);
+			case SNOW: return new Color(245,245,245,255);
+			case ICE: return new Color(150,192,255,150);
 			case SNOW_BLOCK: return new Color(205,205,205,255);
 			case CACTUS: return new Color(85,107,47,255);  
 			case CLAY: return new Color(144,152,168,255);

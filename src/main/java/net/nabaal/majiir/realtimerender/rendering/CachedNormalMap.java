@@ -4,8 +4,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
+import net.nabaal.majiir.realtimerender.image.ReadCache;
 
-public class CachedNormalMap extends NormalMapProvider {
+public class CachedNormalMap extends NormalMapProvider implements ReadCache {
 
 	private final NormalMap source;
 	private final ConcurrentMap<Coordinate, NormalMapTile> cache = new ConcurrentHashMap<Coordinate, NormalMapTile>();
@@ -29,6 +30,11 @@ public class CachedNormalMap extends NormalMapProvider {
 			cache.put(tile, result);
 		}
 		return result;
+	}
+
+	@Override
+	public void clear() {
+		cache.clear();
 	}
 	
 }

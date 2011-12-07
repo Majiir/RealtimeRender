@@ -44,8 +44,10 @@ public class ChunkManager {
 				future.get();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+				System.out.println("Exception should be here! #1"); // TODO: Test
 			} catch (ExecutionException e) {
 				e.printStackTrace();
+				System.out.println("Exception should be here! #2");
 			}
 		}
 	}

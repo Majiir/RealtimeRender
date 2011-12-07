@@ -30,7 +30,6 @@ public class ChunkManager {
 	public void render(ChunkRenderer chunkRenderer) {
 		// TODO: Multithreading
 		for (ChunkSnapshot snapshot : snapshots.values()) {
-			chunkRenderer.render(snapshot);
 			new RenderChunkTask(chunkRenderer, snapshot).run();
 		}
 	}

@@ -56,6 +56,7 @@ public class RenderTask implements Runnable {
 		HeightMapWriteCache hwc = new HeightMapWriteCache(hm);
 		hm = hwc;
 		hm = new HeightMapReadCache(hm);
+		ReadCache hm_rc = (ReadCache) hm;
 		
 		renderer = new HeightMapRenderer(hm);
 		
@@ -108,6 +109,7 @@ public class RenderTask implements Runnable {
 		plugin.getChunkManager().render(renderer);
 		plugin.getChunkManager().endBatch();
 		nm_rc.clear();
+		hm_rc.clear();
 		wc1.commit();
 		wc.commit();
 		plugin.commit(fp.getChanged());

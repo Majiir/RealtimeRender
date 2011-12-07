@@ -86,6 +86,8 @@ public class RenderTask implements Runnable {
 		wc = new ImageWriteCache(ip);
 		ip = wc;
 		ip = new CompositeImageBuilder(ip, Coordinate.OFFSET_CHUNK_TILE);
+		ImageWriteCache wc1 = new ImageWriteCache(ip);
+		ip = wc1;
 		
 		renderer = new DiffuseShadedChunkRenderer(ip, nm);
 		
@@ -101,6 +103,7 @@ public class RenderTask implements Runnable {
 	
 		plugin.getChunkManager().render(renderer);
 		plugin.getChunkManager().endBatch();
+		wc1.commit();
 		wc.commit();
 		plugin.commit(fp.getChanged());
 		

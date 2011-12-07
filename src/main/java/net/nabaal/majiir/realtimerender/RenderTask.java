@@ -7,6 +7,7 @@ import net.nabaal.majiir.realtimerender.image.ImageProvider;
 import net.nabaal.majiir.realtimerender.image.ImageReadCache;
 import net.nabaal.majiir.realtimerender.image.ImageWriteCache;
 import net.nabaal.majiir.realtimerender.image.ImageWriteMonitor;
+import net.nabaal.majiir.realtimerender.image.ReadCache;
 import net.nabaal.majiir.realtimerender.image.ZoomImageBuilder;
 import net.nabaal.majiir.realtimerender.rendering.AdaptiveNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.CachedNormalMap;
@@ -46,7 +47,8 @@ public class RenderTask implements Runnable {
 		// STAGE ONE: PREPROCESS (HEIGHT MAP)
 		
 		ip = new FileImageProvider(plugin.getDataFolder(), new HeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
-		ip = new ImageReadCache(ip);
+		rc = new ImageReadCache(ip);
+		ip = rc;
 		wc = new ImageWriteCache(ip);
 		ip = wc;
 		ip = new CompositeImageBuilder(ip, Coordinate.OFFSET_CHUNK_TILE);
@@ -60,6 +62,7 @@ public class RenderTask implements Runnable {
 		plugin.getChunkManager().render(renderer);
 		hwc.commit();
 		wc.commit();
+		rc.clear();
 		
 		// STAGE TWO: DRAWING
 		
@@ -69,6 +72,7 @@ public class RenderTask implements Runnable {
 		//hm = new RandomHeightMap();
 		NormalMap nm0 = new FiniteDifferencesNormalMap(hm);
 		nm0 = new CachedNormalMap(nm0);
+		ReadCache nm_rc = (ReadCache) nm0;
 		NormalMap nm = new CircleAverageNormalMap(nm0, 2);
 		nm = new AdaptiveNormalMap(nm, nm0);
 		//NormalMap nm = nm0;
@@ -103,6 +107,7 @@ public class RenderTask implements Runnable {
 	
 		plugin.getChunkManager().render(renderer);
 		plugin.getChunkManager().endBatch();
+		nm_rc.clear();
 		wc1.commit();
 		wc.commit();
 		plugin.commit(fp.getChanged());

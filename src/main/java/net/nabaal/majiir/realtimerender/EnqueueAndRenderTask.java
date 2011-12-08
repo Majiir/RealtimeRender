@@ -19,13 +19,14 @@ public class EnqueueAndRenderTask implements Runnable {
 		Future<?> f = RealtimeRender.getExecutor().submit(new RenderTask(plugin));
 		
 		if (wait) {
-			Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 			try {
 				f.get();
 			} catch (Exception e) {
 				// TODO: Warn and dump chunk list upon exception? Or store "in progress" chunk list on filesystem?
 				e.printStackTrace();
 			} 
+		} else {
+			Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 		}
 	}
 

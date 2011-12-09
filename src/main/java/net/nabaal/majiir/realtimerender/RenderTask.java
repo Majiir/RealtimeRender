@@ -8,6 +8,7 @@ import net.nabaal.majiir.realtimerender.image.ImageReadCache;
 import net.nabaal.majiir.realtimerender.image.ImageWriteCache;
 import net.nabaal.majiir.realtimerender.image.ImageWriteMonitor;
 import net.nabaal.majiir.realtimerender.image.ReadCache;
+import net.nabaal.majiir.realtimerender.image.WriteCache;
 import net.nabaal.majiir.realtimerender.image.ZoomImageBuilder;
 import net.nabaal.majiir.realtimerender.rendering.AdaptiveNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.CachedNormalMap;
@@ -45,16 +46,21 @@ public class RenderTask implements Runnable {
 		plugin.getChunkManager().startBatch();
 		
 		// STAGE ONE: PREPROCESS (HEIGHT MAP)
-		hm = new FileHeightMap(plugin.getDataFolder(), new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()), Coordinate.SIZE_CHUNK);
-		HeightMapWriteCache hwc = new HeightMapWriteCache(hm, Coordinate.SIZE_CHUNK);
-		hm = hwc;
+		hm = new FileHeightMap(plugin.getDataFolder(), new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()), Coordinate.SIZE_TILE);
+		hm = new HeightMapReadCache(hm, Coordinate.SIZE_TILE);
+		ReadCache hm_rc0 = (ReadCache) hm;
+		hm = new HeightMapWriteCache(hm, Coordinate.SIZE_TILE);
+		WriteCache hm_wc0 = (WriteCache) hm;
 		hm = new HeightMapReadCache(hm, Coordinate.SIZE_CHUNK);
-		ReadCache hm_rc = (ReadCache) hm;
+		ReadCache hm_rc1 = (ReadCache) hm;
+		hm = new HeightMapWriteCache(hm, Coordinate.SIZE_CHUNK);
+		WriteCache hm_wc1 = (WriteCache) hm;
 		
 		renderer = new HeightMapRenderer(hm);
 		
 		plugin.getChunkManager().render(renderer);
-		hwc.commit();
+		hm_wc1.commit();
+		hm_wc0.commit();
 		
 		// STAGE TWO: DRAWING
 		
@@ -100,7 +106,8 @@ public class RenderTask implements Runnable {
 		plugin.getChunkManager().render(renderer);
 		plugin.getChunkManager().endBatch();
 		nm_rc.clear();
-		hm_rc.clear();
+		hm_rc0.clear();
+		hm_rc1.clear();
 		wc1.commit();
 		wc.commit();
 		plugin.commit(fp.getChanged());

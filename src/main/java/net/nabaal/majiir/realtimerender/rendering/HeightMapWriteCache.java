@@ -9,7 +9,7 @@ import net.nabaal.majiir.realtimerender.image.WriteCache;
 
 public class HeightMapWriteCache extends HeightMapProvider implements WriteCache {
 
-	private final ConcurrentMap<Coordinate, HeightMapTile> chunks = new ConcurrentHashMap<Coordinate, HeightMapTile>();
+	private final ConcurrentMap<Coordinate, HeightMapTile> tiles = new ConcurrentHashMap<Coordinate, HeightMapTile>();
 	private final HeightMap source;
 	
 	public HeightMapWriteCache(HeightMap source, int size) {
@@ -19,7 +19,15 @@ public class HeightMapWriteCache extends HeightMapProvider implements WriteCache
 	
 	@Override
 	public void commit() {
-		for (Map.Entry<Coordinate, HeightMapTile> entry : chunks.entrySet()) {
+		for (Map.Entry<Coordinate, HeightMapTile> entry : tiles.entrySet()) {
+			if (source instanceof HeightMapProvider) {
+				HeightMapProvider provider = (HeightMapProvider) source;
+				if (provider.getSize() == this.getSize()) {
+					provider.setHeightMapTile(entry.getKey(), entry.getValue());
+					return;
+				}
+			}
+			
 			// TODO: Cleaner
 			for (int x = 0; x < 16; x++) {
 				for (int y = 0; y < 16; y++) {
@@ -28,23 +36,31 @@ public class HeightMapWriteCache extends HeightMapProvider implements WriteCache
 				}
 			}
 		}
-		chunks.clear();
+		tiles.clear();
 	}
 
 	@Override
-	protected HeightMapTile getHeightMapTile(Coordinate chunkLocation) {
-		if (chunks.containsKey(chunkLocation)) {
-			return chunks.get(chunkLocation);
+	protected HeightMapTile getHeightMapTile(Coordinate tileLocation) {
+		if (tiles.containsKey(tileLocation)) {
+			return tiles.get(tileLocation);
 		}
-		return new HeightMapTile(chunkLocation, source);
+		
+		if (source instanceof HeightMapProvider) {
+			HeightMapProvider provider = (HeightMapProvider) source;
+			if (provider.getSize() == this.getSize()) {
+				return provider.getHeightMapTile(tileLocation);
+			}
+		}
+		
+		return new HeightMapTile(tileLocation, source);
 	}
 
 	@Override
-	protected void setHeightMapTile(Coordinate chunkLocation, HeightMapTile chunk) {
-		if (chunk == null) {
-			throw new IllegalArgumentException("HeightMapChunk cannot be null.");
+	protected void setHeightMapTile(Coordinate tileLocation, HeightMapTile tile) {
+		if (tile == null) {
+			throw new IllegalArgumentException("HeightMapTile cannot be null.");
 		}
-		chunks.put(chunkLocation, chunk);
+		tiles.put(tileLocation, tile);
 	}
 
 }

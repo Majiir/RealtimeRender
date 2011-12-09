@@ -44,18 +44,26 @@ public class HeightMapReadCache extends HeightMapProvider implements ReadCache {
 	}
 
 	@Override
-	protected void setHeightMapTile(Coordinate chunkLocation, HeightMapTile chunk) {
-		if (chunk != null) {
-			chunks.put(chunkLocation, chunk);
+	protected void setHeightMapTile(Coordinate tileLocation, HeightMapTile tile) {
+		if (tile != null) {
+			chunks.put(tileLocation, tile);
 		} else {
-			chunks.remove(chunkLocation);
-			chunk = new HeightMapTile(chunkLocation);
+			chunks.remove(tileLocation);
+			tile = new HeightMapTile(tileLocation);
+		}
+		
+		if (source instanceof HeightMapProvider) {
+			HeightMapProvider provider = (HeightMapProvider) source;
+			if (provider.getSize() == this.getSize()) {
+				provider.setHeightMapTile(tileLocation, tile);
+				return;
+			}
 		}
 		
 		for (int x = 0; x < 16; x++) {
 			for (int y = 0; y < 16; y++) {
-				Coordinate block = chunkLocation.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK));
-				source.setHeight(block, chunk.getHeight(block));
+				Coordinate block = tileLocation.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK));
+				source.setHeight(block, tile.getHeight(block));
 			}
 		}
 	}

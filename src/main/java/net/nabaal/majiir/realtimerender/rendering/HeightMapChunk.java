@@ -4,14 +4,14 @@ import net.nabaal.majiir.realtimerender.Coordinate;
 
 public final class HeightMapChunk extends HeightMap {
 
-	private final int[][] heights = new int[16][16];
+	private final byte[] heights = new byte[256];
 	private final Coordinate chunk;
 	
 	public HeightMapChunk(Coordinate location, HeightMap source) {
 		this.chunk = location;
 		for (int x = 0; x < 16; x++) {
 			for (int y = 0; y < 16; y++) {
-				this.heights[x][y] = source.getHeight(chunk.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK)));
+				this.heights[getArrayCoordinate(x, y)] = source.getHeight(chunk.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK)));
 			}
 		}
 	}
@@ -20,7 +20,7 @@ public final class HeightMapChunk extends HeightMap {
 		this.chunk = location;
 		for (int x = 0; x < 16; x++) {
 			for (int y = 0; y < 16; y++) {
-				this.heights[x][y] = HeightMap.NO_HEIGHT_INFORMATION;
+				this.heights[getArrayCoordinate(x, y)] = HeightMap.NO_HEIGHT_INFORMATION;
 			}
 		}
 	}
@@ -29,7 +29,7 @@ public final class HeightMapChunk extends HeightMap {
 		this.chunk = other.getLocation();
 		for (int x = 0; x < 16; x++) {
 			for (int y = 0; y < 16; y++) {
-				this.heights[x][y] = other.getHeight(chunk.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK)));
+				this.heights[getArrayCoordinate(x, y)] = other.getHeight(chunk.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK)));
 			}
 		}
 	}
@@ -39,15 +39,13 @@ public final class HeightMapChunk extends HeightMap {
 	}
 
 	@Override
-	public int getHeight(Coordinate point) {
-		point = getPixelCoordinate(point);
-		return heights[point.getX()][point.getY()];
+	public byte getHeight(Coordinate point) {
+		return heights[getArrayCoordinate(point)];
 	}
 	
 	@Override
-	public void setHeight(Coordinate point, int height) {
-		point = getPixelCoordinate(point);
-		heights[point.getX()][point.getY()] = height;
+	public void setHeight(Coordinate point, byte height) {
+		heights[getArrayCoordinate(point)] = height;
 	}
 	
 	private Coordinate getPixelCoordinate(Coordinate point) {
@@ -55,6 +53,15 @@ public final class HeightMapChunk extends HeightMap {
 			throw new IllegalArgumentException("Point must be within the chunk.");
 		}
 		return point.subCoordinate(Coordinate.OFFSET_BLOCK_CHUNK);
+	}
+	
+	private int getArrayCoordinate(Coordinate point) {
+		point = getPixelCoordinate(point);
+		return getArrayCoordinate(point.getX(), point.getY());
+	}
+	
+	private int getArrayCoordinate(int x, int y) {
+		return (x << 4) + y;
 	}
 	
 }

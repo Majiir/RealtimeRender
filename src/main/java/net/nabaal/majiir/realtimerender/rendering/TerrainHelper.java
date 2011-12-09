@@ -31,9 +31,9 @@ public final class TerrainHelper {
 		return terrain.contains(material);
 	}
 	
-	public static int getTerrainHeight(int x, int z, ChunkSnapshot snapshot) {
+	public static byte getTerrainHeight(int x, int z, ChunkSnapshot snapshot) {
 		Material material;
-		int y = snapshot.getHighestBlockYAt(x, z) + 1;
+		byte y = (byte) (snapshot.getHighestBlockYAt(x, z) + 1);
 		do {
 			y--;
 			material = Material.getMaterial(snapshot.getBlockTypeId(x, y, z));

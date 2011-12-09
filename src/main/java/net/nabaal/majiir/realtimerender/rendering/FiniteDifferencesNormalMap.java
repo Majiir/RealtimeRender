@@ -25,7 +25,7 @@ public class FiniteDifferencesNormalMap implements NormalMap {
 			return null;
 		}
 		
-		int h;
+		byte h;
 		h = heightMap.getHeight(point.plus(new Coordinate(-1, 0, Coordinate.LEVEL_BLOCK)));
 		if (HeightMap.isValid(h)) {
 			dx += (y - h);

@@ -17,7 +17,7 @@ import java.io.OutputStream;
 import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.image.FilePattern;
 
-public class FileHeightMap extends HeightMapChunkProvider {
+public class FileHeightMap extends HeightMapProvider {
 	
 	private final FilePattern pattern;
 	

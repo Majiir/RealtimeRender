@@ -2,7 +2,7 @@ package net.nabaal.majiir.realtimerender.rendering;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
 
-public abstract class HeightMapChunkProvider extends HeightMap {
+public abstract class HeightMapProvider extends HeightMap {
 
 	protected abstract HeightMapTile getHeightMapChunk(Coordinate chunkLocation);
 	

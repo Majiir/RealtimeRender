@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentMap;
 import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.image.WriteCache;
 
-public class HeightMapWriteCache extends HeightMapChunkProvider implements WriteCache {
+public class HeightMapWriteCache extends HeightMapProvider implements WriteCache {
 
 	private final ConcurrentMap<Coordinate, HeightMapTile> chunks = new ConcurrentHashMap<Coordinate, HeightMapTile>();
 	private final HeightMap source;
@@ -19,8 +19,8 @@ public class HeightMapWriteCache extends HeightMapChunkProvider implements Write
 	@Override
 	public void commit() {
 		for (Map.Entry<Coordinate, HeightMapTile> entry : chunks.entrySet()) {
-			if (source instanceof HeightMapChunkProvider) {
-				((HeightMapChunkProvider)source).setHeightMapChunk(entry.getKey(), entry.getValue());
+			if (source instanceof HeightMapProvider) {
+				((HeightMapProvider)source).setHeightMapChunk(entry.getKey(), entry.getValue());
 			} else {
 				// TODO: Cleaner
 				for (int x = 0; x < 16; x++) {
@@ -40,8 +40,8 @@ public class HeightMapWriteCache extends HeightMapChunkProvider implements Write
 			return chunks.get(chunkLocation);
 		}
 		
-		if (source instanceof HeightMapChunkProvider) {
-			return ((HeightMapChunkProvider)source).getHeightMapChunk(chunkLocation);
+		if (source instanceof HeightMapProvider) {
+			return ((HeightMapProvider)source).getHeightMapChunk(chunkLocation);
 		} else {
 			return new HeightMapTile(chunkLocation, source);
 		}

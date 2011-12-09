@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.image.ImageProvider;
 
-public class ImageHeightMap extends HeightMapChunkProvider {
+public class ImageHeightMap extends HeightMapProvider {
 
 	private final ImageProvider imageProvider;
 	

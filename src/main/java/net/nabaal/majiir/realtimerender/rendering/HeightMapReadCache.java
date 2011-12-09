@@ -49,6 +49,7 @@ public class HeightMapReadCache extends HeightMapProvider implements ReadCache {
 			chunks.put(chunkLocation, chunk);
 		} else {
 			chunks.remove(chunkLocation);
+			chunk = new HeightMapTile(chunkLocation);
 		}
 		
 		for (int x = 0; x < 16; x++) {

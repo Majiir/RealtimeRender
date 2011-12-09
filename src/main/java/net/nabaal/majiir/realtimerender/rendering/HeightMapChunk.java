@@ -1,9 +1,13 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
+import java.io.Serializable;
+
 import net.nabaal.majiir.realtimerender.Coordinate;
 
-public final class HeightMapChunk extends HeightMap {
+public final class HeightMapChunk extends HeightMap implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private final byte[] heights = new byte[256];
 	private final Coordinate chunk;
 	

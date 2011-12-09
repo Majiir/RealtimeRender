@@ -1,9 +1,13 @@
 package net.nabaal.majiir.realtimerender;
 
+import java.io.Serializable;
+
 import org.bukkit.ChunkSnapshot;
 
-public final class Coordinate {
+public final class Coordinate implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	public static final int LEVEL_BLOCK = -8;
 	public static final int LEVEL_CHUNK = -4;
 	public static final int LEVEL_TILE = 0;

@@ -13,14 +13,14 @@ import net.nabaal.majiir.realtimerender.rendering.AdaptiveNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.CachedNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.CircleAverageNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.DiffuseShadedChunkRenderer;
+import net.nabaal.majiir.realtimerender.rendering.FileHeightMap;
 import net.nabaal.majiir.realtimerender.rendering.FiniteDifferencesNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.HeightMap;
-import net.nabaal.majiir.realtimerender.rendering.HeightMapFilePattern;
 import net.nabaal.majiir.realtimerender.rendering.HeightMapReadCache;
 import net.nabaal.majiir.realtimerender.rendering.HeightMapRenderer;
 import net.nabaal.majiir.realtimerender.rendering.HeightMapWriteCache;
-import net.nabaal.majiir.realtimerender.rendering.ImageHeightMap;
 import net.nabaal.majiir.realtimerender.rendering.NormalMap;
+import net.nabaal.majiir.realtimerender.rendering.SerializedHeightMapFilePattern;
 import net.nabaal.majiir.realtimerender.rendering.TileFilePattern;
 
 public class RenderTask implements Runnable {
@@ -45,14 +45,7 @@ public class RenderTask implements Runnable {
 		plugin.getChunkManager().startBatch();
 		
 		// STAGE ONE: PREPROCESS (HEIGHT MAP)
-		
-		ip = new FileImageProvider(plugin.getDataFolder(), new HeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
-		rc = new ImageReadCache(ip);
-		ip = rc;
-		wc = new ImageWriteCache(ip);
-		ip = wc;
-		ip = new CompositeImageBuilder(ip, Coordinate.OFFSET_CHUNK_TILE);
-		hm = new ImageHeightMap(ip);
+		hm = new FileHeightMap(plugin.getDataFolder(), new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
 		HeightMapWriteCache hwc = new HeightMapWriteCache(hm);
 		hm = hwc;
 		hm = new HeightMapReadCache(hm);
@@ -62,8 +55,6 @@ public class RenderTask implements Runnable {
 		
 		plugin.getChunkManager().render(renderer);
 		hwc.commit();
-		wc.commit();
-		rc.clear();
 		
 		// STAGE TWO: DRAWING
 		

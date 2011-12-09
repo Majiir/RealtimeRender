@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
 
-public final class HeightMapChunk extends HeightMap implements Serializable {
+public final class HeightMapTile extends HeightMap implements Serializable {
 
 	private static final long serialVersionUID = 2L;
 	
@@ -12,7 +12,7 @@ public final class HeightMapChunk extends HeightMap implements Serializable {
 	private final Coordinate chunk;
 	private final transient int size;
 	
-	public HeightMapChunk(Coordinate location, HeightMap source) {
+	public HeightMapTile(Coordinate location, HeightMap source) {
 		this.chunk = location;
 		this.size = chunk.getLevel() - Coordinate.LEVEL_BLOCK;
 		this.heights = new byte[1 << (size * 2)];
@@ -23,7 +23,7 @@ public final class HeightMapChunk extends HeightMap implements Serializable {
 		}
 	}
 	
-	public HeightMapChunk(Coordinate location) {
+	public HeightMapTile(Coordinate location) {
 		this.chunk = location;
 		this.size = chunk.getLevel() - Coordinate.LEVEL_BLOCK;
 		this.heights = new byte[1 << (size * 2)];
@@ -34,7 +34,7 @@ public final class HeightMapChunk extends HeightMap implements Serializable {
 		}
 	}
 	
-	public HeightMapChunk(HeightMapChunk other) {
+	public HeightMapTile(HeightMapTile other) {
 		this.chunk = other.getLocation();
 		this.size = chunk.getLevel() - Coordinate.LEVEL_BLOCK;
 		this.heights = new byte[1 << (size * 2)];

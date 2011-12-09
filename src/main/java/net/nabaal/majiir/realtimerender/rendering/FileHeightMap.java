@@ -26,20 +26,20 @@ public class FileHeightMap extends HeightMapChunkProvider {
 	}
 
 	@Override
-	protected HeightMapChunk getHeightMapChunk(Coordinate chunkLocation) {
-		HeightMapChunk chunk = null;
+	protected HeightMapTile getHeightMapChunk(Coordinate chunkLocation) {
+		HeightMapTile chunk = null;
 		File file = pattern.getFile(chunkLocation);
 		try {
 			InputStream fstream = new FileInputStream(file);
 			InputStream bstream = new BufferedInputStream(fstream);
 			ObjectInput ostream = new ObjectInputStream(bstream);
 			try {
-				chunk = (HeightMapChunk) ostream.readObject();
+				chunk = (HeightMapTile) ostream.readObject();
 			} finally {
 				ostream.close();
 			}
 		} catch (FileNotFoundException e) {
-			chunk = new HeightMapChunk(chunkLocation);
+			chunk = new HeightMapTile(chunkLocation);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -49,7 +49,7 @@ public class FileHeightMap extends HeightMapChunkProvider {
 	}
 
 	@Override
-	protected void setHeightMapChunk(Coordinate chunkLocation, HeightMapChunk chunk) {
+	protected void setHeightMapChunk(Coordinate chunkLocation, HeightMapTile chunk) {
 		File file = pattern.getFile(chunkLocation);
 		try {
 			OutputStream fstream = new FileOutputStream(file);

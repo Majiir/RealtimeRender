@@ -16,10 +16,10 @@ public class ImageHeightMap extends HeightMapChunkProvider {
 	}
 	
 	@Override
-	protected HeightMapChunk getHeightMapChunk(Coordinate chunkLocation) {
+	protected HeightMapTile getHeightMapChunk(Coordinate chunkLocation) {
 		
 		BufferedImage image = imageProvider.getImage(chunkLocation);
-		HeightMapChunk chunk = new HeightMapChunk(chunkLocation);
+		HeightMapTile chunk = new HeightMapTile(chunkLocation);
 		
 		if (image == null) {
 			return chunk;
@@ -42,7 +42,7 @@ public class ImageHeightMap extends HeightMapChunkProvider {
 	}
 	
 	@Override
-	protected void setHeightMapChunk(Coordinate chunkLocation, HeightMapChunk chunk) {
+	protected void setHeightMapChunk(Coordinate chunkLocation, HeightMapTile chunk) {
 		
 		BufferedImage image = ImageProvider.createImage(Coordinate.SIZE_CHUNK);
 		Graphics2D graphics = image.createGraphics();

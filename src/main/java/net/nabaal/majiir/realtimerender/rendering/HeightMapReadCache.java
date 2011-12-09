@@ -8,7 +8,7 @@ import net.nabaal.majiir.realtimerender.image.ReadCache;
 
 public class HeightMapReadCache extends HeightMapChunkProvider implements ReadCache {
 
-	private final ConcurrentMap<Coordinate, HeightMapChunk> chunks = new ConcurrentHashMap<Coordinate, HeightMapChunk>();
+	private final ConcurrentMap<Coordinate, HeightMapTile> chunks = new ConcurrentHashMap<Coordinate, HeightMapTile>();
 	private final HeightMap source;
 	
 	public HeightMapReadCache(HeightMap source) {
@@ -21,16 +21,16 @@ public class HeightMapReadCache extends HeightMapChunkProvider implements ReadCa
 	}
 
 	@Override
-	protected HeightMapChunk getHeightMapChunk(Coordinate chunkLocation) {
+	protected HeightMapTile getHeightMapChunk(Coordinate chunkLocation) {
 		if (chunks.containsKey(chunkLocation)) {
 			return chunks.get(chunkLocation);
 		}
 		
-		HeightMapChunk chunk;
+		HeightMapTile chunk;
 		if (source instanceof HeightMapChunkProvider) {
 			chunk = ((HeightMapChunkProvider)source).getHeightMapChunk(chunkLocation);
 		} else {
-			chunk = new HeightMapChunk(chunkLocation, source);
+			chunk = new HeightMapTile(chunkLocation, source);
 		}
 		
 		if (chunk != null) {
@@ -40,7 +40,7 @@ public class HeightMapReadCache extends HeightMapChunkProvider implements ReadCa
 	}
 
 	@Override
-	protected void setHeightMapChunk(Coordinate chunkLocation, HeightMapChunk chunk) {
+	protected void setHeightMapChunk(Coordinate chunkLocation, HeightMapTile chunk) {
 		if (chunk != null) {
 			chunks.put(chunkLocation, chunk);
 		} else {

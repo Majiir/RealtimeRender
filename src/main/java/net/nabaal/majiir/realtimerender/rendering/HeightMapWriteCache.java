@@ -9,7 +9,7 @@ import net.nabaal.majiir.realtimerender.image.WriteCache;
 
 public class HeightMapWriteCache extends HeightMapChunkProvider implements WriteCache {
 
-	private final ConcurrentMap<Coordinate, HeightMapChunk> chunks = new ConcurrentHashMap<Coordinate, HeightMapChunk>();
+	private final ConcurrentMap<Coordinate, HeightMapTile> chunks = new ConcurrentHashMap<Coordinate, HeightMapTile>();
 	private final HeightMap source;
 	
 	public HeightMapWriteCache(HeightMap source) {
@@ -18,7 +18,7 @@ public class HeightMapWriteCache extends HeightMapChunkProvider implements Write
 	
 	@Override
 	public void commit() {
-		for (Map.Entry<Coordinate, HeightMapChunk> entry : chunks.entrySet()) {
+		for (Map.Entry<Coordinate, HeightMapTile> entry : chunks.entrySet()) {
 			if (source instanceof HeightMapChunkProvider) {
 				((HeightMapChunkProvider)source).setHeightMapChunk(entry.getKey(), entry.getValue());
 			} else {
@@ -35,7 +35,7 @@ public class HeightMapWriteCache extends HeightMapChunkProvider implements Write
 	}
 
 	@Override
-	protected HeightMapChunk getHeightMapChunk(Coordinate chunkLocation) {
+	protected HeightMapTile getHeightMapChunk(Coordinate chunkLocation) {
 		if (chunks.containsKey(chunkLocation)) {
 			return chunks.get(chunkLocation);
 		}
@@ -43,12 +43,12 @@ public class HeightMapWriteCache extends HeightMapChunkProvider implements Write
 		if (source instanceof HeightMapChunkProvider) {
 			return ((HeightMapChunkProvider)source).getHeightMapChunk(chunkLocation);
 		} else {
-			return new HeightMapChunk(chunkLocation, source);
+			return new HeightMapTile(chunkLocation, source);
 		}
 	}
 
 	@Override
-	protected void setHeightMapChunk(Coordinate chunkLocation, HeightMapChunk chunk) {
+	protected void setHeightMapChunk(Coordinate chunkLocation, HeightMapTile chunk) {
 		if (chunk == null) {
 			throw new IllegalArgumentException("HeightMapChunk cannot be null.");
 		}

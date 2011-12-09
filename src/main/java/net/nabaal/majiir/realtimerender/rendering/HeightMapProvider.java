@@ -4,21 +4,31 @@ import net.nabaal.majiir.realtimerender.Coordinate;
 
 public abstract class HeightMapProvider extends HeightMap {
 
-	protected abstract HeightMapTile getHeightMapChunk(Coordinate chunkLocation);
+	private final int size;
 	
-	protected abstract void setHeightMapChunk(Coordinate chunkLocation, HeightMapTile chunk);
+	public HeightMapProvider(int size) {
+		this.size = size;
+	}
+	
+	public int getSize() {
+		return size;
+	}
+	
+	protected abstract HeightMapTile getHeightMapTile(Coordinate tileLocation);
+	
+	protected abstract void setHeightMapTile(Coordinate tileLocation, HeightMapTile tile);
 	
 	@Override
 	public final byte getHeight(Coordinate point) {
-		return this.getHeightMapChunk(point.zoomOut(Coordinate.OFFSET_BLOCK_CHUNK)).getHeight(point);
+		return this.getHeightMapTile(point.zoomOut(size)).getHeight(point);
 	}
 	
 	@Override
 	public final void setHeight(Coordinate block, byte height) {
-		Coordinate chunkLocation = block.zoomOut(Coordinate.OFFSET_BLOCK_CHUNK);
-		HeightMapTile chunk = getHeightMapChunk(chunkLocation);
-		chunk.setHeight(block, height);
-		setHeightMapChunk(chunkLocation, chunk);
+		Coordinate tileLocation = block.zoomOut(size);
+		HeightMapTile tile = getHeightMapTile(tileLocation);
+		tile.setHeight(block, height);
+		setHeightMapTile(tileLocation, tile);
 	}
 
 }

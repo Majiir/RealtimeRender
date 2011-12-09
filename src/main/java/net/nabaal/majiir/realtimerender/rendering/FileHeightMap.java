@@ -21,42 +21,43 @@ public class FileHeightMap extends HeightMapProvider {
 	
 	private final FilePattern pattern;
 	
-	public FileHeightMap(File directory, FilePattern pattern) {
+	public FileHeightMap(File directory, FilePattern pattern, int size) {
+		super(size);
 		this.pattern = pattern;
 	}
 
 	@Override
-	protected HeightMapTile getHeightMapChunk(Coordinate chunkLocation) {
-		HeightMapTile chunk = null;
-		File file = pattern.getFile(chunkLocation);
+	protected HeightMapTile getHeightMapTile(Coordinate tileLocation) {
+		HeightMapTile tile = null;
+		File file = pattern.getFile(tileLocation);
 		try {
 			InputStream fstream = new FileInputStream(file);
 			InputStream bstream = new BufferedInputStream(fstream);
 			ObjectInput ostream = new ObjectInputStream(bstream);
 			try {
-				chunk = (HeightMapTile) ostream.readObject();
+				tile = (HeightMapTile) ostream.readObject();
 			} finally {
 				ostream.close();
 			}
 		} catch (FileNotFoundException e) {
-			chunk = new HeightMapTile(chunkLocation);
+			tile = new HeightMapTile(tileLocation);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return chunk;
+		return tile;
 	}
 
 	@Override
-	protected void setHeightMapChunk(Coordinate chunkLocation, HeightMapTile chunk) {
-		File file = pattern.getFile(chunkLocation);
+	protected void setHeightMapTile(Coordinate tileLocation, HeightMapTile tile) {
+		File file = pattern.getFile(tileLocation);
 		try {
 			OutputStream fstream = new FileOutputStream(file);
 			OutputStream bstream = new BufferedOutputStream(fstream);
 			ObjectOutput ostream = new ObjectOutputStream(bstream);
 			try {
-				ostream.writeObject(chunk);
+				ostream.writeObject(tile);
 			} finally {
 				ostream.close();
 			}

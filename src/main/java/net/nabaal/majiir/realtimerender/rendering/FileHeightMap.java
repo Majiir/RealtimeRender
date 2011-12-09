@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +38,8 @@ public class FileHeightMap extends HeightMapChunkProvider {
 			} finally {
 				ostream.close();
 			}
+		} catch (FileNotFoundException e) {
+			chunk = new HeightMapChunk(chunkLocation);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

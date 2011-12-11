@@ -6,15 +6,14 @@ import net.nabaal.majiir.realtimerender.Coordinate;
 
 public final class HeightMapTile extends HeightMap implements Serializable {
 
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 	
 	private final byte[] heights;
 	private final Coordinate location;
-	private final transient int size;
 	
 	public HeightMapTile(Coordinate location, HeightMap source) {
 		this.location = location;
-		this.size = location.getLevel() - Coordinate.LEVEL_BLOCK;
+		int size = getSize();
 		this.heights = new byte[1 << (size * 2)];
 		for (int x = 0; x < (1 << size); x++) {
 			for (int y = 0; y < (1 << size); y++) {
@@ -25,7 +24,7 @@ public final class HeightMapTile extends HeightMap implements Serializable {
 	
 	public HeightMapTile(Coordinate location) {
 		this.location = location;
-		this.size = location.getLevel() - Coordinate.LEVEL_BLOCK;
+		int size = getSize();
 		this.heights = new byte[1 << (size * 2)];
 		for (int x = 0; x < (1 << size); x++) {
 			for (int y = 0; y < (1 << size); y++) {
@@ -36,7 +35,7 @@ public final class HeightMapTile extends HeightMap implements Serializable {
 	
 	public HeightMapTile(HeightMapTile other) {
 		this.location = other.getLocation();
-		this.size = location.getLevel() - Coordinate.LEVEL_BLOCK;
+		int size = getSize();
 		this.heights = new byte[1 << (size * 2)];
 		for (int x = 0; x < (1 << size); x++) {
 			for (int y = 0; y < (1 << size); y++) {
@@ -47,6 +46,10 @@ public final class HeightMapTile extends HeightMap implements Serializable {
 	
 	public Coordinate getLocation() {
 		return this.location;
+	}
+	
+	public int getSize() {
+		return location.getLevel() - Coordinate.LEVEL_BLOCK;
 	}
 
 	@Override
@@ -60,10 +63,10 @@ public final class HeightMapTile extends HeightMap implements Serializable {
 	}
 	
 	private Coordinate getPixelCoordinate(Coordinate point) {
-		if (!point.zoomOut(size).equals(location)) {
+		if (!point.zoomOut(getSize()).equals(location)) {
 			throw new IllegalArgumentException("Point must be within the chunk.");
 		}
-		return point.subCoordinate(size);
+		return point.subCoordinate(getSize());
 	}
 	
 	private int getArrayCoordinate(Coordinate point) {
@@ -72,7 +75,7 @@ public final class HeightMapTile extends HeightMap implements Serializable {
 	}
 	
 	private int getArrayCoordinate(int x, int y) {
-		return (x << size) + y;
+		return (x << getSize()) + y;
 	}
 	
 }

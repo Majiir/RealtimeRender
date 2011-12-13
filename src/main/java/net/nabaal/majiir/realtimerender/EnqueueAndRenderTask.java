@@ -1,9 +1,5 @@
 package net.nabaal.majiir.realtimerender;
 
-import java.io.FileNotFoundException;
-import java.util.concurrent.Future;
-import java.util.concurrent.FutureTask;
-
 public class EnqueueAndRenderTask implements Runnable {
 
 	private final RealtimeRender plugin;

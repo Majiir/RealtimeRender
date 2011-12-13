@@ -13,7 +13,6 @@ import java.util.concurrent.Future;
 import org.bukkit.ChunkSnapshot;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
-import net.nabaal.majiir.realtimerender.RealtimeRender;
 import net.nabaal.majiir.realtimerender.RenderChunkTask;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 

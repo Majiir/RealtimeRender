@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import org.bukkit.ChunkSnapshot;
@@ -19,7 +20,8 @@ import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 public class ChunkManager {
 	
 	private final ConcurrentLinkedQueue<ChunkSnapshot> incoming = new ConcurrentLinkedQueue<ChunkSnapshot>();
-	private ConcurrentMap<Coordinate, ChunkSnapshot> snapshots; 
+	private final ExecutorService executor = Executors.newCachedThreadPool();
+	private ConcurrentMap<Coordinate, ChunkSnapshot> snapshots;
 	
 	public void enqueue(ChunkSnapshot chunkSnapshot) {
 		incoming.add(chunkSnapshot);
@@ -33,8 +35,7 @@ public class ChunkManager {
 		}
 	}
 	
-	public void render(ChunkRenderer chunkRenderer) {
-		ExecutorService executor = RealtimeRender.getExecutor();
+	public void render(ChunkRenderer chunkRenderer) { 
 		List<Future<?>> futures = new ArrayList<Future<?>>();
 		for (ChunkSnapshot snapshot : snapshots.values()) {
 			futures.add(executor.submit(new RenderChunkTask(chunkRenderer, snapshot)));

@@ -20,7 +20,6 @@ public class RealtimeRender extends JavaPlugin {
 	
 	// TODO: Plugin-specific logger
 	private static final Logger log = Logger.getLogger("Minecraft");
-	private static final ExecutorService executor = Executors.newCachedThreadPool();
 	
 	private final RealtimeRenderWorldListener worldListener = new RealtimeRenderWorldListener(this);
 	
@@ -79,10 +78,6 @@ public class RealtimeRender extends JavaPlugin {
 	
 	public void commit(Iterable<File> files) {
 		commitProvider.commitFiles(files);
-	}
-		
-	public static ExecutorService getExecutor() {
-		return executor;
 	}
 	
 	public static Logger getLogger() {

@@ -1,10 +1,14 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
+import java.io.Serializable;
+
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.block.Biome;
 
-public class ProcessedChunkSnapshot implements ChunkSnapshot {
+public class ProcessedChunkSnapshot implements ChunkSnapshot, Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private final byte[] blockData = new byte[32768];
 	private final byte[] blockLight = new byte[32768];
 	private final byte[] blockTypes = new byte[32768];

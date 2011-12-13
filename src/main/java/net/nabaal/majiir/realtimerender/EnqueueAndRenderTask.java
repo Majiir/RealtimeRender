@@ -29,7 +29,7 @@ public class EnqueueAndRenderTask implements Runnable {
 				e.printStackTrace();
 			} 
 		} else {
-			Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
+			thread.setPriority(Thread.MIN_PRIORITY);
 		}
 	}
 

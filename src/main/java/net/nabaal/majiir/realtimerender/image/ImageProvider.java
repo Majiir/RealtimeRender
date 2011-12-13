@@ -32,9 +32,12 @@ public abstract class ImageProvider {
 		setImage(pixel, image);
 	}
 	
-	public static final BufferedImage createImage(int level) {
-		// TODO: Consolidate these
-		return new BufferedImage(1 << level, 1 << level, BufferedImage.TYPE_INT_ARGB);
+	public static final BufferedImage createImage(int size) {
+		return createImage(1 << size, 1 << size);
+	}
+	
+	public static final BufferedImage createImage(int width, int height) {
+		return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	public abstract BufferedImage getImage(Coordinate tile);

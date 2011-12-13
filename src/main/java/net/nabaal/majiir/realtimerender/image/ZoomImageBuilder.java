@@ -67,9 +67,4 @@ public class ZoomImageBuilder extends ImageProvider {
 		return source.getTiles();
 	}
 	
-	// TODO: Eliminate/pull out
-	private static BufferedImage createImage(int width, int height) {
-		return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-	}
-	
 }

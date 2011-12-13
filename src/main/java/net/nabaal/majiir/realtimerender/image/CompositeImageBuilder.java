@@ -71,11 +71,6 @@ public class CompositeImageBuilder extends ImageProvider {
 			source.setImage(tile.zoomOut(levels), tileImg);
 		}
 	}
-	
-	// TODO: Eliminate/pull out
-	private static BufferedImage createImage(int width, int height) {
-		return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-	}
 
 	@Override
 	public void removeImage(Coordinate tile) {

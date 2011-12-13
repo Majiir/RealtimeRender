@@ -24,7 +24,7 @@ public class HeightMapWriteCache extends HeightMapProvider implements WriteCache
 				HeightMapProvider provider = (HeightMapProvider) source;
 				if (provider.getSize() == this.getSize()) {
 					provider.setHeightMapTile(entry.getKey(), entry.getValue());
-					return;
+					continue;
 				}
 			}
 			

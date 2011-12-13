@@ -21,7 +21,6 @@ public class EnqueueAndRenderTask implements Runnable {
 			try {
 				thread.join();
 			} catch (InterruptedException e) {
-				// TODO: Warn and dump chunk list upon exception? Or store "in progress" chunk list on filesystem?
 				e.printStackTrace();
 			} 
 		} else {

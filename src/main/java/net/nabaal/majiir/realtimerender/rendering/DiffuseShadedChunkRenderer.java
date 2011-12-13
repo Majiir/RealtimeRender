@@ -244,7 +244,6 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 	
 	public static int getBiomeFoliageColor(ChunkSnapshot chunkSnapshot, int x, int y, int z) {
 		Coordinate coordinate = getBiomeColorIndex(chunkSnapshot, x, z);
-		// TODO: Test all four leaves types.
 		if ((chunkSnapshot.getBlockData(x, y, z) & 0x3) == 0x2) {
 			return foliageColor.getRGB(255 - coordinate.getX(), 255 - coordinate.getY());
 		} else {

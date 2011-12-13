@@ -63,19 +63,13 @@ public class RenderTask implements Runnable {
 		hm_wc0.commit();
 		
 		// STAGE TWO: DRAWING
-		
-		// TODO: Improve
-		
+				
 		// normal map
-		//hm = new RandomHeightMap();
 		NormalMap nm0 = new FiniteDifferencesNormalMap(hm);
 		nm0 = new CachedNormalMap(nm0);
 		ReadCache nm_rc = (ReadCache) nm0;
 		NormalMap nm = new CircleAverageNormalMap(nm0, 2);
 		nm = new AdaptiveNormalMap(nm, nm0);
-		//NormalMap nm = nm0;
-		
-		// END TODO: Improve
 		
 		// renders
 		fp = new FileImageProvider(plugin.getDataFolder(), new TileFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));

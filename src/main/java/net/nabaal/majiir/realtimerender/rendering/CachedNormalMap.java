@@ -14,9 +14,6 @@ public class CachedNormalMap extends NormalMapProvider implements ReadCache {
 	public CachedNormalMap(NormalMap source) {
 		this.source = source;
 	}
-
-	// TODO: Make caches into pass-throughs, with the cache provider a separate class (memory cache, image-based cache, whatever)
-	// (also make height/normal maps two-way so heightmap rendering can be done directly onto them, committed back from caches, etc)
 	
 	@Override
 	public NormalMapTile getNormalMapTile(Coordinate tile) {

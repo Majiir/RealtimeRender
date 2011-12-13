@@ -60,9 +60,9 @@ public class HeightMapReadCache extends HeightMapProvider implements ReadCache {
 			}
 		}
 		
-		for (int x = 0; x < 16; x++) {
-			for (int y = 0; y < 16; y++) {
-				Coordinate block = tileLocation.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK));
+		for (int x = 0; x < (1 << getSize()); x++) {
+			for (int y = 0; y < (1 << getSize()); y++) {
+				Coordinate block = tileLocation.zoomIn(getSize()).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK));
 				source.setHeight(block, tile.getHeight(block));
 			}
 		}

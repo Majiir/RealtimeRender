@@ -29,9 +29,9 @@ public class HeightMapWriteCache extends HeightMapProvider implements WriteCache
 			}
 			
 			// TODO: Cleaner
-			for (int x = 0; x < 16; x++) {
-				for (int y = 0; y < 16; y++) {
-					Coordinate block = entry.getKey().zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK));
+			for (int x = 0; x < (1 << getSize()); x++) {
+				for (int y = 0; y < (1 << getSize()); y++) {
+					Coordinate block = entry.getKey().zoomIn(getSize()).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK));
 					source.setHeight(block, entry.getValue().getHeight(block));
 				}
 			}

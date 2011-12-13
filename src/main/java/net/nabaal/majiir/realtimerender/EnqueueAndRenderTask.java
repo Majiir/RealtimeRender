@@ -1,6 +1,8 @@
 package net.nabaal.majiir.realtimerender;
 
+import java.io.FileNotFoundException;
 import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
 
 public class EnqueueAndRenderTask implements Runnable {
 
@@ -16,12 +18,13 @@ public class EnqueueAndRenderTask implements Runnable {
 	public void run() {
 		plugin.enqueueLoadedChunks();
 		
-		Future<?> f = RealtimeRender.getExecutor().submit(new RenderTask(plugin));
+		Thread thread = new Thread(new RenderTask(plugin));
+		thread.start();
 		
 		if (wait) {
 			try {
-				f.get();
-			} catch (Exception e) {
+				thread.join();
+			} catch (InterruptedException e) {
 				// TODO: Warn and dump chunk list upon exception? Or store "in progress" chunk list on filesystem?
 				e.printStackTrace();
 			} 

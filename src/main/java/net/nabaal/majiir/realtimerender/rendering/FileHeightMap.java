@@ -13,6 +13,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.zip.DeflaterOutputStream;
+import java.util.zip.InflaterInputStream;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.image.FilePattern;
@@ -32,7 +34,8 @@ public class FileHeightMap extends HeightMapProvider {
 		File file = pattern.getFile(tileLocation);
 		try {
 			InputStream fstream = new FileInputStream(file);
-			InputStream bstream = new BufferedInputStream(fstream);
+			InputStream istream = new InflaterInputStream(fstream); 
+			InputStream bstream = new BufferedInputStream(istream);
 			ObjectInput ostream = new ObjectInputStream(bstream);
 			try {
 				tile = (HeightMapTile) ostream.readObject();
@@ -54,7 +57,8 @@ public class FileHeightMap extends HeightMapProvider {
 		File file = pattern.getFile(tileLocation);
 		try {
 			OutputStream fstream = new FileOutputStream(file);
-			OutputStream bstream = new BufferedOutputStream(fstream);
+			OutputStream dstream = new DeflaterOutputStream(fstream);
+			OutputStream bstream = new BufferedOutputStream(dstream);
 			ObjectOutput ostream = new ObjectOutputStream(bstream);
 			try {
 				ostream.writeObject(tile);

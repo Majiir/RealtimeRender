@@ -9,7 +9,7 @@ public class ChunkSnapshotTile implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private final Coordinate location;
-	private final ProcessedChunkSnapshot[] snapshots;
+	private final SerializableChunkSnapshot[] snapshots;
 	private final transient int offset;
 	
 	public ChunkSnapshotTile(Coordinate location) {
@@ -18,14 +18,14 @@ public class ChunkSnapshotTile implements Serializable {
 		}
 		this.location = location;
 		this.offset = location.getLevel() - Coordinate.LEVEL_CHUNK;
-		this.snapshots = new ProcessedChunkSnapshot[1 << offset];
+		this.snapshots = new SerializableChunkSnapshot[1 << offset];
 	}
 	
-	public ProcessedChunkSnapshot getSnapshot(Coordinate chunk) {
+	public SerializableChunkSnapshot getSnapshot(Coordinate chunk) {
 		return snapshots[getArrayIndex(chunk)];		
 	}
 	
-	public void setSnapshot(Coordinate chunk, ProcessedChunkSnapshot snapshot) {
+	public void setSnapshot(Coordinate chunk, SerializableChunkSnapshot snapshot) {
 		snapshots[getArrayIndex(chunk)] = snapshot;
 	}
 	

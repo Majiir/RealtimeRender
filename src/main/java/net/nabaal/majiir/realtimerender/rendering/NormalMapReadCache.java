@@ -6,12 +6,12 @@ import java.util.concurrent.ConcurrentMap;
 import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.image.ReadCache;
 
-public class CachedNormalMap extends NormalMapProvider implements ReadCache {
+public class NormalMapReadCache extends NormalMapProvider implements ReadCache {
 
 	private final NormalMap source;
 	private final ConcurrentMap<Coordinate, NormalMapTile> cache = new ConcurrentHashMap<Coordinate, NormalMapTile>();
 	
-	public CachedNormalMap(NormalMap source) {
+	public NormalMapReadCache(NormalMap source) {
 		this.source = source;
 	}
 	

@@ -11,7 +11,7 @@ import net.nabaal.majiir.realtimerender.image.ReadCache;
 import net.nabaal.majiir.realtimerender.image.WriteCache;
 import net.nabaal.majiir.realtimerender.image.ZoomImageBuilder;
 import net.nabaal.majiir.realtimerender.rendering.AdaptiveNormalMap;
-import net.nabaal.majiir.realtimerender.rendering.CachedNormalMap;
+import net.nabaal.majiir.realtimerender.rendering.NormalMapReadCache;
 import net.nabaal.majiir.realtimerender.rendering.CircleAverageNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.DiffuseShadedChunkRenderer;
 import net.nabaal.majiir.realtimerender.rendering.FileHeightMap;
@@ -66,7 +66,7 @@ public class RenderTask implements Runnable {
 				
 		// normal map
 		NormalMap nm0 = new FiniteDifferencesNormalMap(hm);
-		nm0 = new CachedNormalMap(nm0);
+		nm0 = new NormalMapReadCache(nm0);
 		ReadCache nm_rc = (ReadCache) nm0;
 		NormalMap nm = new CircleAverageNormalMap(nm0, 2);
 		nm = new AdaptiveNormalMap(nm, nm0);

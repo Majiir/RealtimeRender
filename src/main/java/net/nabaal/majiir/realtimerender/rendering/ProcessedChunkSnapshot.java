@@ -1,11 +1,9 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
-import java.io.Serializable;
-
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.block.Biome;
 
-public class ProcessedChunkSnapshot implements ChunkSnapshot, Serializable {
+public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 
 	private static final long serialVersionUID = 1L;
 	

@@ -1,5 +1,7 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.block.Biome;
 
@@ -38,6 +40,21 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 				}
 			}
 		}
+	}
+	
+	public ProcessedChunkSnapshot(int x, int z, String worldName, long captureFullTime, Biome[] biome, double[] biomeRainfall, double[] biomeTemperature, byte[] blocks, byte[] blockData, byte[] blockLight, byte[] blockTypes, byte[] heightMap) {
+		this.x = x;
+		this.z = z;
+		this.worldName = worldName;
+		this.captureFullTime = captureFullTime;
+		
+		System.arraycopy(biome, 0, this.biome, 0, biome.length);
+		System.arraycopy(biomeRainfall, 0, this.biomeRainfall, 0, biomeRainfall.length);
+		System.arraycopy(biomeTemperature, 0, this.biomeTemperature, 0, biomeTemperature.length);
+		System.arraycopy(blockData, 0, this.blockData, 0, blockData.length);
+		System.arraycopy(blockLight, 0, this.blockLight, 0, blockLight.length);
+		System.arraycopy(blockTypes, 0, this.blockTypes, 0, blockTypes.length);
+		System.arraycopy(heightMap, 0, this.heightMap, 0, heightMap.length);
 	}
 	
 	@Override

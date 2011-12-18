@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import net.nabaal.majiir.realtimerender.commit.PluginCommitProvider;
 import net.nabaal.majiir.realtimerender.commit.RealtimeRenderCommitPlugin;
 import net.nabaal.majiir.realtimerender.rendering.ChunkManager;
+import net.nabaal.majiir.realtimerender.rendering.NoOpChunkPreprocessor;
 
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
@@ -22,7 +23,7 @@ public class RealtimeRender extends JavaPlugin {
 	private final RealtimeRenderWorldListener worldListener = new RealtimeRenderWorldListener(this);
 	
 	private final PluginCommitProvider commitProvider = new PluginCommitProvider();
-	private final ChunkManager chunkManager = new ChunkManager();
+	private final ChunkManager chunkManager = new ChunkManager(new NoOpChunkPreprocessor());
 	
 	private World world;
 	private int startDelay;

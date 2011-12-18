@@ -21,9 +21,14 @@ public class ChunkManager {
 	private final ConcurrentLinkedQueue<ChunkSnapshot> incoming = new ConcurrentLinkedQueue<ChunkSnapshot>();
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private ConcurrentMap<Coordinate, ChunkSnapshot> snapshots;
+	private final ChunkPreprocessor processor;
+	
+	public ChunkManager(ChunkPreprocessor processor) {
+		this.processor = processor;
+	}
 	
 	public void enqueue(ChunkSnapshot chunkSnapshot) {
-		incoming.add(chunkSnapshot);
+		incoming.add(processor.processChunk(chunkSnapshot));
 	}
 	
 	public void startBatch() {

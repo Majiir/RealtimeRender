@@ -16,7 +16,7 @@ public class SerializedHeightMapFilePattern extends FilePattern {
 	public SerializedHeightMapFilePattern(File parent, String prefix, int level) {
 		super(parent);
 		this.prefix = prefix;
-		this.pattern = Pattern.compile(Pattern.quote(prefix) + "\\.y\\.(\\-?\\d+)\\.(\\-?\\d+)\\.png");
+		this.pattern = Pattern.compile(Pattern.quote(prefix) + "\\.y\\.(\\-?\\d+)\\.(\\-?\\d+)\\.dat");
 		this.level = level;
 	}
 	

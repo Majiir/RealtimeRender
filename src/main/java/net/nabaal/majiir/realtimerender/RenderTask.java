@@ -46,7 +46,7 @@ public class RenderTask implements Runnable {
 		plugin.getChunkManager().startBatch();
 		
 		// STAGE ONE: PREPROCESS (HEIGHT MAP)
-		hm = new FileHeightMap(plugin.getDataFolder(), new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()), Coordinate.SIZE_TILE);
+		hm = new FileHeightMap(plugin.getDataFolder(), new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName(), Coordinate.LEVEL_TILE), Coordinate.SIZE_TILE);
 		hm = new HeightMapReadCache(hm, Coordinate.SIZE_TILE);
 		ReadCache hm_rc0 = (ReadCache) hm;
 		hm = new HeightMapWriteCache(hm, Coordinate.SIZE_TILE);

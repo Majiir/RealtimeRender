@@ -16,7 +16,7 @@ public class TileFilePattern extends FilePattern {
 	public TileFilePattern(File parent, String prefix) {
 		super(parent);
 		this.prefix = prefix;
-		this.pattern = Pattern.compile(Pattern.quote(prefix) + "\\.(\\d)\\.(\\d)\\.(\\d)\\.png");
+		this.pattern = Pattern.compile(Pattern.quote(prefix) + "\\.(\\-?\\d+)\\.(\\-?\\d+)\\.(\\-?\\d+)\\.png");
 	}
 	
 	@Override

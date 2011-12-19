@@ -30,6 +30,9 @@ public class SerializedHeightMapFilePattern extends FilePattern {
 	
 	@Override
 	public Coordinate getTile(File file) {
+		if (!file.getParentFile().equals(getParent())) {
+			throw new IllegalArgumentException("File must reside in the parent directory");
+		}
 		Matcher matcher = pattern.matcher(file.getName());
 		if (!matcher.matches()) {
 			return null;

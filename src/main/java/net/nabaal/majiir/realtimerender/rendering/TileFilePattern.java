@@ -16,7 +16,7 @@ public class TileFilePattern extends FilePattern {
 	public TileFilePattern(File parent, String prefix) {
 		super(parent);
 		this.prefix = prefix;
-		this.pattern = Pattern.compile(Pattern.quote(prefix) + "\\.(\\d)\\.(\\d)\\.(\\d)\\.png");
+		this.pattern = Pattern.compile(Pattern.quote(prefix) + "\\.(\\-?\\d+)\\.(\\-?\\d+)\\.(\\-?\\d+)\\.png");
 	}
 	
 	@Override
@@ -26,6 +26,9 @@ public class TileFilePattern extends FilePattern {
 	
 	@Override
 	public Coordinate getTile(File file) {
+		if (!file.getParentFile().equals(getParent())) {
+			throw new IllegalArgumentException("File must reside in the parent directory");
+		}
 		Matcher matcher = pattern.matcher(file.getName());
 		if (!matcher.matches()) {
 			return null;

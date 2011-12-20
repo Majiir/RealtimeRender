@@ -16,7 +16,7 @@ public class SerializedHeightMapFilePattern extends FilePattern {
 	public SerializedHeightMapFilePattern(File parent, String prefix, int level) {
 		super(parent);
 		this.prefix = prefix;
-		this.pattern = Pattern.compile(Pattern.quote(prefix) + "\\.y\\.(\\d)\\.(\\d)\\.png");
+		this.pattern = Pattern.compile(Pattern.quote(prefix) + "\\.y\\.(\\-?\\d+)\\.(\\-?\\d+)\\.dat");
 		this.level = level;
 	}
 	
@@ -30,6 +30,9 @@ public class SerializedHeightMapFilePattern extends FilePattern {
 	
 	@Override
 	public Coordinate getTile(File file) {
+		if (!file.getParentFile().equals(getParent())) {
+			throw new IllegalArgumentException("File must reside in the parent directory");
+		}
 		Matcher matcher = pattern.matcher(file.getName());
 		if (!matcher.matches()) {
 			return null;

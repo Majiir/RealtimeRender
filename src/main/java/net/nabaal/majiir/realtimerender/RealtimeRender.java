@@ -26,6 +26,7 @@ public class RealtimeRender extends JavaPlugin {
 	
 	private final PluginCommitProvider commitProvider = new PluginCommitProvider();
 	private final ChunkManager chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(this.getDataFolder(), "world")));
+	private final ChunkSaveTask chunkSaveTask = new ChunkSaveTask(chunkManager);
 	
 	private World world;
 	private int startDelay;
@@ -37,6 +38,8 @@ public class RealtimeRender extends JavaPlugin {
 		
 		// TODO: Some way for tasks to not run simultaneously by accident, yet ensure the chunk queue is empty before shutting down.
 		new EnqueueAndRenderTask(this, true).run();
+		
+		chunkSaveTask.stop();
 		
 		log.info(String.format("%s: disabled.", this.getDescription().getName()));
 	}
@@ -56,6 +59,7 @@ public class RealtimeRender extends JavaPlugin {
 		pm.registerEvent(Event.Type.WORLD_UNLOAD, worldListener, Event.Priority.Monitor, this);
 		
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new EnqueueAndRenderTask(this, false), startDelay * 20, intervalDelay * 20);
+		this.getServer().getScheduler().scheduleAsyncDelayedTask(this, chunkSaveTask);
 		
 		log.info(String.format("%s: enabled.", this.getDescription().getName()));
 		

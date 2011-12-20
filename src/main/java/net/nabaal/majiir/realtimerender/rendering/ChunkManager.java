@@ -1,14 +1,18 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.bukkit.ChunkSnapshot;
 
@@ -18,47 +22,66 @@ import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 
 public class ChunkManager {
 	
-	private final ConcurrentLinkedQueue<ChunkSnapshot> incoming = new ConcurrentLinkedQueue<ChunkSnapshot>();
+	private final BlockingQueue<ChunkSnapshot> incoming = new ArrayBlockingQueue<ChunkSnapshot>(200);
 	private final ExecutorService executor = Executors.newCachedThreadPool();
-	private ConcurrentMap<Coordinate, ChunkSnapshot> snapshots;
+	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	private final ChunkPreprocessor processor;
+	private final FileChunkSnapshotProvider provider;
+	private final Set<Coordinate> chunks = new HashSet<Coordinate>();
+	private final List<Coordinate> tiles = new ArrayList<Coordinate>();
 	
-	public ChunkManager(ChunkPreprocessor processor) {
+	public ChunkManager(ChunkPreprocessor processor, FileChunkSnapshotProvider provider) {
 		this.processor = processor;
+		this.provider = provider;
+	}
+	
+	public Lock getLock() {
+		return lock.readLock();
 	}
 	
 	public void enqueue(ChunkSnapshot chunkSnapshot) {
-		incoming.add(processor.processChunk(chunkSnapshot));
+		SerializableChunkSnapshot snapshot = processor.processChunk(chunkSnapshot);
+		try {
+			incoming.put(snapshot);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void startBatch() {
-		snapshots = new ConcurrentHashMap<Coordinate, ChunkSnapshot>();
-		while (!incoming.isEmpty()) {
-			ChunkSnapshot chunkSnapshot = incoming.remove();
-			snapshots.put(Coordinate.fromSnapshot(chunkSnapshot), chunkSnapshot);
+		lock.writeLock().lock();
+		chunks.addAll(provider.getTiles());
+		for (Coordinate chunk : chunks) {
+			tiles.add(chunk.zoomOut(3));
 		}
 	}
 	
-	public void render(ChunkRenderer chunkRenderer) { 
-		List<Future<?>> futures = new ArrayList<Future<?>>();
-		for (ChunkSnapshot snapshot : snapshots.values()) {
-			futures.add(executor.submit(new RenderChunkTask(chunkRenderer, snapshot)));
-		}
-		for (Future<?> future : futures) {
-			try {
-				future.get();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				System.out.println("Exception should be here! #1"); // TODO: Test
-			} catch (ExecutionException e) {
-				e.printStackTrace();
-				System.out.println("Exception should be here! #2");
+	public void render(ChunkRenderer chunkRenderer) {
+		for (Coordinate tile : tiles) {
+			List<Future<?>> futures = new ArrayList<Future<?>>();
+			for (Coordinate chunk : chunks) {
+				if (chunk.zoomOut(3).equals(tile)) {
+					futures.add(executor.submit(new RenderChunkTask(chunkRenderer, provider.getSnapshot(chunk))));
+				}
+			}
+			for (Future<?> future : futures) {
+				try {
+					future.get();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					System.out.println("Exception should be here! #1"); // TODO: Test
+				} catch (ExecutionException e) {
+					e.printStackTrace();
+					System.out.println("Exception should be here! #2");
+				}
 			}
 		}
 	}
 	
 	public void endBatch() {
-		snapshots = null;
+		tiles.clear();
+		chunks.clear();
+		lock.writeLock().unlock();
 	}
 	
 }

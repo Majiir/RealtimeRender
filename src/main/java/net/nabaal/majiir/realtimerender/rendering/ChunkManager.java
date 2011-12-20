@@ -49,10 +49,13 @@ public class ChunkManager {
 	}
 	
 	public void doSaveChunk() {
+		lock.readLock().lock();
 		try {
 			provider.setSnapshot(incoming.take());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		} finally {
+			lock.readLock().unlock();
 		}
 	}
 	

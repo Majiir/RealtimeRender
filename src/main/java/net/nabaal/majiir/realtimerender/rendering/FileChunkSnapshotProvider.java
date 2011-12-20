@@ -13,6 +13,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
@@ -27,7 +28,7 @@ public class FileChunkSnapshotProvider {
 		this.pattern = pattern;
 	}
 
-	protected SerializableChunkSnapshot getSnapshot(Coordinate chunk) {
+	public SerializableChunkSnapshot getSnapshot(Coordinate chunk) {
 		SerializableChunkSnapshot tile = null;
 		File file = pattern.getFile(chunk);
 		try {
@@ -49,7 +50,7 @@ public class FileChunkSnapshotProvider {
 		return tile;
 	}
 
-	protected void setSnapshot(SerializableChunkSnapshot snapshot) {
+	public void setSnapshot(SerializableChunkSnapshot snapshot) {
 		File file = pattern.getFile(Coordinate.fromSnapshot(snapshot));
 		try {
 			OutputStream fstream = new FileOutputStream(file);

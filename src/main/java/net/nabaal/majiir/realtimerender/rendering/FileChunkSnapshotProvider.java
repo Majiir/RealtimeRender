@@ -24,7 +24,7 @@ public class FileChunkSnapshotProvider {
 	
 	private final FilePattern pattern;
 	
-	public FileChunkSnapshotProvider(File directory, FilePattern pattern) {
+	public FileChunkSnapshotProvider(FilePattern pattern) {
 		this.pattern = pattern;
 	}
 

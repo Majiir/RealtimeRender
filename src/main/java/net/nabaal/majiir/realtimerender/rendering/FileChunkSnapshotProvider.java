@@ -67,4 +67,8 @@ public class FileChunkSnapshotProvider {
 		}
 	}
 	
+	public List<Coordinate> getTiles() {
+		return pattern.getTiles();
+	}
+	
 }

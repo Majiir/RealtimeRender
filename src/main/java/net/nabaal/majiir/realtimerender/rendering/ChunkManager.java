@@ -28,7 +28,7 @@ public class ChunkManager {
 	private final ChunkPreprocessor processor;
 	private final FileChunkSnapshotProvider provider;
 	private final Set<Coordinate> chunks = new HashSet<Coordinate>();
-	private final List<Coordinate> tiles = new ArrayList<Coordinate>();
+	private final Set<Coordinate> tiles = new HashSet<Coordinate>();
 	
 	public ChunkManager(ChunkPreprocessor processor, FileChunkSnapshotProvider provider) {
 		this.processor = processor;

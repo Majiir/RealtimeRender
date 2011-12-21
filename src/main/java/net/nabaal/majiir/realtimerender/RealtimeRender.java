@@ -25,8 +25,8 @@ public class RealtimeRender extends JavaPlugin {
 	private final RealtimeRenderWorldListener worldListener = new RealtimeRenderWorldListener(this);
 	
 	private final PluginCommitProvider commitProvider = new PluginCommitProvider();
-	private final ChunkManager chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(this.getDataFolder(), "world")));
-	private final ChunkSaveTask chunkSaveTask = new ChunkSaveTask(chunkManager);
+	private ChunkManager chunkManager;
+	private ChunkSaveTask chunkSaveTask;
 	
 	private World world;
 	private int startDelay;
@@ -52,6 +52,9 @@ public class RealtimeRender extends JavaPlugin {
 		startDelay = 60; // in seconds
 		intervalDelay = 120;
 		/* TODO: End configuration */
+		
+		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(this.getDataFolder(), "world")));
+		chunkSaveTask = new ChunkSaveTask(chunkManager);
 		
 		PluginManager pm = this.getServer().getPluginManager();
 		
@@ -90,7 +93,7 @@ public class RealtimeRender extends JavaPlugin {
 	}
 
 	private static ChunkSnapshot getChunkSnapshot(Chunk chunk) {
-		return chunk.getChunkSnapshot(true, false, true);
+		return chunk.getChunkSnapshot(true, true, true);
 	}
 	
 	public void enqueueChunk(Chunk chunk) {

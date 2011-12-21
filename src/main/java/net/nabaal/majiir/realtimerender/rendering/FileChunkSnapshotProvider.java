@@ -27,6 +27,10 @@ public class FileChunkSnapshotProvider {
 	public FileChunkSnapshotProvider(FilePattern pattern) {
 		this.pattern = pattern;
 	}
+	
+	public FilePattern getPattern() {
+		return this.pattern;
+	}
 
 	public SerializableChunkSnapshot getSnapshot(Coordinate chunk) {
 		SerializableChunkSnapshot tile = null;

@@ -15,7 +15,7 @@ public class ChunkFilePattern extends FilePattern {
 	public ChunkFilePattern(File parent, String prefix) {
 		super(parent);
 		this.prefix = prefix;
-		this.pattern = Pattern.compile(Pattern.quote(prefix) + "\\.chunk\\.(\\d)\\.(\\d)\\.dat");
+		this.pattern = Pattern.compile(Pattern.quote(prefix) + "\\.chunk\\.(\\-?\\d+)\\.(\\-?\\d+)\\.dat");
 	}
 	
 	@Override

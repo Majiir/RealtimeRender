@@ -22,7 +22,7 @@ import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 
 public class ChunkManager {
 	
-	private final BlockingQueue<SerializableChunkSnapshot> incoming = new ArrayBlockingQueue<SerializableChunkSnapshot>(200);
+	private final BlockingQueue<ChunkSnapshot> incoming = new ArrayBlockingQueue<ChunkSnapshot>(200);
 	private final ExecutorService executor = Executors.newCachedThreadPool();
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	private final ChunkPreprocessor processor;
@@ -40,9 +40,8 @@ public class ChunkManager {
 	}
 	
 	public void enqueue(ChunkSnapshot chunkSnapshot) {
-		SerializableChunkSnapshot snapshot = processor.processChunk(chunkSnapshot);
 		try {
-			incoming.put(snapshot);
+			incoming.put(chunkSnapshot);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -51,7 +50,8 @@ public class ChunkManager {
 	public void doSaveChunk() {
 		lock.readLock().lock();
 		try {
-			provider.setSnapshot(incoming.take());
+			SerializableChunkSnapshot snapshot = processor.processChunk(incoming.take());
+			provider.setSnapshot(snapshot);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {

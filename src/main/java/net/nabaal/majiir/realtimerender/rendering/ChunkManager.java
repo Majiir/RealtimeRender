@@ -53,7 +53,6 @@ public class ChunkManager {
 			SerializableChunkSnapshot snapshot = processor.processChunk(incoming.take());
 			provider.setSnapshot(snapshot);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
 		} finally {
 			lock.readLock().unlock();
 		}

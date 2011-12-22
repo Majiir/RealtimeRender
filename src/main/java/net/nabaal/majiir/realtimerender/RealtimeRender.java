@@ -32,13 +32,14 @@ public class RealtimeRender extends JavaPlugin {
 	private int startDelay;
 	private int intervalDelay;
 	private int saveThreads;
+	private boolean renderLoaded;
 	
 	@Override
 	public void onDisable() {	
 		log.info(String.format("%s: rendering loaded chunks...", this.getDescription().getName()));
 		
 		// TODO: Some way for tasks to not run simultaneously by accident, yet ensure the chunk queue is empty before shutting down.
-		new EnqueueAndRenderTask(this, true).run();
+		new EnqueueAndRenderTask(this, true, true).run();
 		
 		chunkSaveTask.stop();
 		
@@ -53,6 +54,7 @@ public class RealtimeRender extends JavaPlugin {
 		startDelay = 60; // in seconds
 		intervalDelay = 120;
 		saveThreads = 10;
+		renderLoaded = false;
 		/* TODO: End configuration */
 		
 		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(this.getDataFolder(), "world")));
@@ -63,7 +65,7 @@ public class RealtimeRender extends JavaPlugin {
 		pm.registerEvent(Event.Type.CHUNK_UNLOAD, worldListener, Event.Priority.Monitor, this);
 		pm.registerEvent(Event.Type.WORLD_UNLOAD, worldListener, Event.Priority.Monitor, this);
 		
-		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new EnqueueAndRenderTask(this, false), startDelay * 20, intervalDelay * 20);
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new EnqueueAndRenderTask(this, false, renderLoaded), startDelay * 20, intervalDelay * 20);
 		for (int i = 0; i < saveThreads; i++) {
 			this.getServer().getScheduler().scheduleAsyncDelayedTask(this, chunkSaveTask);
 		}

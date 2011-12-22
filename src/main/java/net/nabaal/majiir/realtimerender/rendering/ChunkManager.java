@@ -17,6 +17,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import org.bukkit.ChunkSnapshot;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
+import net.nabaal.majiir.realtimerender.RealtimeRender;
 import net.nabaal.majiir.realtimerender.RenderChunkTask;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 
@@ -91,7 +92,9 @@ public class ChunkManager {
 	public void endBatch() {
 		tiles.clear();
 		for (Coordinate chunk : chunks) {
-			provider.getPattern().getFile(chunk).delete();
+			if (!provider.getPattern().getFile(chunk).delete()) {
+				RealtimeRender.getLogger().warning("RealtimeRender: could not delete file for chunk: " + chunk);
+			}
 		}
 		chunks.clear();
 		lock.writeLock().unlock();

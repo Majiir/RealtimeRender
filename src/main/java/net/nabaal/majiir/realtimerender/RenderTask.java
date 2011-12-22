@@ -1,5 +1,6 @@
 package net.nabaal.majiir.realtimerender;
 
+import net.nabaal.majiir.realtimerender.image.ChangeFilter;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 import net.nabaal.majiir.realtimerender.image.CompositeImageBuilder;
 import net.nabaal.majiir.realtimerender.image.FileImageProvider;
@@ -78,10 +79,10 @@ public class RenderTask implements Runnable {
 		ip = rc;
 		wm = new ImageWriteMonitor(ip);
 		ip = wm;
-		//ip = new ChangeFilter(ip);
 		wc = new ImageWriteCache(ip);
 		ip = wc;
 		ip = new CompositeImageBuilder(ip, Coordinate.OFFSET_CHUNK_TILE);
+		ip = new ChangeFilter(ip);
 		ImageWriteCache wc1 = new ImageWriteCache(ip);
 		ip = wc1;
 		

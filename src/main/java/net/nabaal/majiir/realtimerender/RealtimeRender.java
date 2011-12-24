@@ -57,6 +57,10 @@ public class RealtimeRender extends JavaPlugin {
 		renderLoaded = false;
 		/* TODO: End configuration */
 		
+		if (this.getDataFolder().mkdir()) {
+			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));
+		}
+		
 		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(this.getDataFolder(), "world")));
 		chunkSaveTask = new ChunkSaveTask(chunkManager);
 		
@@ -71,10 +75,6 @@ public class RealtimeRender extends JavaPlugin {
 		}
 		
 		log.info(String.format("%s: enabled.", this.getDescription().getName()));
-		
-		if (this.getDataFolder().mkdir()) {
-			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));
-		}
 	}
 	
 	public void registerCommitPlugin(RealtimeRenderCommitPlugin commitPlugin) {

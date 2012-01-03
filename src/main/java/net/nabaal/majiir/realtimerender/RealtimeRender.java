@@ -50,6 +50,10 @@ public class RealtimeRender extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		
+		if (this.getDataFolder().mkdir()) {
+			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));
+		}
+		
 		Configuration config = this.getConfig();
 		
 		world = this.getServer().getWorld(config.getString("world"));
@@ -57,10 +61,6 @@ public class RealtimeRender extends JavaPlugin {
 		intervalDelay = config.getInt("intervalDelay");
 		saveThreads = config.getInt("saveThreads");
 		renderLoaded = config.getBoolean("renderLoaded");
-		
-		if (this.getDataFolder().mkdir()) {
-			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));
-		}
 		
 		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(this.getDataFolder(), "world")));
 		chunkSaveTask = new ChunkSaveTask(chunkManager);

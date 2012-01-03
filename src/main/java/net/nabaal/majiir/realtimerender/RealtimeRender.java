@@ -54,6 +54,10 @@ public class RealtimeRender extends JavaPlugin {
 			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));
 		}
 		
+		if (!new File(this.getDataFolder(), "config.yml").exists()) {
+			this.saveDefaultConfig();
+		}
+		
 		Configuration config = this.getConfig();
 		
 		world = this.getServer().getWorld(config.getString("world"));

@@ -13,6 +13,7 @@ import net.nabaal.majiir.realtimerender.rendering.NoOpChunkPreprocessor;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -49,13 +50,13 @@ public class RealtimeRender extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		
-		/* TODO: Begin configuration */
-		world = this.getServer().getWorld("world");
-		startDelay = 60; // in seconds
-		intervalDelay = 120;
-		saveThreads = 10;
-		renderLoaded = false;
-		/* TODO: End configuration */
+		Configuration config = this.getConfig();
+		
+		world = this.getServer().getWorld(config.getString("world"));
+		startDelay = config.getInt("startDelay");
+		intervalDelay = config.getInt("intervalDelay");
+		saveThreads = config.getInt("saveThreads");
+		renderLoaded = config.getBoolean("renderLoaded");
 		
 		if (this.getDataFolder().mkdir()) {
 			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));

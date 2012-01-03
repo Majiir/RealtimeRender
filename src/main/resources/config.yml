@@ -1,0 +1,5 @@
+world: world
+startDelay: 60
+intervalDelay: 120
+saveThreads: 10
+renderLoaded: false

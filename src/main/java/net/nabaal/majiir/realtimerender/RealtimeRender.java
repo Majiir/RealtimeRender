@@ -34,6 +34,8 @@ public class RealtimeRender extends JavaPlugin {
 	private int intervalDelay;
 	private int saveThreads;
 	private boolean renderLoaded;
+	private int zoomsIn;
+	private int zoomsOut;
 	
 	@Override
 	public void onDisable() {	
@@ -65,6 +67,8 @@ public class RealtimeRender extends JavaPlugin {
 		intervalDelay = config.getInt("intervalDelay");
 		saveThreads = config.getInt("saveThreads");
 		renderLoaded = config.getBoolean("renderLoaded");
+		zoomsIn = config.getInt("zoomsIn");
+		zoomsOut = config.getInt("zoomsOut");
 		
 		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(this.getDataFolder(), "world")));
 		chunkSaveTask = new ChunkSaveTask(chunkManager);
@@ -93,6 +97,14 @@ public class RealtimeRender extends JavaPlugin {
 	
 	public World getWorld() {
 		return this.world;
+	}
+	
+	public int getZoomsIn() {
+		return zoomsIn;
+	}
+	
+	public int getZoomsOut() {
+		return zoomsOut;
 	}
 	
 	public void commit(Iterable<File> files) {

@@ -1,5 +1,8 @@
 package net.nabaal.majiir.realtimerender;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.nabaal.majiir.realtimerender.image.ChangeFilter;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 import net.nabaal.majiir.realtimerender.image.CompositeImageBuilder;
@@ -89,13 +92,24 @@ public class RenderTask implements Runnable {
 		renderer = new DiffuseShadedChunkRenderer(ip, nm);
 		
 		// zoom out
-		ip = new CompositeImageBuilder(rc, 1);
-		ip = new ZoomImageBuilder(ip, 1); // note the common "1"
+		int zoomsOut = plugin.getZoomsOut();
+		List<WriteCache> caches = new ArrayList<WriteCache>(zoomsOut);
+		ip = rc;
+		for (int i = 0; i < zoomsOut; i++) {
+			ImageWriteCache zwc = new ImageWriteCache(ip);
+			caches.add(zoomsOut - (i + 1), zwc);
+			ip = zwc;
+			ip = new CompositeImageBuilder(ip, 1);
+			ip = new ZoomImageBuilder(ip, 1);
+		}		
 		wm.addListener(ip);
 		
-		// zoom in
-		ip = new CompositeImageBuilder(rc, -1);
-		ip = new ZoomImageBuilder(ip, -1);
+		// zoom in		
+		ip = rc;
+		for (int i = 0; i < plugin.getZoomsIn(); i++) {
+			ip = new CompositeImageBuilder(ip, -1);
+			ip = new ZoomImageBuilder(ip, -1);
+		}
 		wm.addListener(ip);
 	
 		plugin.getChunkManager().render(renderer);
@@ -105,6 +119,9 @@ public class RenderTask implements Runnable {
 		hm_rc1.clear();
 		wc1.commit();
 		wc.commit();
+		for (WriteCache cache : caches) {
+			cache.commit();
+		}
 		plugin.commit(fp.getChanged());
 		
 	}

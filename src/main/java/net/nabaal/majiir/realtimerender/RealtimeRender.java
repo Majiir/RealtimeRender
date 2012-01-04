@@ -83,6 +83,8 @@ public class RealtimeRender extends JavaPlugin {
 			this.getServer().getScheduler().scheduleAsyncDelayedTask(this, chunkSaveTask);
 		}
 		
+		getCommand("map").setExecutor(new CommandManager());
+		
 		log.info(String.format("%s: enabled.", this.getDescription().getName()));
 	}
 	

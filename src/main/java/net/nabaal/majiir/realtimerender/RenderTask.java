@@ -94,8 +94,8 @@ public class RenderTask implements Runnable {
 		wm.addListener(ip);
 		
 		// zoom in
-		ip = new ZoomImageBuilder(ip, -1);
 		ip = new CompositeImageBuilder(rc, -1);
+		ip = new ZoomImageBuilder(ip, -1);
 		wm.addListener(ip);
 	
 		plugin.getChunkManager().render(renderer);

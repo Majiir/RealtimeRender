@@ -93,6 +93,11 @@ public class RenderTask implements Runnable {
 		WriteCache[] caches = new WriteCache[zoomsOut];
 		ip = rc;
 		for (int i = zoomsOut; i > 0; i--) {
+			if (ip != rc) {
+				ImageWriteMonitor zwm = new ImageWriteMonitor(rc);
+				zwm.addListener(ip);
+				ip = zwm;
+			}
 			ImageWriteCache zwc = new ImageWriteCache(ip);
 			caches[i - 1] = zwc;
 			ip = zwc;
@@ -104,6 +109,11 @@ public class RenderTask implements Runnable {
 		// zoom in		
 		ip = rc;
 		for (int i = 0; i < plugin.getZoomsIn(); i++) {
+			if (ip != rc) {
+				ImageWriteMonitor zwm = new ImageWriteMonitor(rc);
+				zwm.addListener(ip);
+				ip = zwm;
+			}
 			ip = new CompositeImageBuilder(ip, -1);
 			ip = new ZoomImageBuilder(ip, -1);
 		}

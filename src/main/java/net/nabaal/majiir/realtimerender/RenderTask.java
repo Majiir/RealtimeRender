@@ -1,8 +1,5 @@
 package net.nabaal.majiir.realtimerender;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.nabaal.majiir.realtimerender.image.ChangeFilter;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 import net.nabaal.majiir.realtimerender.image.CompositeImageBuilder;

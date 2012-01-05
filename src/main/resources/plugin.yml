@@ -6,5 +6,5 @@ description: Maintains a frequently-updated map render.
 commands:
   map:
     description: Prints a hello message
-      usage: |
-        /<command> - prints a hello message
+    usage: |
+      /<command> - prints a hello message

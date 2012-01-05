@@ -20,7 +20,11 @@ public class ZoomImageBuilder extends ImageProvider {
 	
 	@Override
 	public BufferedImage getImage(Coordinate tile) {
-		return getZoomImage(source.getImage(tile));
+		BufferedImage image = source.getImage(tile);
+		if (image != null) {
+			image = getZoomImage(image);
+		}
+		return image;
 	}
 
 	@Override

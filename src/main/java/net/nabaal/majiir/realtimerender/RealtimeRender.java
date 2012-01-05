@@ -37,6 +37,8 @@ public class RealtimeRender extends JavaPlugin {
 	private int zoomsIn;
 	private int zoomsOut;
 	
+	private boolean redoZooms = false; 
+	
 	@Override
 	public void onDisable() {	
 		log.info(String.format("%s: rendering loaded chunks...", this.getDescription().getName()));
@@ -83,7 +85,7 @@ public class RealtimeRender extends JavaPlugin {
 			this.getServer().getScheduler().scheduleAsyncDelayedTask(this, chunkSaveTask);
 		}
 		
-		getCommand("map").setExecutor(new CommandManager());
+		getCommand("map").setExecutor(new CommandManager(this));
 		
 		log.info(String.format("%s: enabled.", this.getDescription().getName()));
 	}
@@ -107,6 +109,14 @@ public class RealtimeRender extends JavaPlugin {
 	
 	public int getZoomsOut() {
 		return zoomsOut;
+	}
+	
+	public boolean getRedoZooms() {
+		return redoZooms;
+	}
+	
+	public void setRedoZooms(boolean redoZooms) {
+		this.redoZooms = redoZooms;
 	}
 	
 	public void commit(Iterable<File> files) {

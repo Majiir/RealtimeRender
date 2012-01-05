@@ -126,6 +126,17 @@ public class RenderTask implements Runnable {
 		hm_rc1.clear();
 		wc1.commit();
 		wc.commit();
+		if (plugin.getRedoZooms()) {
+			RealtimeRender.getLogger().info("RealtimeRender: zooms: rebuilding...");
+			for (Coordinate tile : fp.getTiles()) {
+				if (tile.getLevel() == Coordinate.LEVEL_TILE) {
+					wc.setImage(tile, rc.getImage(tile));
+				}
+			}
+			wc.commit();
+			plugin.setRedoZooms(false);
+			RealtimeRender.getLogger().info("RealtimeRender: zooms: done!");
+		}
 		for (WriteCache cache : caches) {
 			cache.commit();
 		}

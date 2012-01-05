@@ -15,7 +15,7 @@ public class CommandManager implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (args[0].equals("zooms")) {
+		if ((args.length > 0) && args[0].equals("zooms")) {
 			if (!sender.isOp()) {
 				sender.sendMessage(ChatColor.RED + "You must be an op to do that!");
 				return true;

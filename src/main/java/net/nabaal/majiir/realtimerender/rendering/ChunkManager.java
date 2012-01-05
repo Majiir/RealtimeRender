@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -51,8 +52,11 @@ public class ChunkManager {
 	public void doSaveChunk() {
 		lock.readLock().lock();
 		try {
-			SerializableChunkSnapshot snapshot = processor.processChunk(incoming.take());
-			provider.setSnapshot(snapshot);
+			ChunkSnapshot chunk = incoming.poll(10, TimeUnit.MILLISECONDS);
+			if (chunk != null) {
+				SerializableChunkSnapshot snapshot = processor.processChunk(chunk);
+				provider.setSnapshot(snapshot);
+			}
 		} catch (InterruptedException e) {
 		} finally {
 			lock.readLock().unlock();

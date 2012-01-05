@@ -20,15 +20,15 @@ public class ZoomImageBuilder extends ImageProvider {
 	
 	@Override
 	public BufferedImage getImage(Coordinate tile) {
-		throw new UnsupportedOperationException("Must refactor first!");
-		//BufferedImage image = source.getImage(tile);
-		// TODO: Use an AffineTransform or Graphics2D to perform scaling.
-		//return (BufferedImage) image.getScaledInstance(image.getWidth() << zoom, image.getHeight() << zoom, BufferedImage.SCALE_REPLICATE);
+		return getZoomImage(source.getImage(tile));
 	}
 
 	@Override
 	public void setImage(Coordinate tile, BufferedImage image) {
-		
+		source.setImage(tile, getZoomImage(image));
+	}
+
+	private BufferedImage getZoomImage(BufferedImage image) {
 		int width = image.getWidth();
 		int height = image.getHeight();
 		
@@ -53,8 +53,7 @@ public class ZoomImageBuilder extends ImageProvider {
 		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, hint);
 		
 		graphics.drawImage(image, 0, 0, width, height, null);
-		source.setImage(tile, newImg);
-		
+		return newImg;
 	}
 
 	@Override

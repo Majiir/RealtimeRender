@@ -86,6 +86,26 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 			case LONG_GRASS:
 				color = setAlpha(computeShadedColor(new Color(getBiomeGrassColor(chunkSnapshot, x, z)), 0.5), 96);
 				break;
+			case WOOL:
+				int colorVal = chunkSnapshot.getBlockData(x, y, z) & 0xF;
+				switch (colorVal) {
+				case 0: color = new Color(0xdcdcdc); break; // white
+				case 1: color = new Color(0xe77e34); break; // orange
+				case 2: color = new Color(0xc050c8); break; // magenta
+				case 3: color = new Color(0x6084c2); break; // light blue
+				case 4: color = new Color(0xbdb520); break; // yellow
+				case 5: color = new Color(0x43b428); break; // lime
+				case 6: color = new Color(0xcf7a95); break; // pink
+				case 7: color = new Color(0x424545); break; // gray
+				case 8: color = new Color(0x9da3a3); break; // light gray
+				case 9: color = new Color(0x2b729d); break; // cyan
+				case 10: color = new Color(0x7335c2); break; // purple
+				case 11: color = new Color(0x2a379b); break; // blue
+				case 12: color = new Color(0x5f3a23); break; // brown
+				case 13: color = new Color(0x3a5a29); break; // green
+				case 14: color = new Color(0x9f2f28); break; // red
+				case 15: color = new Color(0x241819); break; // black
+				}
 			default:
 				//RealtimeRender.getLogger().warning(String.format("RealtimeRender: missing color for material '%s'!", material.toString()));
 				color = new Color(0xFF00FF);
@@ -101,6 +121,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 			case AIR:			return new Color(0, 0, 0, 0);
 			case STONE:			return new Color(128, 132, 136);
 			case VINE:			return new Color(0, 0xDD, 0, 32);
+			case WATER_LILY:	return new Color(0, 0xDD, 0, 32);
 			case YELLOW_FLOWER:	return new Color(0xDD, 0xDD, 0, 192);
 			case DIRT:				return new Color(134, 96, 67);
 			case COBBLESTONE: 		return new Color(100, 100, 100);
@@ -154,7 +175,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 			case SNOW_BLOCK: return new Color(205,205,205,255);
 			case CACTUS: return new Color(85,107,47,255);  
 			case CLAY: return new Color(144,152,168,255);
-			case SUGAR_CANE: return new Color(193,234,150,255);
+			case SUGAR_CANE_BLOCK: return new Color(193,234,150,255);
 			case JUKEBOX: return new Color(125,66,44,255);  
 			case FENCE: return new Color(88,54,22,200);   
 			case PUMPKIN: return new Color(227,144,29,255); 
@@ -164,6 +185,16 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 			case PORTAL: return new Color(60,13,106,127);  
 			case JACK_O_LANTERN: return new Color(227,144,29,255); 
 			case CAKE_BLOCK: return new Color(228,205,206,255);
+			case RED_ROSE: return new Color(111,1,1,255);
+			case SMOOTH_BRICK: return new Color(128, 132, 136);
+			case SMOOTH_STAIRS: return new Color(128, 132, 136);
+			case MELON_BLOCK: return new Color(153,194,110,255);
+			case MELON_STEM: return new Color(102,81,51,64);
+			case PUMPKIN_STEM: return new Color(102,81,51,64);
+			case MYCEL: return new Color(0x7b6e83);
+			case HUGE_MUSHROOM_1: return new Color(111,1,1,255);
+			case HUGE_MUSHROOM_2: return new Color(102,81,51);
+			case DEAD_BUSH: return new Color(157, 128, 79, 70);
 			
 			default: return null;
 		}

@@ -106,11 +106,11 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 				case 14: color = new Color(0x9f2f28); break; // red
 				case 15: color = new Color(0x241819); break; // black
 				}
+				break;
 			default:
 				//RealtimeRender.getLogger().warning(String.format("RealtimeRender: missing color for material '%s'!", material.toString()));
 				color = new Color(0xFF00FF);
 			}
-		
 		}
 		
 		return color;

@@ -2,14 +2,9 @@ package net.nabaal.majiir.realtimerender.rendering;
 
 import java.awt.Color;
 
-import org.bukkit.Material;
 import org.bukkit.block.Biome;
 
-public abstract class BiomeMaterialColor extends MaterialColor {
-
-	public BiomeMaterialColor(Material material) {
-		super(material);
-	}
+public abstract class BiomeMaterialColor implements MaterialColor {
 	
 	public abstract Color getColor(double rainfall, double temperature, Biome biome);
 

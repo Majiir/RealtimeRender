@@ -29,6 +29,11 @@ public class DefaultColorPalette implements ColorPalette {
 	
 	@Override
 	public Color getMaterialColor(Material material, int data, int x, int z, double rainfall, double temperature, Biome biome) {
+		x %= 16;
+		z %= 16;
+		if (x < 0) { x += 16; }
+		if (z < 0) { z += 16; }
+		
 		switch (material) {
 			case AIR: return new Color(0, 0, 0, 0);
 			case STONE: return new Color(128, 132, 136);

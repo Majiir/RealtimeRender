@@ -88,18 +88,13 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 	}
 	
 	public double computeDiffuseShading(ChunkSnapshot chunkSnapshot, int x, int z) {	
-		Float64Vector n = computeTerrainNormal(chunkSnapshot, x, z);
+		Float64Vector n = this.normalMap.getNormal(Coordinate.fromSnapshot(chunkSnapshot).zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, z, Coordinate.LEVEL_BLOCK)));
 		Float64Vector light = Float64Vector.valueOf(-1, -1, -1);
 		if (n == null) {
 			return -1;
 		}
 		double shading = n.times(light).divide((n.norm().times(light.norm()))).doubleValue();
 		return ((shading + 1) * 0.4) + 0.15;
-	}
-		
-	public Float64Vector computeTerrainNormal(ChunkSnapshot chunkSnapshot, int x, int z) {
-		Coordinate chunk = Coordinate.fromSnapshot(chunkSnapshot);
-		return this.normalMap.getNormal(chunk.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, z, Coordinate.LEVEL_BLOCK))); 
 	}
 	
 	public static int getTerrainHeight(ChunkSnapshot chunkSnapshot, int x, int z) {

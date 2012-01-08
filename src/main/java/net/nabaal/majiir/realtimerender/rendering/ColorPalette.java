@@ -7,6 +7,6 @@ import org.bukkit.block.Biome;
 
 public interface ColorPalette {
 
-	public Color getMaterialColor(Material material, int x, int z, double rainfall, double temperature, Biome biome);
+	public Color getMaterialColor(Material material, int data, int x, int z, double rainfall, double temperature, Biome biome);
 
 }

@@ -2,15 +2,13 @@ package net.nabaal.majiir.realtimerender.rendering;
 
 import java.awt.Color;
 
-import org.bukkit.Material;
 import org.bukkit.block.Biome;
 
-public class SimpleMaterialColor extends MaterialColor {
+public class SimpleMaterialColor implements MaterialColor {
 
 	private final Color color;
 	
-	public SimpleMaterialColor(Material material, Color color) {
-		super(material);
+	public SimpleMaterialColor(Color color) {
 		this.color = color;
 	}
 

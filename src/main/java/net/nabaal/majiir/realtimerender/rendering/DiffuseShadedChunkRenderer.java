@@ -87,33 +87,6 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		}
 	}
 	
-	public static Color computeShadedColor(Color color, double multiplier) {		
-		int r = color.getRed();
-		int g = color.getGreen();
-		int b = color.getBlue();
-		
-		if (multiplier < 1) {
-			r *= multiplier;
-			g *= multiplier;
-			b *= multiplier;	
-		}
-		
-		r *= multiplier;
-		g *= multiplier;
-		b *= multiplier;
-	
-		r = Math.min(r, 255);
-		g = Math.min(g, 255);
-		b = Math.min(b, 255);
-		
-		r = Math.max(r, 0);
-		g = Math.max(g, 0);
-		b = Math.max(b, 0);
-		
-		return new Color(r, g, b, color.getAlpha());
-	}
-	
-	
 	public double computeDiffuseShading(ChunkSnapshot chunkSnapshot, int x, int z) {	
 		Float64Vector n = computeTerrainNormal(chunkSnapshot, x, z);
 		Float64Vector light = Float64Vector.valueOf(-1, -1, -1);
@@ -123,14 +96,12 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		double shading = n.times(light).divide((n.norm().times(light.norm()))).doubleValue();
 		return ((shading + 1) * 0.4) + 0.15;
 	}
-	
-	
+		
 	public Float64Vector computeTerrainNormal(ChunkSnapshot chunkSnapshot, int x, int z) {
 		Coordinate chunk = Coordinate.fromSnapshot(chunkSnapshot);
 		return this.normalMap.getNormal(chunk.zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, z, Coordinate.LEVEL_BLOCK))); 
 	}
 	
-
 	public static int getTerrainHeight(ChunkSnapshot chunkSnapshot, int x, int z) {
 		int y = chunkSnapshot.getHighestBlockYAt(x, z);
 		Material material;

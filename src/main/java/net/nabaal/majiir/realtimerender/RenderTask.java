@@ -12,6 +12,7 @@ import net.nabaal.majiir.realtimerender.image.ReadCache;
 import net.nabaal.majiir.realtimerender.image.WriteCache;
 import net.nabaal.majiir.realtimerender.image.ZoomImageBuilder;
 import net.nabaal.majiir.realtimerender.rendering.AdaptiveNormalMap;
+import net.nabaal.majiir.realtimerender.rendering.DefaultColorPalette;
 import net.nabaal.majiir.realtimerender.rendering.NormalMapReadCache;
 import net.nabaal.majiir.realtimerender.rendering.CircleAverageNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.DiffuseShadedChunkRenderer;
@@ -86,7 +87,7 @@ public class RenderTask implements Runnable {
 		ImageWriteCache wc1 = new ImageWriteCache(ip);
 		ip = wc1;
 		
-		renderer = new DiffuseShadedChunkRenderer(ip, nm);
+		renderer = new DiffuseShadedChunkRenderer(ip, nm, new DefaultColorPalette());
 		
 		// zoom out
 		int zoomsOut = plugin.getZoomsOut();

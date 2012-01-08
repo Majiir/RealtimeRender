@@ -52,7 +52,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		imageProvider.setImage(Coordinate.fromSnapshot(chunkSnapshot), image);
 	}
 	
-	public Color getMaterialColor(Material material, ChunkSnapshot chunkSnapshot, int x, int y, int z) {
+	private Color getMaterialColor(Material material, ChunkSnapshot chunkSnapshot, int x, int y, int z) {
 		x += (chunkSnapshot.getX() * 16);
 		z += (chunkSnapshot.getZ() * 16);
 		
@@ -73,11 +73,11 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		return Material.getMaterial(chunkSnapshot.getBlockTypeId(x, y + 1, z)) == Material.STATIONARY_WATER;
 	}
 	
-	public static Color setAlpha(Color color, int a) {
+	private static Color setAlpha(Color color, int a) {
 		return new Color(color.getRed(), color.getGreen(), color.getBlue(), a);
 	}
 	
-	public static Color computeShadeColor(double shading) {
+	private static Color computeShadeColor(double shading) {
 		if (shading < 0.5) {
 			return new Color(0, 0, 0, (int) Math.floor((1 - (shading * 2)) * 255));
 		} else if (shading < 1.0) {
@@ -87,7 +87,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		}
 	}
 	
-	public double computeDiffuseShading(ChunkSnapshot chunkSnapshot, int x, int z) {	
+	private double computeDiffuseShading(ChunkSnapshot chunkSnapshot, int x, int z) {	
 		Float64Vector n = this.normalMap.getNormal(Coordinate.fromSnapshot(chunkSnapshot).zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, z, Coordinate.LEVEL_BLOCK)));
 		Float64Vector light = Float64Vector.valueOf(-1, -1, -1);
 		if (n == null) {
@@ -97,7 +97,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		return ((shading + 1) * 0.4) + 0.15;
 	}
 	
-	public static int getTerrainHeight(ChunkSnapshot chunkSnapshot, int x, int z) {
+	private static int getTerrainHeight(ChunkSnapshot chunkSnapshot, int x, int z) {
 		int y = chunkSnapshot.getHighestBlockYAt(x, z);
 		Material material;
 		do {

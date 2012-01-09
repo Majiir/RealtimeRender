@@ -87,8 +87,8 @@ public class DefaultColorPalette implements ColorPalette {
 		colors.put(Material.MELON_STEM, new SimpleMaterialColor(new Color(102, 81, 51, 64)));
 		colors.put(Material.PUMPKIN_STEM, new SimpleMaterialColor(new Color(102, 81, 51, 64)));
 		colors.put(Material.MYCEL, new SimpleMaterialColor(new Color(0x7b6e83)));
-		colors.put(Material.HUGE_MUSHROOM_1, new SimpleMaterialColor(new Color(111, 1, 1, 255)));
-		colors.put(Material.HUGE_MUSHROOM_2, new SimpleMaterialColor(new Color(102, 81, 51)));
+		colors.put(Material.HUGE_MUSHROOM_1, new SimpleMaterialColor(new Color(102, 81, 51)));
+		colors.put(Material.HUGE_MUSHROOM_2, new SimpleMaterialColor(new Color(111, 1, 1, 255)));
 		colors.put(Material.DEAD_BUSH, new SimpleMaterialColor(new Color(157, 128, 79, 70)));
 	}
 	

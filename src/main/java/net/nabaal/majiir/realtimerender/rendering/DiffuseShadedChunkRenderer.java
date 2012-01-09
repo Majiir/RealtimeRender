@@ -53,10 +53,8 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 	}
 	
 	private Color getMaterialColor(Material material, ChunkSnapshot chunkSnapshot, int x, int y, int z) {
-		x += (chunkSnapshot.getX() * 16);
-		z += (chunkSnapshot.getZ() * 16);
 		
-		Color color = colorPalette.getMaterialColor(material).getColor(chunkSnapshot.getBlockData(x, y, z), x, z, chunkSnapshot.getRawBiomeRainfall(x, z), chunkSnapshot.getRawBiomeTemperature(x, z), chunkSnapshot.getBiome(x, z));
+		Color color = colorPalette.getMaterialColor(material).getColor(chunkSnapshot.getBlockData(x, y, z), x + (chunkSnapshot.getX() * 16), z + (chunkSnapshot.getZ() * 16), chunkSnapshot.getRawBiomeRainfall(x, z), chunkSnapshot.getRawBiomeTemperature(x, z), chunkSnapshot.getBiome(x, z));
 		
 		if (color != null) {
 			if (material.equals(Material.WATER) && isUnderWater(chunkSnapshot, x, y, z)) {

@@ -1,8 +1,8 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
 import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
 
@@ -10,7 +10,7 @@ import org.bukkit.Material;
 
 public class DefaultColorPalette implements ColorPalette {
 
-	private final Map<Material, MaterialColor> colors = new HashMap<Material, MaterialColor>();
+	private final ConcurrentMap<Material, MaterialColor> colors = new ConcurrentHashMap<Material, MaterialColor>();
 	
 	public DefaultColorPalette() {
 		colors.put(Material.AIR, new SimpleMaterialColor(new Color(0, 0, 0, 0)));

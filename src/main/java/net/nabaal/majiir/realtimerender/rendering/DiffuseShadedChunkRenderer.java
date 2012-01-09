@@ -53,18 +53,18 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 	}
 	
 	private Color getMaterialColor(Material material, ChunkSnapshot chunkSnapshot, int x, int y, int z) {
-		
-		Color color = colorPalette.getMaterialColor(material).getColor(chunkSnapshot.getBlockData(x, y, z), x + (chunkSnapshot.getX() * 16), z + (chunkSnapshot.getZ() * 16), chunkSnapshot.getRawBiomeRainfall(x, z), chunkSnapshot.getRawBiomeTemperature(x, z), chunkSnapshot.getBiome(x, z));
-		
-		if (color != null) {
-			if (material.equals(Material.WATER) && isUnderWater(chunkSnapshot, x, y, z)) {
-				color = setAlpha(color, 32);
+		MaterialColor materialColor = colorPalette.getMaterialColor(material);
+		if (materialColor != null) {
+			Color color = materialColor.getColor(chunkSnapshot.getBlockData(x, y, z), x + (chunkSnapshot.getX() * 16), z + (chunkSnapshot.getZ() * 16), chunkSnapshot.getRawBiomeRainfall(x, z), chunkSnapshot.getRawBiomeTemperature(x, z), chunkSnapshot.getBiome(x, z));
+			if (color != null) {
+				if (material.equals(Material.WATER) && isUnderWater(chunkSnapshot, x, y, z)) {
+					color = setAlpha(color, 32);
+				}
+				return color;
 			}
-		} else {
-			//RealtimeRender.getLogger().warning(String.format("RealtimeRender: missing color for material '%s'!", material.toString()));
-			color = new Color(0xFF00FF);
 		}
-		return color;
+		//RealtimeRender.getLogger().warning(String.format("RealtimeRender: missing color for material '%s'!", material.toString()));
+		return new Color(0xFF00FF);
 	}
 	
 	private static boolean isUnderWater(ChunkSnapshot chunkSnapshot, int x, int y, int z) {

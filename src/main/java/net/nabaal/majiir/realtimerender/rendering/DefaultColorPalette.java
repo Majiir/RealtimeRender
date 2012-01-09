@@ -10,7 +10,7 @@ import org.bukkit.Material;
 
 public class DefaultColorPalette implements ColorPalette {
 
-	private final Map<Material, SimpleMaterialColor> colors = new HashMap<Material, SimpleMaterialColor>();
+	private final Map<Material, MaterialColor> colors = new HashMap<Material, MaterialColor>();
 	
 	public DefaultColorPalette() {
 		colors.put(Material.AIR, new SimpleMaterialColor(new Color(0, 0, 0, 0)));
@@ -90,33 +90,16 @@ public class DefaultColorPalette implements ColorPalette {
 		colors.put(Material.HUGE_MUSHROOM_1, new SimpleMaterialColor(new Color(102, 81, 51)));
 		colors.put(Material.HUGE_MUSHROOM_2, new SimpleMaterialColor(new Color(111, 1, 1, 255)));
 		colors.put(Material.DEAD_BUSH, new SimpleMaterialColor(new Color(157, 128, 79, 70)));
+		colors.put(Material.WOOL, new WoolMaterialColor());
+		colors.put(Material.GRASS, new GrassMaterialColor());
+		colors.put(Material.LONG_GRASS, new LongGrassMaterialColor());
+		colors.put(Material.STATIONARY_WATER, new WaterMaterialColor());
+		colors.put(Material.LEAVES, new FoliageMaterialColor());
 	}
 	
 	@Override
 	public MaterialColor getMaterialColor(Material material) {
-		
-		if (material.equals(Material.WOOL)) {
-			return new WoolMaterialColor();
-		}
-		
-		if (material.equals(Material.GRASS)) {
-			return new GrassMaterialColor();
-		}
-		
-		if (material.equals(Material.LONG_GRASS)) {
-			return new LongGrassMaterialColor();
-		}
-		
-		if (material.equals(Material.STATIONARY_WATER)) {
-			return new WaterMaterialColor();
-		}
-		
-		if (material.equals(Material.LEAVES)) {
-			return new FoliageMaterialColor();
-		}
-		
 		return colors.get(material);
-		
 	}
 	
 	public static Color setAlpha(Color color, int a) {

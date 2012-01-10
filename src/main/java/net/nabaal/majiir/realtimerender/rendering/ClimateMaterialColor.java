@@ -1,16 +1,36 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 import org.bukkit.block.Biome;
 
-public abstract class ClimateMaterialColor implements MaterialColor {
+public class ClimateMaterialColor implements MaterialColor {
 	
-	public abstract Color getColor(double rainfall, double temperature, Biome biome);
-
-	@Override
-	public final Color getColor(int data, int x, int z, double rainfall, double temperature, Biome biome) {
-		return getColor(rainfall, temperature, biome);
+	private final BufferedImage gradient;
+	private final boolean flip;
+	
+	public ClimateMaterialColor(BufferedImage gradient) {
+		this(gradient, false);
+	}
+	
+	public ClimateMaterialColor(BufferedImage gradient, boolean flip) {
+		this.gradient = gradient;
+		this.flip = flip;
 	}
 
+	@Override
+	public Color getColor(int data, int x, int z, double rainfall, double temperature, Biome biome) {
+		rainfall *= temperature;
+		int width = gradient.getWidth() - 1;
+		int height = gradient.getHeight() - 1;
+		int i = (int)((1.0d - temperature) * width);
+		int j = (int)((1.0d - rainfall) * height);
+		if (flip) {
+			i = width - i;
+			j = height - j;
+		}
+		return new Color(gradient.getRGB(i, j), true);
+	}
+	
 }

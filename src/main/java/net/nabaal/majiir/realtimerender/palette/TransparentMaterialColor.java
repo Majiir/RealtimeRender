@@ -17,6 +17,7 @@ public class TransparentMaterialColor implements MaterialColor {
 	@Override
 	public Color getColor(int data, int x, int z, double rainfall, double temperature, Biome biome) {
 		Color color = source.getColor(data, x, z, rainfall, temperature, biome);
+		if (color == null) { return null; }
 		return new Color(color.getRed(), color.getGreen(), color.getBlue(), (int)(color.getAlpha() * multiplier));
 	}
 

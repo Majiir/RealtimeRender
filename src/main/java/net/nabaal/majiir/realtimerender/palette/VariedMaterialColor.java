@@ -18,6 +18,7 @@ public class VariedMaterialColor implements MaterialColor {
 	}
 
 	public Color getColor(int x, int z, Color color) {
+		if (color == null) { return null; }
 		final int prime = 29;
 		int hash = 1;
 		hash = prime * hash + x;

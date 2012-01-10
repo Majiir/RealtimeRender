@@ -76,19 +76,30 @@ public final class Coordinate implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		Coordinate other = (Coordinate) obj;
-		return (getX() == other.getX()) && (getY() == other.getY()) && (getLevel() == other.getLevel());
-	}
-
-	@Override
 	public String toString() {
 		return String.format("(%d, %d) [%d]", this.getX(), this.getY(), this.getLevel());
 	}
 
 	@Override
 	public int hashCode() {
-		return ((Integer)getX()).hashCode() ^ ((Integer)getY()).hashCode() ^ ((Integer)getLevel()).hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + level;
+		result = prime * result + x;
+		result = prime * result + y;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) { return true; }
+		if (obj == null) { return false; }
+		if (!(obj instanceof Coordinate)) { return false; }
+		Coordinate other = (Coordinate) obj;
+		if (level != other.level) { return false; }
+		if (x != other.x) { return false; }
+		if (y != other.y) { return false; }
+		return true;
 	}
 
 }

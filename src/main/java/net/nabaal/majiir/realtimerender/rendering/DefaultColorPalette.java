@@ -25,7 +25,7 @@ public class DefaultColorPalette implements ColorPalette {
 		colors.put(Material.BEDROCK, new SimpleMaterialColor(new Color(84, 84, 84)));
 		colors.put(Material.STATIONARY_LAVA, new SimpleMaterialColor(new Color(255, 108, 16))); 
 		colors.put(Material.LAVA, new SimpleMaterialColor(new Color(255, 108, 16)));
-		colors.put(Material.SAND, new SimpleMaterialColor(new Color(218, 210, 158)));
+		colors.put(Material.SAND, new VariedMaterialColor(new Color(218, 210, 158), 4, 8));
 		colors.put(Material.GRAVEL, new SimpleMaterialColor(new Color(136, 126, 126)));
 		colors.put(Material.GOLD_ORE, new SimpleMaterialColor(new Color(143, 140, 125)));
 		colors.put(Material.IRON_ORE, new SimpleMaterialColor(new Color(136, 130, 127)));

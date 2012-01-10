@@ -1,12 +1,17 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.imageio.ImageIO;
+
 import net.nabaal.majiir.realtimerender.Coordinate;
+import net.nabaal.majiir.realtimerender.RealtimeRender;
 
 import org.bukkit.Material;
 
@@ -110,11 +115,28 @@ public class DefaultColorPalette implements ColorPalette {
 		woolColors.put(0xE, new SimpleMaterialColor(new Color(0x9f2f28))); // red
 		woolColors.put(0xF, new SimpleMaterialColor(new Color(0x241819))); // black	
 		colors.put(Material.WOOL, new MetadataMaterialColor(woolColors));
-		colors.put(Material.GRASS, new GrassMaterialColor());
-		colors.put(Material.LONG_GRASS, new LongGrassMaterialColor());
-		colors.put(Material.STATIONARY_WATER, new WaterMaterialColor());
+		BufferedImage foliage = null;
+		BufferedImage grass = null;
+		BufferedImage longgrass = null;
+		BufferedImage water = null;
+		try {
+			foliage = ImageIO.read(getClass().getResource("/images/foliagecolor.png"));
+			grass = ImageIO.read(getClass().getResource("/images/grasscolor.png"));
+			longgrass = ImageIO.read(getClass().getResource("/images/longgrasscolor.png"));
+			water = ImageIO.read(getClass().getResource("/images/watercolor.png"));
+		} catch (IOException e) {
+			RealtimeRender.getLogger().severe("Failed to load palette resources!");
+		}
+		colors.put(Material.GRASS, new ClimateMaterialColor(grass));
+		colors.put(Material.LONG_GRASS, new TransparentMaterialColor(new ClimateMaterialColor(longgrass), 0.375));
+		colors.put(Material.STATIONARY_WATER, new TransparentMaterialColor(new ClimateMaterialColor(water), 0.75));
 		colors.put(Material.WATER, colors.get(Material.STATIONARY_WATER));
-		colors.put(Material.LEAVES, new FoliageMaterialColor());
+		Map<Integer, MaterialColor> leaves = new HashMap<Integer, MaterialColor>();
+		leaves.put(0x0, new TransparentMaterialColor(new ClimateMaterialColor(foliage), 0.375));
+		leaves.put(0x1, leaves.get(0x0));
+		leaves.put(0x2, new TransparentMaterialColor(new ClimateMaterialColor(foliage, true), 0.375));
+		leaves.put(0x3, leaves.get(0x0));
+		colors.put(Material.LEAVES, new MetadataMaterialColor(leaves));
 	}
 	
 	@Override

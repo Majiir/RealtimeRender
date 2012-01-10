@@ -1,4 +1,4 @@
-package net.nabaal.majiir.realtimerender.rendering;
+package net.nabaal.majiir.realtimerender.palette;
 
 import org.bukkit.Material;
 

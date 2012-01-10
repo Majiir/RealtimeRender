@@ -7,6 +7,8 @@ import java.awt.image.BufferedImage;
 import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 import net.nabaal.majiir.realtimerender.image.ImageProvider;
+import net.nabaal.majiir.realtimerender.palette.ColorPalette;
+import net.nabaal.majiir.realtimerender.palette.MaterialColor;
 
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Material;

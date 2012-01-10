@@ -1,16 +1,36 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
 import java.awt.Color;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.bukkit.block.Biome;
 
-public abstract class MetadataMaterialColor implements MaterialColor {
-
-	public abstract Color getColor(int data);
+public class MetadataMaterialColor implements MaterialColor {
+	
+	private final ConcurrentMap<Integer, MaterialColor> colors = new ConcurrentHashMap<Integer, MaterialColor>();
+	private final MaterialColor fallback;
+	
+	public MetadataMaterialColor(Map<Integer, MaterialColor> colors) {
+		this(colors, null);
+	}
+	
+	public MetadataMaterialColor(Map<Integer, MaterialColor> colors, MaterialColor fallback) {
+		this.colors.putAll(colors);
+		this.fallback = fallback;
+	}
 	
 	@Override
 	public Color getColor(int data, int x, int z, double rainfall, double temperature, Biome biome) {
-		return getColor(data);
+		MaterialColor color = colors.get(data);
+		if (color == null) {
+			if (fallback == null) {
+				return null;
+			}
+			color = fallback;
+		}
+		return color.getColor(data, x, z, rainfall, temperature, biome);
 	}
 
 }

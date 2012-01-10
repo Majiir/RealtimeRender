@@ -1,6 +1,8 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
 import java.awt.Color;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -90,7 +92,24 @@ public class DefaultColorPalette implements ColorPalette {
 		colors.put(Material.HUGE_MUSHROOM_1, new SimpleMaterialColor(new Color(102, 81, 51)));
 		colors.put(Material.HUGE_MUSHROOM_2, new SimpleMaterialColor(new Color(111, 1, 1, 255)));
 		colors.put(Material.DEAD_BUSH, new SimpleMaterialColor(new Color(157, 128, 79, 70)));
-		colors.put(Material.WOOL, new WoolMaterialColor());
+		Map<Integer, MaterialColor> woolColors = new HashMap<Integer, MaterialColor>();
+		woolColors.put(0x0, new SimpleMaterialColor(new Color(0xdcdcdc))); // white
+		woolColors.put(0x1, new SimpleMaterialColor(new Color(0xe77e34))); // orange
+		woolColors.put(0x2, new SimpleMaterialColor(new Color(0xc050c8))); // magenta
+		woolColors.put(0x3, new SimpleMaterialColor(new Color(0x6084c2))); // light blue
+		woolColors.put(0x4, new SimpleMaterialColor(new Color(0xbdb520))); // yellow
+		woolColors.put(0x5, new SimpleMaterialColor(new Color(0x43b428))); // lime
+		woolColors.put(0x6, new SimpleMaterialColor(new Color(0xcf7a95))); // pink
+		woolColors.put(0x7, new SimpleMaterialColor(new Color(0x424545))); // gray
+		woolColors.put(0x8, new SimpleMaterialColor(new Color(0x9da3a3))); // light gray
+		woolColors.put(0x9, new SimpleMaterialColor(new Color(0x2b729d))); // cyan
+		woolColors.put(0xA, new SimpleMaterialColor(new Color(0x7335c2))); // purple
+		woolColors.put(0xB, new SimpleMaterialColor(new Color(0x2a379b))); // blue
+		woolColors.put(0xC, new SimpleMaterialColor(new Color(0x5f3a23))); // brown
+		woolColors.put(0xD, new SimpleMaterialColor(new Color(0x3a5a29))); // green
+		woolColors.put(0xE, new SimpleMaterialColor(new Color(0x9f2f28))); // red
+		woolColors.put(0xF, new SimpleMaterialColor(new Color(0x241819))); // black	
+		colors.put(Material.WOOL, new MetadataMaterialColor(woolColors));
 		colors.put(Material.GRASS, new GrassMaterialColor());
 		colors.put(Material.LONG_GRASS, new LongGrassMaterialColor());
 		colors.put(Material.STATIONARY_WATER, new WaterMaterialColor());

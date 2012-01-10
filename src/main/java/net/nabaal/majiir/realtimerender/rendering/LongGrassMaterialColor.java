@@ -10,7 +10,7 @@ import net.nabaal.majiir.realtimerender.Coordinate;
 
 import org.bukkit.block.Biome;
 
-public class LongGrassMaterialColor extends BiomeMaterialColor {
+public class LongGrassMaterialColor extends ClimateMaterialColor {
 
 	private static BufferedImage grassColor = null;
 	

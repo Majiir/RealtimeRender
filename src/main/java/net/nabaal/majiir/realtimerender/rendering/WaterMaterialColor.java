@@ -10,7 +10,7 @@ import net.nabaal.majiir.realtimerender.Coordinate;
 
 import org.bukkit.block.Biome;
 
-public class WaterMaterialColor extends BiomeMaterialColor {
+public class WaterMaterialColor extends ClimateMaterialColor {
 
 	private static BufferedImage waterColor = null;
 	

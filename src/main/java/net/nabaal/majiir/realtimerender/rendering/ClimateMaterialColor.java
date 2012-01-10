@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import org.bukkit.block.Biome;
 
-public abstract class BiomeMaterialColor implements MaterialColor {
+public abstract class ClimateMaterialColor implements MaterialColor {
 	
 	public abstract Color getColor(double rainfall, double temperature, Biome biome);
 

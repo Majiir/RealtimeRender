@@ -7,17 +7,17 @@ import org.bukkit.block.Biome;
 
 public class VariedMaterialColor implements MaterialColor {
 
-	private final Color color;
+	private final MaterialColor source;
 	private final int lightVariance;
 	private final int colorVariance;
 	
-	public VariedMaterialColor(Color color, int colorVariance, int lightVariance) {
-		this.color = color;
+	public VariedMaterialColor(MaterialColor source, int colorVariance, int lightVariance) {
+		this.source = source;
 		this.colorVariance = colorVariance;
 		this.lightVariance = lightVariance;
 	}
 
-	public Color getColor(int x, int z) {
+	public Color getColor(int x, int z, Color color) {
 		final int prime = 29;
 		int hash = 1;
 		hash = prime * hash + x;
@@ -36,7 +36,7 @@ public class VariedMaterialColor implements MaterialColor {
 	
 	@Override
 	public final Color getColor(int data, int x, int z, double rainfall, double temperature, Biome biome) {
-		return getColor(x, z);
+		return getColor(x, z, source.getColor(data, x, z, rainfall, temperature, biome));
 	}
 
 }

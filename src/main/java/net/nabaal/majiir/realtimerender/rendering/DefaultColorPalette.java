@@ -113,6 +113,7 @@ public class DefaultColorPalette implements ColorPalette {
 		colors.put(Material.GRASS, new GrassMaterialColor());
 		colors.put(Material.LONG_GRASS, new LongGrassMaterialColor());
 		colors.put(Material.STATIONARY_WATER, new WaterMaterialColor());
+		colors.put(Material.WATER, colors.get(Material.STATIONARY_WATER));
 		colors.put(Material.LEAVES, new FoliageMaterialColor());
 	}
 	

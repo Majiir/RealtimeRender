@@ -136,7 +136,7 @@ public class DefaultColorPalette implements ColorPalette {
 		leaves.put(0x1, leaves.get(0x0));
 		leaves.put(0x2, new TransparentMaterialColor(new ClimateMaterialColor(foliage, true), 0.375));
 		leaves.put(0x3, leaves.get(0x0));
-		colors.put(Material.LEAVES, new MetadataMaterialColor(leaves));
+		colors.put(Material.LEAVES, new MetadataMaterialColor(leaves, 0x3));
 	}
 	
 	@Override

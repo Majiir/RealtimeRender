@@ -6,7 +6,7 @@ import org.bukkit.event.world.WorldUnloadEvent;
 
 public class RealtimeRenderWorldListener extends WorldListener {
 
-	public final RealtimeRender plugin;
+	private final RealtimeRender plugin; 
 	
 	public RealtimeRenderWorldListener(RealtimeRender instance) {
 		plugin = instance;

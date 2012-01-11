@@ -36,6 +36,7 @@ public class RealtimeRender extends JavaPlugin {
 	private boolean renderLoaded;
 	private int zoomsIn;
 	private int zoomsOut;
+	private int chunksUnloadPerTick;
 	
 	private boolean redoZooms = false; 
 	
@@ -71,6 +72,7 @@ public class RealtimeRender extends JavaPlugin {
 		renderLoaded = config.getBoolean("renderLoaded");
 		zoomsIn = config.getInt("zoomsIn");
 		zoomsOut = config.getInt("zoomsOut");
+		chunksUnloadPerTick = config.getInt("chunksUnloadPerTick");
 		
 		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(this.getDataFolder(), "world")));
 		chunkSaveTask = new ChunkSaveTask(chunkManager);
@@ -101,6 +103,10 @@ public class RealtimeRender extends JavaPlugin {
 	
 	public World getWorld() {
 		return this.world;
+	}
+	
+	public int getChunksUnloadPerTick() {
+		return chunksUnloadPerTick;
 	}
 	
 	public int getZoomsIn() {

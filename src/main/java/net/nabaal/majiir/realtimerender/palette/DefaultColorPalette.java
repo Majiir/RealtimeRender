@@ -32,7 +32,7 @@ public class DefaultColorPalette implements ColorPalette {
 		colors.put(Material.BEDROCK, new SimpleMaterialColor(new Color(84, 84, 84)));
 		colors.put(Material.STATIONARY_LAVA, new SimpleMaterialColor(new Color(255, 108, 16))); 
 		colors.put(Material.LAVA, new SimpleMaterialColor(new Color(255, 108, 16)));
-		colors.put(Material.SAND, new VariedMaterialColor(new SimpleMaterialColor(new Color(218, 210, 158)), 4, 8));
+		colors.put(Material.SAND, new SparklingMaterialColor(new SimpleMaterialColor(new Color(218, 210, 158)), 8, 32, 0.01));
 		colors.put(Material.GRAVEL, new SimpleMaterialColor(new Color(136, 126, 126)));
 		colors.put(Material.GOLD_ORE, new SimpleMaterialColor(new Color(143, 140, 125)));
 		colors.put(Material.IRON_ORE, new SimpleMaterialColor(new Color(136, 130, 127)));
@@ -129,7 +129,7 @@ public class DefaultColorPalette implements ColorPalette {
 		}
 		colors.put(Material.GRASS, new ClimateMaterialColor(grass));
 		colors.put(Material.LONG_GRASS, new TransparentMaterialColor(new ClimateMaterialColor(longgrass), 0.375));
-		colors.put(Material.STATIONARY_WATER, new TransparentMaterialColor(new ClimateMaterialColor(water), 0.75));
+		colors.put(Material.STATIONARY_WATER, new TransparentMaterialColor(new SparklingMaterialColor(new ClimateMaterialColor(water), 16, 48, 0.01), 0.75));
 		colors.put(Material.WATER, colors.get(Material.STATIONARY_WATER));
 		Map<Integer, MaterialColor> leaves = new HashMap<Integer, MaterialColor>();
 		leaves.put(0x0, new TransparentMaterialColor(new ClimateMaterialColor(foliage), 0.375));

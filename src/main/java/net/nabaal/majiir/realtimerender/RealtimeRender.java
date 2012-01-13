@@ -3,8 +3,8 @@ package net.nabaal.majiir.realtimerender;
 import java.io.File;
 import java.util.logging.Logger;
 
+import net.nabaal.majiir.realtimerender.commit.CommitProvider;
 import net.nabaal.majiir.realtimerender.commit.PluginCommitProvider;
-import net.nabaal.majiir.realtimerender.commit.RealtimeRenderCommitPlugin;
 import net.nabaal.majiir.realtimerender.rendering.ChunkFilePattern;
 import net.nabaal.majiir.realtimerender.rendering.ChunkManager;
 import net.nabaal.majiir.realtimerender.rendering.FileChunkSnapshotProvider;
@@ -90,9 +90,8 @@ public class RealtimeRender extends JavaPlugin {
 		log.info(String.format("%s: enabled.", this.getDescription().getName()));
 	}
 	
-	public void registerCommitPlugin(RealtimeRenderCommitPlugin commitPlugin) {
-		commitProvider.registerProvider(commitPlugin);
-		log.info(String.format("%s: registered commit plugin '%s'.", this.getDescription().getName(), commitPlugin.getDescription().getName()));
+	public void registerCommitPlugin(CommitProvider provider) {
+		commitProvider.registerProvider(provider);
 	}
 	
 	public ChunkManager getChunkManager() {

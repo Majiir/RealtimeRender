@@ -18,6 +18,15 @@ public class EnqueueAndRenderTask implements Runnable {
 	
 	@Override
 	public void run() {
+		if (!lock.tryLock()) {
+			if (wait) {
+				RealtimeRender.getLogger().info("RealtimeRender: waiting for render in progress to finish...");
+				lock.lock();
+			} else {
+				RealtimeRender.getLogger().warning("RealtimeRender: render task already running, skipping this cycle.");
+				return;
+			}
+		}
 		if (wait) {
 			lock.lock();
 		} else {

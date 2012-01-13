@@ -8,26 +8,13 @@ public class RealtimeRenderWorldListener extends WorldListener {
 
 	private final RealtimeRender plugin; 
 	
-	private int count = 0;
-	private long tick;
-	
 	public RealtimeRenderWorldListener(RealtimeRender instance) {
 		plugin = instance;
-		tick = plugin.getWorld().getFullTime();
 	}
 	
 	public void onChunkUnload(ChunkUnloadEvent event) {
 		if (event.getWorld().equals(plugin.getWorld())) {
-			if (tick != plugin.getWorld().getFullTime()) {
-				count = 0;
-				tick = plugin.getWorld().getFullTime();
-			}
-			if (count < plugin.getChunksUnloadPerTick()) {
-				plugin.enqueueChunk(event.getChunk());
-				count++;
-			} else {
-				event.setCancelled(true);
-			}
+			plugin.enqueueChunk(event.getChunk());
 		}
 	}
 	

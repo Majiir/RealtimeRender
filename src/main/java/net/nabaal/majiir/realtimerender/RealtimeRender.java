@@ -1,6 +1,8 @@
 package net.nabaal.majiir.realtimerender;
 
 import java.io.File;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 import net.nabaal.majiir.realtimerender.commit.CommitProvider;
@@ -26,6 +28,7 @@ public class RealtimeRender extends JavaPlugin {
 	private final RealtimeRenderWorldListener worldListener = new RealtimeRenderWorldListener(this);
 	
 	private final PluginCommitProvider commitProvider = new PluginCommitProvider();
+	private final Lock renderLock = new ReentrantLock();
 	private ChunkManager chunkManager;
 	private ChunkSaveTask chunkSaveTask;
 	
@@ -44,7 +47,7 @@ public class RealtimeRender extends JavaPlugin {
 		log.info(String.format("%s: rendering loaded chunks...", this.getDescription().getName()));
 		
 		// TODO: Some way for tasks to not run simultaneously by accident, yet ensure the chunk queue is empty before shutting down.
-		new EnqueueAndRenderTask(this, true, true).run();
+		new EnqueueAndRenderTask(this, true, true, renderLock).run();
 		
 		chunkSaveTask.stop();
 		
@@ -80,7 +83,7 @@ public class RealtimeRender extends JavaPlugin {
 		pm.registerEvent(Event.Type.CHUNK_UNLOAD, worldListener, Event.Priority.Monitor, this);
 		pm.registerEvent(Event.Type.WORLD_UNLOAD, worldListener, Event.Priority.Monitor, this);
 		
-		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new EnqueueAndRenderTask(this, false, renderLoaded), startDelay * 20, intervalDelay * 20);
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new EnqueueAndRenderTask(this, false, renderLoaded, renderLock), startDelay * 20, intervalDelay * 20);
 		for (int i = 0; i < saveThreads; i++) {
 			this.getServer().getScheduler().scheduleAsyncDelayedTask(this, chunkSaveTask);
 		}

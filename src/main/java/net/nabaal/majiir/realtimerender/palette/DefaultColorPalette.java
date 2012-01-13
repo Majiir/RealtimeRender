@@ -32,7 +32,6 @@ public class DefaultColorPalette implements ColorPalette {
 		colors.put(Material.BEDROCK, new SimpleMaterialColor(new Color(84, 84, 84)));
 		colors.put(Material.STATIONARY_LAVA, new SimpleMaterialColor(new Color(255, 108, 16))); 
 		colors.put(Material.LAVA, new SimpleMaterialColor(new Color(255, 108, 16)));
-		colors.put(Material.SAND, new SparklingMaterialColor(new SimpleMaterialColor(new Color(218, 210, 158)), 8, 32, 0.01));
 		colors.put(Material.GRAVEL, new SimpleMaterialColor(new Color(136, 126, 126)));
 		colors.put(Material.GOLD_ORE, new SimpleMaterialColor(new Color(143, 140, 125)));
 		colors.put(Material.IRON_ORE, new SimpleMaterialColor(new Color(136, 130, 127)));
@@ -119,18 +118,21 @@ public class DefaultColorPalette implements ColorPalette {
 		BufferedImage grass = null;
 		BufferedImage longgrass = null;
 		BufferedImage water = null;
+		BufferedImage sand = null;
 		try {
 			foliage = ImageIO.read(getClass().getResource("/images/foliagecolor.png"));
 			grass = ImageIO.read(getClass().getResource("/images/grasscolor.png"));
 			longgrass = ImageIO.read(getClass().getResource("/images/longgrasscolor.png"));
 			water = ImageIO.read(getClass().getResource("/images/watercolor.png"));
+			sand = ImageIO.read(getClass().getResource("/images/sand.png"));
 		} catch (IOException e) {
 			RealtimeRender.getLogger().severe("Failed to load palette resources!");
 		}
 		colors.put(Material.GRASS, new ClimateMaterialColor(grass));
 		colors.put(Material.LONG_GRASS, new TransparentMaterialColor(new ClimateMaterialColor(longgrass), 0.375));
-		colors.put(Material.STATIONARY_WATER, new TransparentMaterialColor(new SparklingMaterialColor(new ClimateMaterialColor(water), 16, 48, 0.01), 0.75));
+		colors.put(Material.STATIONARY_WATER, new TransparentMaterialColor(new ClimateMaterialColor(water), 0.75));
 		colors.put(Material.WATER, colors.get(Material.STATIONARY_WATER));
+		colors.put(Material.SAND, new RandomTextureMaterialColor(sand));
 		Map<Integer, MaterialColor> leaves = new HashMap<Integer, MaterialColor>();
 		leaves.put(0x0, new TransparentMaterialColor(new ClimateMaterialColor(foliage), 0.375));
 		leaves.put(0x1, leaves.get(0x0));

@@ -24,15 +24,15 @@ public class VariedMaterialColor implements MaterialColor {
 		hash = prime * hash + x;
 		hash = prime * hash + z;
 		Random random = new Random(hash);
-		int mod = random.nextInt(colorVariance * 2 + 1) - colorVariance;
-		int r = color.getRed() + mod + nextLightVariance(random);
-		int g = color.getGreen() + mod + nextLightVariance(random);
-		int b = color.getBlue() + mod + nextLightVariance(random);
+		int mod = random.nextInt(lightVariance * 2 + 1) - lightVariance;
+		int r = color.getRed() + mod + nextColorVariance(random);
+		int g = color.getGreen() + mod + nextColorVariance(random);
+		int b = color.getBlue() + mod + nextColorVariance(random);
 		return new Color(r, g, b, color.getAlpha());
 	}
 	
-	private int nextLightVariance(Random random) {
-		return random.nextInt(lightVariance * 2 + 1) - lightVariance;
+	private int nextColorVariance(Random random) {
+		return random.nextInt(colorVariance * 2 + 1) - colorVariance;
 	}
 	
 	@Override

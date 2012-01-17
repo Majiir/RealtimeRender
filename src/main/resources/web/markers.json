@@ -1,0 +1,50 @@
+[
+  {
+    "block": {"x": "0", "y": "0"},
+    "label": "Origin"
+  },
+  {
+    "block": {"x": "2032", "y": "1034"},
+    "label": "Tiir"
+  },
+  {
+    "block": {"x": "-1180", "y": "-8"},
+    "label": "Tanhauser"
+  },
+  {
+    "block": {"x": "814", "y": "-1440"},
+    "label": "disguyzcrazy's Oil Rig"
+  }, 
+  {
+    "block": {"x": "1182", "y": "-2978"},
+    "label": "The Yawning City"
+  },
+  {
+    "block": {"x": "1180", "y": "-700"},
+    "label": "Herschel"
+  },
+  {
+    "block": {"x": "593", "y": "206"},
+    "label": "Ochomocho"
+  },
+  {
+    "block": {"x": 1486, "y": -1535},
+    "label": "Tahiri"
+  },
+  {
+    "block": {"x": -620, "y": 448},
+    "label": "Curator Stravos"
+  },
+  {
+    "block": {"x": 300, "y": -495},
+    "label": "runeploug"
+  },
+  {
+    "block": {"x": -2762, "y": 3547},
+    "label": "End User"
+  },
+  {
+    "block": {"x": -620, "y": -626},
+    "label": "disguyzcrazy"
+  }
+]

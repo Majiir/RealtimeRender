@@ -2,13 +2,16 @@ package net.nabaal.majiir.realtimerender.image;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
+import net.nabaal.majiir.realtimerender.RealtimeRender;
 
 
 public class FileImageProvider extends ImageProvider {
@@ -31,7 +34,10 @@ public class FileImageProvider extends ImageProvider {
 		try {
 			return ImageIO.read(pattern.getFile(tile));
 		} catch (IOException e) {
-			return null; 
+			return null;
+		} catch (Exception e) {
+			RealtimeRender.getLogger().warning("RealtimeRender: error reading tile: " + tile);
+			return null;
 		}
 	}
 
@@ -48,7 +54,8 @@ public class FileImageProvider extends ImageProvider {
 			File file = pattern.getFile(tile);
 			ImageIO.write(image, "png", file);
 			changed.add(file);
-		} catch (IOException e) {
+		} catch (Exception e) {
+			RealtimeRender.getLogger().warning("RealtimeRender: error saving tile: " + tile);
 			e.printStackTrace();
 		}
 	}

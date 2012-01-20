@@ -2,12 +2,10 @@ package net.nabaal.majiir.realtimerender.image;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
 
 import net.nabaal.majiir.realtimerender.Coordinate;

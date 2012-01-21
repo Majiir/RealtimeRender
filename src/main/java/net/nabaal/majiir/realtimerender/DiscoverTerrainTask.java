@@ -13,7 +13,7 @@ public class DiscoverTerrainTask implements Runnable {
 	private int step;
 	private int last = 0;
 	
-	public DiscoverTerrainTask(RealtimeRender plugin, int threshold) {
+	public DiscoverTerrainTask(RealtimeRender plugin, double threshold) {
 		this(plugin, threshold, 0);
 	}
 	

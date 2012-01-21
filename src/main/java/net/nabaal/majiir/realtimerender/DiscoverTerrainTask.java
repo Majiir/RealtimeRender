@@ -29,11 +29,11 @@ public class DiscoverTerrainTask implements Runnable {
 		aggressiveUnload();
 		Coordinate c;
 		do {
-			step++;
 			if (isBeyondThreshold()) {
 				step = 0;
 			}
 			c = getCurrentPosition();
+			step++;
 		} while (!tryLoadChunk(c.getX(), c.getY()));
 		last = step;		
 	}

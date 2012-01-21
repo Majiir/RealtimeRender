@@ -24,15 +24,6 @@ public class CommandManager implements CommandExecutor {
 			sender.sendMessage(ChatColor.GREEN + "All zoom levels will be regenerated during the next cycle.");
 			return true;
 		}
-		if ((args.length > 0) && args[0].equals("discover")) {
-			if (!sender.isOp()) {
-				sender.sendMessage(ChatColor.RED + "You must be an op to do that!");
-				return true;
-			}
-			plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new DiscoverTerrainTask(plugin, 2.0, 30000), 0, 10);
-			sender.sendMessage(ChatColor.GREEN + "Discovering terrain.");
-			return true;
-		}
 		return false;
 	}
 

@@ -12,6 +12,7 @@ import net.nabaal.majiir.realtimerender.rendering.ChunkManager;
 import net.nabaal.majiir.realtimerender.rendering.FileChunkSnapshotProvider;
 import net.nabaal.majiir.realtimerender.rendering.NoOpChunkPreprocessor;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
@@ -86,6 +87,14 @@ public class RealtimeRender extends JavaPlugin {
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new EnqueueAndRenderTask(this, false, renderLoaded, renderLock), startDelay * 20, intervalDelay * 20);
 		for (int i = 0; i < saveThreads; i++) {
 			this.getServer().getScheduler().scheduleAsyncDelayedTask(this, chunkSaveTask);
+		}
+		
+		int interval = config.getInt("discoverInterval");
+		
+		if (interval > 0) {
+			this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new DiscoverTerrainTask(this, 4.0), 100, interval);
+		} else {
+			log.warning("RealtimeRender: discover interval must be greater than zero. (check config.yml)");
 		}
 		
 		getCommand("map").setExecutor(new CommandManager(this));

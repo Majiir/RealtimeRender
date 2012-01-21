@@ -5,3 +5,4 @@ saveThreads: 10
 renderLoaded: false
 zoomsIn: 1
 zoomsOut: 3
+discoverInterval: 2

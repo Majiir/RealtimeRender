@@ -93,11 +93,9 @@ public class DiscoverTerrainTask implements Runnable {
 	}
 	
 	private boolean isChunkInUse(Chunk chunk) {
-		int x = chunk.getX();
-		int z = chunk.getZ();
 		for (Player player : this.plugin.getWorld().getPlayers()) {
 			Location loc = player.getLocation();
-			if ((Math.abs(loc.getBlockX() - (x << 4)) <= 128) && (Math.abs(loc.getBlockZ() - (z << 4)) <= 128)) {
+			if ((Math.abs((loc.getBlockX() >> 4) - chunk.getX()) <= 8) && (Math.abs((loc.getBlockZ() >> 4 - chunk.getZ()) <= 8)) {
 				return true;
 			}
 		}

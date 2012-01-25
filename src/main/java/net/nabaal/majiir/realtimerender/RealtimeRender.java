@@ -12,7 +12,6 @@ import net.nabaal.majiir.realtimerender.rendering.ChunkManager;
 import net.nabaal.majiir.realtimerender.rendering.FileChunkSnapshotProvider;
 import net.nabaal.majiir.realtimerender.rendering.NoOpChunkPreprocessor;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;

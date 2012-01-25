@@ -130,7 +130,7 @@ public class DefaultColorPalette implements ColorPalette {
 		}
 		colors.put(Material.GRASS, new ClimateMaterialColor(grass));
 		colors.put(Material.LONG_GRASS, new TransparentMaterialColor(new ClimateMaterialColor(longgrass), 0.375));
-		colors.put(Material.STATIONARY_WATER, new TransparentMaterialColor(new ClimateMaterialColor(water), 0.75));
+		colors.put(Material.STATIONARY_WATER, new TransparentMaterialColor(new ClimateMaterialColor(water), 0.80));
 		colors.put(Material.WATER, colors.get(Material.STATIONARY_WATER));
 		colors.put(Material.SAND, new RandomTextureMaterialColor(sand));
 		Map<Integer, MaterialColor> leaves = new HashMap<Integer, MaterialColor>();

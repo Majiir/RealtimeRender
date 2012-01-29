@@ -31,10 +31,6 @@
 			box-shadow: 0 0 7px #999999;
 		}
 
-		div.row {
-			
-		}
-
 		span.label, span.value {
 			display: inline-block;
 			text-align: right;
@@ -47,6 +43,11 @@
 
 		span.value {
 			width: 3em;
+		}
+		
+		span.error {
+			color: red;
+			font-weight: bold;
 		}
 
 	</style>
@@ -172,7 +173,7 @@
 			layersControl.addOverlay(markerLayer, "Markers");
 	
 		}).fail(function() {
-			layersControl.getContainer().innerHTML = '<span style="color: red; font-weight: bold;">Error: Could not load markers file!</span>';
+			layersControl.getContainer().innerHTML = '<span class="error">Error: Could not load markers file!</span>';
 		});
 
 		var coordinatesControl = new L.Control.Coordinates();

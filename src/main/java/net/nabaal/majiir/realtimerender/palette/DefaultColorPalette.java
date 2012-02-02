@@ -14,6 +14,7 @@ import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.RealtimeRender;
 
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 
 public class DefaultColorPalette implements ColorPalette {
 
@@ -128,7 +129,9 @@ public class DefaultColorPalette implements ColorPalette {
 		} catch (IOException e) {
 			RealtimeRender.getLogger().severe("Failed to load palette resources!");
 		}
-		colors.put(Material.GRASS, new ClimateMaterialColor(grass));
+		Map<Biome, MaterialColor> biomes = new HashMap<Biome, MaterialColor>();
+		biomes.put(Biome.SWAMPLAND, new ClimateMaterialColor(foliage) /* placeholder */);
+		colors.put(Material.GRASS, new BiomeMaterialColor(biomes, new ClimateMaterialColor(grass)));
 		colors.put(Material.LONG_GRASS, new TransparentMaterialColor(new ClimateMaterialColor(longgrass), 0.375));
 		colors.put(Material.STATIONARY_WATER, new TransparentMaterialColor(new ClimateMaterialColor(water), 0.80));
 		colors.put(Material.WATER, colors.get(Material.STATIONARY_WATER));

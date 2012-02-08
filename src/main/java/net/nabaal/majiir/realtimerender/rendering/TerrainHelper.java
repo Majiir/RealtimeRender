@@ -32,16 +32,12 @@ public final class TerrainHelper {
 	}
 	
 	public static byte getTerrainHeight(int x, int z, ChunkSnapshot snapshot) {
-		Material material;
-		byte y = (byte) (snapshot.getHighestBlockYAt(x, z) + 1);
-		do {
-			y--;
-			material = Material.getMaterial(snapshot.getBlockTypeId(x, y, z));
-		} while (!isTerrain(material) && (y > -1));
-		if (y == -1) {
-			y = HeightMap.NO_HEIGHT_INFORMATION;
+		for (int y = Math.min(snapshot.getHighestBlockYAt(x, z) + 1, 127); i >= 0; i--) {
+			if (isTerrain(Material.getMaterial(snapshot.getBlockTypeId(x, y, z)))) {
+				return (byte) y;
+			}
 		}
-		return y;
+		return HeightMap.NO_HEIGHT_INFORMATION;
 	}
 	
 }

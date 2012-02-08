@@ -43,11 +43,11 @@ public class FileHeightMap extends HeightMapProvider {
 				ostream.close();
 			}
 		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
+			RealtimeRender.getLogger().warning("RealtimeRender: error reading height map " + tile + ": " + e);
+		}
+		if (tile == null) {
 			tile = new HeightMapTile(tileLocation);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 		return tile;
 	}
@@ -65,8 +65,8 @@ public class FileHeightMap extends HeightMapProvider {
 			} finally {
 				ostream.close();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			RealtimeRender.getLogger().warning("RealtimeRender: error writing height map " + tile + ": " + e);
 		}
 	}
 	

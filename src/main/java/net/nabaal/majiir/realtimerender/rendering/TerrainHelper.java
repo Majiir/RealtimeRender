@@ -27,14 +27,42 @@ public final class TerrainHelper {
 		Material.NETHERRACK,
 	}));
 	
+	private static Set<Material> structure = new HashSet<Material>(Arrays.asList(new Material[] {
+		Material.WOOD,
+		Material.WOOL,
+		Material.COBBLESTONE,
+		Material.LEAVES,
+		Material.LOG,
+		Material.BOOKSHELF,
+		Material.BRICK,
+		Material.BRICK_STAIRS,
+		Material.DOUBLE_STEP,		
+	}));
+	
 	public static boolean isTerrain(Material material) {
 		return terrain.contains(material);
+	}
+	
+	public static boolean isStructure(Material material) {
+		return structure.contains(material);
 	}
 	
 	public static byte getTerrainHeight(int x, int z, ChunkSnapshot snapshot) {
 		for (int y = Math.min(snapshot.getHighestBlockYAt(x, z) + 1, 127); y >= 0; y--) {
 			if (isTerrain(Material.getMaterial(snapshot.getBlockTypeId(x, y, z)))) {
 				return (byte) y;
+			}
+		}
+		return HeightMap.NO_HEIGHT_INFORMATION;
+	}
+	
+	public static byte getStructureHeight(int x, int z, ChunkSnapshot snapshot) {
+		for (int y = Math.min(snapshot.getHighestBlockYAt(x, z) + 1, 127); y >= 0; y--) {
+			Material material = Material.getMaterial(snapshot.getBlockTypeId(x, y, z)));
+			if (isStructure(material)) {
+				return (byte) y;
+			} else if (isTerrain(material)) {
+				break;
 			}
 		}
 		return HeightMap.NO_HEIGHT_INFORMATION;

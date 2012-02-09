@@ -17,11 +17,13 @@ import org.jscience.mathematics.vector.Float64Vector;
 public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 	
 	private final NormalMap normalMap;
+	private final NormalMap structureMap;
 	private final ImageProvider imageProvider;
 	private final ColorPalette colorPalette;
 	
-	public DiffuseShadedChunkRenderer(ImageProvider imageProvider, NormalMap normalMap, ColorPalette colorPalette) {				
+	public DiffuseShadedChunkRenderer(ImageProvider imageProvider, NormalMap normalMap, NormalMap structureMap, ColorPalette colorPalette) {				
 		this.normalMap = normalMap;
+		this.structureMap = structureMap;
 		this.imageProvider = imageProvider;
 		this.colorPalette = colorPalette;
 	}
@@ -42,7 +44,15 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 					g.fillRect(x, z, 1, 1);
 					
 					if (TerrainHelper.isTerrain(material)) {
-						double shading = computeDiffuseShading(chunkSnapshot, x, z);
+						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.normalMap);
+						if (shading >= 0) {
+							g.setColor(computeShadeColor(shading));
+							g.fillRect(x, z, 1, 1);
+						}
+					}
+					
+					if (TerrainHelper.isStructure(material)) {
+						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.structureMap);
 						if (shading >= 0) {
 							g.setColor(computeShadeColor(shading));
 							g.fillRect(x, z, 1, 1);
@@ -87,8 +97,8 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		}
 	}
 	
-	private double computeDiffuseShading(ChunkSnapshot chunkSnapshot, int x, int z) {	
-		Float64Vector n = this.normalMap.getNormal(Coordinate.fromSnapshot(chunkSnapshot).zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, z, Coordinate.LEVEL_BLOCK)));
+	private double computeDiffuseShading(ChunkSnapshot chunkSnapshot, int x, int z, NormalMap nm) {	
+		Float64Vector n = nm.getNormal(Coordinate.fromSnapshot(chunkSnapshot).zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, z, Coordinate.LEVEL_BLOCK)));
 		Float64Vector light = Float64Vector.valueOf(-1, -1, -1);
 		if (n == null) {
 			return -1;

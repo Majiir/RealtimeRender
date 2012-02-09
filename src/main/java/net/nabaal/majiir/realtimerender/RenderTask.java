@@ -13,6 +13,7 @@ import net.nabaal.majiir.realtimerender.image.WriteCache;
 import net.nabaal.majiir.realtimerender.image.ZoomImageBuilder;
 import net.nabaal.majiir.realtimerender.palette.DefaultColorPalette;
 import net.nabaal.majiir.realtimerender.rendering.AdaptiveNormalMap;
+import net.nabaal.majiir.realtimerender.rendering.AverageNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.NormalMapReadCache;
 import net.nabaal.majiir.realtimerender.rendering.CircleAverageNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.DiffuseShadedChunkRenderer;
@@ -64,6 +65,23 @@ public class RenderTask implements Runnable {
 		hm_wc1.commit();
 		hm_wc0.commit();
 		
+		// STAGE ONE: PREPROCESS (STRUCTURE MAP)
+		HeightMap hms = new FileHeightMap(plugin.getDataFolder(), new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName() + ".s", Coordinate.LEVEL_TILE), Coordinate.SIZE_TILE);
+		hms = new HeightMapReadCache(hms, Coordinate.SIZE_TILE);
+		ReadCache hms_rc0 = (ReadCache) hms;
+		hms = new HeightMapWriteCache(hms, Coordinate.SIZE_TILE);
+		WriteCache hms_wc0 = (WriteCache) hms;
+		hms = new HeightMapReadCache(hms, Coordinate.SIZE_CHUNK);
+		ReadCache hms_rc1 = (ReadCache) hms;
+		hms = new HeightMapWriteCache(hms, Coordinate.SIZE_CHUNK);
+		WriteCache hms_wc1 = (WriteCache) hms;
+		
+		renderer = new HeightMapRenderer(hms);
+		
+		plugin.getChunkManager().render(renderer);
+		hms_wc1.commit();
+		hms_wc0.commit();
+		
 		// STAGE TWO: DRAWING
 				
 		// normal map
@@ -72,6 +90,11 @@ public class RenderTask implements Runnable {
 		ReadCache nm_rc = (ReadCache) nm0;
 		NormalMap nm = new CircleAverageNormalMap(nm0, 2);
 		nm = new AdaptiveNormalMap(nm, nm0);
+		
+		// structure normal map
+		NormalMap nms = new FiniteDifferencesNormalMap(hms);
+		nms = new NormalMapReadCache(nms);
+		nms = new AverageNormalMap(nms, nm);
 		
 		// renders
 		fp = new FileImageProvider(plugin.getDataFolder(), new TileFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
@@ -87,7 +110,7 @@ public class RenderTask implements Runnable {
 		ImageWriteCache wc1 = new ImageWriteCache(ip);
 		ip = wc1;
 		
-		renderer = new DiffuseShadedChunkRenderer(ip, nm, new DefaultColorPalette());
+		renderer = new DiffuseShadedChunkRenderer(ip, nm, nms, new DefaultColorPalette());
 		
 		// zoom out
 		int zoomsOut = plugin.getZoomsOut();
@@ -125,6 +148,8 @@ public class RenderTask implements Runnable {
 		nm_rc.clear();
 		hm_rc0.clear();
 		hm_rc1.clear();
+		hms_rc0.clear();
+		hms_rc1.clear();
 		wc1.commit();
 		wc.commit();
 		if (plugin.getRedoZooms()) {

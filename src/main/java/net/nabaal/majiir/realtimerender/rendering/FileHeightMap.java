@@ -17,6 +17,7 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
+import net.nabaal.majiir.realtimerender.RealtimeRender;
 import net.nabaal.majiir.realtimerender.image.FilePattern;
 
 public class FileHeightMap extends HeightMapProvider {

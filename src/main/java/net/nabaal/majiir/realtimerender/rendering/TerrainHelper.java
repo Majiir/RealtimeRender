@@ -1,7 +1,7 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.bukkit.ChunkSnapshot;
@@ -13,7 +13,7 @@ public final class TerrainHelper {
 		throw new InstantiationException("Cannot instantiate a helper class.");
 	} 
 	
-	private static Set<Material> terrain = new HashSet<Material>(Arrays.asList(new Material[] {
+	private static Set<Material> terrain = EnumSet.copyOf(Arrays.asList(new Material[] {
 		Material.SAND,
 		Material.SANDSTONE,
 		Material.BEDROCK,
@@ -27,7 +27,7 @@ public final class TerrainHelper {
 		Material.NETHERRACK,
 	}));
 	
-	private static Set<Material> structure = new HashSet<Material>(Arrays.asList(new Material[] {
+	private static Set<Material> structure = EnumSet.copyOf(Arrays.asList(new Material[] {
 		Material.WOOD,
 		Material.WOOL,
 		Material.COBBLESTONE,

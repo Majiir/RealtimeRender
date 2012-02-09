@@ -65,7 +65,7 @@ public final class TerrainHelper {
 	
 	public static byte getStructureHeight(int x, int z, ChunkSnapshot snapshot) {
 		for (int y = Math.min(snapshot.getHighestBlockYAt(x, z) + 1, 127); y >= 0; y--) {
-			Material material = Material.getMaterial(snapshot.getBlockTypeId(x, y, z)));
+			Material material = Material.getMaterial(snapshot.getBlockTypeId(x, y, z));
 			if (isStructure(material)) {
 				return (byte) y;
 			} else if (isTerrain(material)) {

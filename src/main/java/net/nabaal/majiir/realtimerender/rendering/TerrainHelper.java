@@ -1,7 +1,7 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Set;
 
 import org.bukkit.ChunkSnapshot;
@@ -13,7 +13,7 @@ public final class TerrainHelper {
 		throw new InstantiationException("Cannot instantiate a helper class.");
 	} 
 	
-	private static Set<Material> terrain = new HashSet<Material>(Arrays.asList(new Material[] {
+	private static Set<Material> terrain = EnumSet.copyOf(Arrays.asList(new Material[] {
 		Material.SAND,
 		Material.SANDSTONE,
 		Material.BEDROCK,
@@ -27,7 +27,7 @@ public final class TerrainHelper {
 		Material.NETHERRACK,
 	}));
 	
-	private static Set<Material> structure = new HashSet<Material>(Arrays.asList(new Material[] {
+	private static Set<Material> structure = EnumSet.copyOf(Arrays.asList(new Material[] {
 		Material.WOOD,
 		Material.WOOL,
 		Material.COBBLESTONE,
@@ -36,7 +36,14 @@ public final class TerrainHelper {
 		Material.BOOKSHELF,
 		Material.BRICK,
 		Material.BRICK_STAIRS,
-		Material.DOUBLE_STEP,		
+		Material.DOUBLE_STEP,
+		Material.STEP,
+		Material.HUGE_MUSHROOM_1,
+		Material.HUGE_MUSHROOM_2,
+		Material.CROPS,
+		Material.WOOD_STAIRS,
+		Material.WOOD_DOOR,
+		Material.WORKBENCH,
 	}));
 	
 	public static boolean isTerrain(Material material) {
@@ -58,7 +65,7 @@ public final class TerrainHelper {
 	
 	public static byte getStructureHeight(int x, int z, ChunkSnapshot snapshot) {
 		for (int y = Math.min(snapshot.getHighestBlockYAt(x, z) + 1, 127); y >= 0; y--) {
-			Material material = Material.getMaterial(snapshot.getBlockTypeId(x, y, z)));
+			Material material = Material.getMaterial(snapshot.getBlockTypeId(x, y, z));
 			if (isStructure(material)) {
 				return (byte) y;
 			} else if (isTerrain(material)) {

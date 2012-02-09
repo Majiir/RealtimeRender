@@ -36,7 +36,14 @@ public final class TerrainHelper {
 		Material.BOOKSHELF,
 		Material.BRICK,
 		Material.BRICK_STAIRS,
-		Material.DOUBLE_STEP,		
+		Material.DOUBLE_STEP,
+		Material.STEP,
+		Material.HUGE_MUSHROOM_1,
+		Material.HUGE_MUSHROOM_2,
+		Material.CROPS,
+		Material.WOOD_STAIRS,
+		Material.WOOD_DOOR,
+		Material.WORKBENCH,
 	}));
 	
 	public static boolean isTerrain(Material material) {

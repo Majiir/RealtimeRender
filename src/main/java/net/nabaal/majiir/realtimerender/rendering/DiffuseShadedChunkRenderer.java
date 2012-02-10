@@ -35,12 +35,10 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
 				boolean seenStructure = false;
-				int ymax = chunkSnapshot.getHighestBlockYAt(x, z);
 				// TODO: Handle cases where we can start at an opaque non-terrain block
-				for (int y = TerrainHelper.getTerrainHeight(x, z, chunkSnapshot); y <= ymax; y++) {
-					Color color;
+				for (int y = TerrainHelper.getTerrainHeight(x, z, chunkSnapshot); y <= chunkSnapshot.getHighestBlockYAt(x, z); y++) {
 					Material material = Material.getMaterial(chunkSnapshot.getBlockTypeId(x, y, z));
-					color = getMaterialColor(material, chunkSnapshot, x, y, z);
+					Color color = getMaterialColor(material, chunkSnapshot, x, y, z);
 					
 					if (TerrainHelper.isTerrain(material)) {
 						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.normalMap);

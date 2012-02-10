@@ -34,6 +34,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		Graphics2D g = (Graphics2D) image.getGraphics();
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
+				boolean seenStructure = false;
 				int ymax = chunkSnapshot.getHighestBlockYAt(x, z);
 				// TODO: Handle cases where we can start at an opaque non-terrain block
 				for (int y = TerrainHelper.getTerrainHeight(x, z, chunkSnapshot); y <= ymax; y++) {
@@ -46,11 +47,12 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 						if (shading >= 0) {
 							color = tintOrShadeColor(color, shading, 1.0);
 						}
-					} else if (TerrainHelper.isStructure(material)) {
+					} else if (TerrainHelper.isStructure(material) && !seenStructure) {
+						seenStructure = true;
 						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.structureMap);
 						if (shading >= 0) {
 							if (material.equals(Material.LEAVES)) {
-								color = tintOrShadeColor(color, shading, 0.3);
+								color = tintOrShadeColor(color, shading, 0.6);
 							} else {
 								color = tintOrShadeColor(color, shading, 1.0);
 							}

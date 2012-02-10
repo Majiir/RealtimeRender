@@ -28,7 +28,7 @@ public class DefaultColorPalette implements ColorPalette {
 		colors.put(Material.YELLOW_FLOWER, new SimpleMaterialColor(new Color(0xDD, 0xDD, 0, 192)));
 		colors.put(Material.DIRT, new SimpleMaterialColor(new Color(134, 96, 67)));
 		colors.put(Material.COBBLESTONE, new SimpleMaterialColor(new Color(100, 100, 100)));
-		colors.put(Material.WOOD, new SimpleMaterialColor(new Color(157, 128, 79)));
+		colors.put(Material.WOOD, new SimpleMaterialColor(new Color(167, 138, 89)));
 		colors.put(Material.SAPLING, new SimpleMaterialColor(new Color(120, 205, 120, 64)));
 		colors.put(Material.BEDROCK, new SimpleMaterialColor(new Color(84, 84, 84)));
 		colors.put(Material.STATIONARY_LAVA, new SimpleMaterialColor(new Color(255, 108, 16))); 
@@ -54,7 +54,7 @@ public class DefaultColorPalette implements ColorPalette {
 		colors.put(Material.OBSIDIAN, new SimpleMaterialColor(new Color(17, 13, 26, 255))); 
 		colors.put(Material.TORCH, new SimpleMaterialColor(new Color(255, 225, 96, 208))); 
 		colors.put(Material.FIRE, new SimpleMaterialColor(new Color(224, 174, 21, 255))); 
-		colors.put(Material.WOOD_STAIRS, new SimpleMaterialColor(new Color(191, 169, 116, 255)));
+		colors.put(Material.WOOD_STAIRS, colors.get(Material.WOOD));
 		colors.put(Material.CHEST, new SimpleMaterialColor(new Color(191, 135, 2, 255)));
 		colors.put(Material.REDSTONE_WIRE, new SimpleMaterialColor(new Color(111, 1, 1, 255))); 
 		colors.put(Material.DIAMOND_ORE, new SimpleMaterialColor(new Color(129, 140, 143, 255)));
@@ -96,7 +96,7 @@ public class DefaultColorPalette implements ColorPalette {
 		colors.put(Material.MYCEL, new SimpleMaterialColor(new Color(0x7b6e83)));
 		colors.put(Material.HUGE_MUSHROOM_1, new SimpleMaterialColor(new Color(102, 81, 51)));
 		colors.put(Material.HUGE_MUSHROOM_2, new SimpleMaterialColor(new Color(111, 1, 1, 255)));
-		colors.put(Material.DEAD_BUSH, new SimpleMaterialColor(new Color(157, 128, 79, 70)));
+		colors.put(Material.DEAD_BUSH, new SimpleMaterialColor(new Color(157, 128, 79, 190)));
 		Map<Integer, MaterialColor> woolColors = new HashMap<Integer, MaterialColor>();
 		woolColors.put(0x0, new SimpleMaterialColor(new Color(0xdcdcdc))); // white
 		woolColors.put(0x1, new SimpleMaterialColor(new Color(0xe77e34))); // orange

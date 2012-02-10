@@ -25,7 +25,7 @@ public class StructureMapRenderer implements ChunkRenderer {
 						new Coordinate(x, z, Coordinate.LEVEL_BLOCK)
 					),
 					
-					TerrainHelper.getTerrainHeight(x, z, snapshot)
+					TerrainHelper.getStructureHeight(x, z, snapshot)
 				);
 			}
 		}

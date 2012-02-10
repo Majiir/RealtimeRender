@@ -25,6 +25,7 @@ import net.nabaal.majiir.realtimerender.rendering.HeightMapRenderer;
 import net.nabaal.majiir.realtimerender.rendering.HeightMapWriteCache;
 import net.nabaal.majiir.realtimerender.rendering.NormalMap;
 import net.nabaal.majiir.realtimerender.rendering.SerializedHeightMapFilePattern;
+import net.nabaal.majiir.realtimerender.rendering.StructureMapRenderer;
 import net.nabaal.majiir.realtimerender.rendering.TileFilePattern;
 
 public class RenderTask implements Runnable {
@@ -76,7 +77,7 @@ public class RenderTask implements Runnable {
 		hms = new HeightMapWriteCache(hms, Coordinate.SIZE_CHUNK);
 		WriteCache hms_wc1 = (WriteCache) hms;
 		
-		renderer = new HeightMapRenderer(hms);
+		renderer = new StructureMapRenderer(hms);
 		
 		plugin.getChunkManager().render(renderer);
 		hms_wc1.commit();

@@ -95,6 +95,7 @@ public class RenderTask implements Runnable {
 		// structure normal map
 		NormalMap nms = new FiniteDifferencesNormalMap(hms);
 		nms = new NormalMapReadCache(nms);
+		ReadCache nms_rc = (ReadCache) nms;
 		
 		// renders
 		fp = new FileImageProvider(plugin.getDataFolder(), new TileFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
@@ -146,6 +147,7 @@ public class RenderTask implements Runnable {
 		plugin.getChunkManager().render(renderer);
 		plugin.getChunkManager().endBatch();
 		nm_rc.clear();
+		nms_rc.clear();
 		hm_rc0.clear();
 		hm_rc1.clear();
 		hms_rc0.clear();

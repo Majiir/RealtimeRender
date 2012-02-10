@@ -94,7 +94,6 @@ public class RenderTask implements Runnable {
 		// structure normal map
 		NormalMap nms = new FiniteDifferencesNormalMap(hms);
 		nms = new NormalMapReadCache(nms);
-		nms = new AverageNormalMap(nms, nm);
 		
 		// renders
 		fp = new FileImageProvider(plugin.getDataFolder(), new TileFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));

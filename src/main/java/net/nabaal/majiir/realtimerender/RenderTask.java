@@ -13,7 +13,6 @@ import net.nabaal.majiir.realtimerender.image.WriteCache;
 import net.nabaal.majiir.realtimerender.image.ZoomImageBuilder;
 import net.nabaal.majiir.realtimerender.palette.DefaultColorPalette;
 import net.nabaal.majiir.realtimerender.rendering.AdaptiveNormalMap;
-import net.nabaal.majiir.realtimerender.rendering.AverageNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.NormalMapReadCache;
 import net.nabaal.majiir.realtimerender.rendering.CircleAverageNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.DiffuseShadedChunkRenderer;
@@ -77,7 +76,7 @@ public class RenderTask implements Runnable {
 		hms = new HeightMapWriteCache(hms, Coordinate.SIZE_CHUNK);
 		WriteCache hms_wc1 = (WriteCache) hms;
 		
-		renderer = new HeightMapRenderer(hms);
+		renderer = new StructureMapRenderer(hms);
 		
 		plugin.getChunkManager().render(renderer);
 		hms_wc1.commit();
@@ -96,7 +95,6 @@ public class RenderTask implements Runnable {
 		NormalMap nms = new FiniteDifferencesNormalMap(hms);
 		nms = new NormalMapReadCache(nms);
 		ReadCache nms_rc = (ReadCache) nms;
-		nms = new AverageNormalMap(nms, nm);
 		
 		// renders
 		fp = new FileImageProvider(plugin.getDataFolder(), new TileFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));

@@ -34,6 +34,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		Graphics2D g = (Graphics2D) image.getGraphics();
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
+				boolean seenStructure = false;
 				// TODO: Handle cases where we can start at an opaque non-terrain block
 				for (int y = TerrainHelper.getTerrainHeight(x, z, chunkSnapshot); y <= chunkSnapshot.getHighestBlockYAt(x, z); y++) {
 					Material material = Material.getMaterial(chunkSnapshot.getBlockTypeId(x, y, z));
@@ -42,14 +43,17 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 					if (TerrainHelper.isTerrain(material)) {
 						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.normalMap);
 						if (shading >= 0) {
-							color = tintOrShadeColor(color, shading);
+							color = tintOrShadeColor(color, shading, 1.0);
 						}
-					}
-					
-					if (TerrainHelper.isStructure(material)) {
+					} else if (TerrainHelper.isStructure(material) && !seenStructure) {
+						seenStructure = true;
 						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.structureMap);
 						if (shading >= 0) {
-							color = tintOrShadeColor(color, shading);
+							if (material.equals(Material.LEAVES)) {
+								color = tintOrShadeColor(color, shading, 0.6);
+							} else {
+								color = tintOrShadeColor(color, shading, 1.0);
+							}
 						}
 					}
 					
@@ -84,12 +88,12 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		return new Color(color.getRed(), color.getGreen(), color.getBlue(), a);
 	}
 	
-	private static Color tintOrShadeColor(Color color, double shading) {
+	private static Color tintOrShadeColor(Color color, double shading, double intensity) {
 		shading = Math.min(Math.max(shading, 0), 1);
 		if (shading > 0.5) {
-			return tintColor(color, (shading * 2) - 1);
+			return tintColor(color, ((shading * 2) - 1) * intensity);
 		} else {
-			return shadeColor(color, 1 - (shading * 2));
+			return shadeColor(color, (1 - (shading * 2)) * intensity);
 		}
 	}
 	

@@ -25,6 +25,7 @@ import net.nabaal.majiir.realtimerender.rendering.HeightMapRenderer;
 import net.nabaal.majiir.realtimerender.rendering.HeightMapWriteCache;
 import net.nabaal.majiir.realtimerender.rendering.NormalMap;
 import net.nabaal.majiir.realtimerender.rendering.SerializedHeightMapFilePattern;
+import net.nabaal.majiir.realtimerender.rendering.StructureMapRenderer;
 import net.nabaal.majiir.realtimerender.rendering.TileFilePattern;
 
 public class RenderTask implements Runnable {
@@ -94,6 +95,7 @@ public class RenderTask implements Runnable {
 		// structure normal map
 		NormalMap nms = new FiniteDifferencesNormalMap(hms);
 		nms = new NormalMapReadCache(nms);
+		ReadCache nms_rc = (ReadCache) nms;
 		nms = new AverageNormalMap(nms, nm);
 		
 		// renders
@@ -146,6 +148,7 @@ public class RenderTask implements Runnable {
 		plugin.getChunkManager().render(renderer);
 		plugin.getChunkManager().endBatch();
 		nm_rc.clear();
+		nms_rc.clear();
 		hm_rc0.clear();
 		hm_rc1.clear();
 		hms_rc0.clear();

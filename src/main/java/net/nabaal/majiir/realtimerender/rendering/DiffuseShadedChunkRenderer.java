@@ -40,24 +40,23 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 					Color color;
 					Material material = Material.getMaterial(chunkSnapshot.getBlockTypeId(x, y, z));
 					color = getMaterialColor(material, chunkSnapshot, x, y, z);
-					g.setColor(color);
-					g.fillRect(x, z, 1, 1);
 					
 					if (TerrainHelper.isTerrain(material)) {
 						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.normalMap);
 						if (shading >= 0) {
-							g.setColor(computeShadeColor(shading));
-							g.fillRect(x, z, 1, 1);
+							color = tintOrShadeColor(color, shading);
 						}
 					}
 					
 					if (TerrainHelper.isStructure(material)) {
 						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.structureMap);
 						if (shading >= 0) {
-							g.setColor(computeShadeColor(shading));
-							g.fillRect(x, z, 1, 1);
+							color = tintOrShadeColor(color, shading);
 						}
 					}
+					
+					g.setColor(color);
+					g.fillRect(x, z, 1, 1);
 				}
 			}
 		}
@@ -87,14 +86,32 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		return new Color(color.getRed(), color.getGreen(), color.getBlue(), a);
 	}
 	
-	private static Color computeShadeColor(double shading) {
-		if (shading < 0.5) {
-			return new Color(0, 0, 0, (int) Math.floor((1 - (shading * 2)) * 255));
-		} else if (shading < 1.0) {
-			return new Color(255, 255, 255, (int) Math.floor(((shading * 2) - 1) * 255));
+	private static Color tintOrShadeColor(Color color, double shading) {
+		shading = Math.min(Math.max(shading, 0), 1);
+		if (shading > 0.5) {
+			return tintColor(color, (shading * 2) - 1);
 		} else {
-			return new Color(255, 255, 255, 255);
+			return shadeColor(color, 1 - (shading * 2));
 		}
+	}
+	
+	private static Color shadeColor(Color color, double shade) {
+		return new Color(
+				(int)(color.getRed() * (1.0 - shade)),
+				(int)(color.getGreen() * (1.0 - shade)),
+				(int)(color.getBlue() * (1.0 - shade)),
+				color.getAlpha()
+			);
+	}
+	
+	private static Color tintColor(Color color, double shade) {
+		int r = color.getRed();
+		int g = color.getGreen();
+		int b = color.getBlue();
+		r += (int)((255 - r) * shade);
+		g += (int)((255 - g) * shade);
+		b += (int)((255 - b) * shade);
+		return new Color(r, g, b, color.getAlpha());
 	}
 	
 	private double computeDiffuseShading(ChunkSnapshot chunkSnapshot, int x, int z, NormalMap nm) {	

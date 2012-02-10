@@ -13,7 +13,6 @@ import net.nabaal.majiir.realtimerender.image.WriteCache;
 import net.nabaal.majiir.realtimerender.image.ZoomImageBuilder;
 import net.nabaal.majiir.realtimerender.palette.DefaultColorPalette;
 import net.nabaal.majiir.realtimerender.rendering.AdaptiveNormalMap;
-import net.nabaal.majiir.realtimerender.rendering.AverageNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.NormalMapReadCache;
 import net.nabaal.majiir.realtimerender.rendering.CircleAverageNormalMap;
 import net.nabaal.majiir.realtimerender.rendering.DiffuseShadedChunkRenderer;

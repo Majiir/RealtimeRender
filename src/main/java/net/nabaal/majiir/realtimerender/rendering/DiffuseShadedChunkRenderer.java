@@ -46,9 +46,7 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 						if (shading >= 0) {
 							color = tintOrShadeColor(color, shading);
 						}
-					}
-					
-					if (TerrainHelper.isStructure(material)) {
+					} else if (TerrainHelper.isStructure(material)) {
 						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.structureMap);
 						if (shading >= 0) {
 							color = tintOrShadeColor(color, shading);

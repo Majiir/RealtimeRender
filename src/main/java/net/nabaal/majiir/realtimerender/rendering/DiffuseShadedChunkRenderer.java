@@ -44,12 +44,16 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 					if (TerrainHelper.isTerrain(material)) {
 						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.normalMap);
 						if (shading >= 0) {
-							color = tintOrShadeColor(color, shading);
+							color = tintOrShadeColor(color, shading, 1.0);
 						}
 					} else if (TerrainHelper.isStructure(material)) {
 						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.structureMap);
 						if (shading >= 0) {
-							color = tintOrShadeColor(color, shading);
+							if (material.equals(Material.LEAVES)) {
+								color = tintOrShadeColor(color, shading, 0.3);
+							} else {
+								color = tintOrShadeColor(color, shading, 1.0);
+							}
 						}
 					}
 					
@@ -84,12 +88,12 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		return new Color(color.getRed(), color.getGreen(), color.getBlue(), a);
 	}
 	
-	private static Color tintOrShadeColor(Color color, double shading) {
+	private static Color tintOrShadeColor(Color color, double shading, double intensity) {
 		shading = Math.min(Math.max(shading, 0), 1);
 		if (shading > 0.5) {
-			return tintColor(color, (shading * 2) - 1);
+			return tintColor(color, ((shading * 2) - 1) * intensity);
 		} else {
-			return shadeColor(color, 1 - (shading * 2));
+			return shadeColor(color, (1 - (shading * 2)) * intensity);
 		}
 	}
 	

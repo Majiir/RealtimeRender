@@ -1,6 +1,10 @@
 package net.nabaal.majiir.realtimerender;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -19,6 +23,8 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import flexjson.JSONSerializer;
 
 public class RealtimeRender extends JavaPlugin {
 	
@@ -97,6 +103,23 @@ public class RealtimeRender extends JavaPlugin {
 		}
 		
 		getCommand("map").setExecutor(new CommandManager(this));
+		
+		File options = new File(getDataFolder(), "options.json");
+		JSONSerializer serializer = new JSONSerializer();
+		serializer.exclude("class");
+		try {
+			serializer.serialize(new Object() {
+				public int minZoom = -1 * zoomsIn;
+				public int maxZoom = zoomsOut;
+				public Object spawn = new Object() {
+					public int x = world.getSpawnLocation().getBlockX();
+					public int y = world.getSpawnLocation().getBlockY();
+				};
+			}, new FileWriter(options));
+		} catch (IOException e) {
+			log.warning(String.format("%s: failed to write options file!", this.getDescription().getName()));
+		}
+		commitProvider.commitFiles(Arrays.asList(new File[] { options }));
 		
 		log.info(String.format("%s: enabled.", this.getDescription().getName()));
 	}

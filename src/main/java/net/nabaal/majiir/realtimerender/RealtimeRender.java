@@ -1,11 +1,23 @@
 package net.nabaal.majiir.realtimerender;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.JarURLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 import net.nabaal.majiir.realtimerender.commit.CommitProvider;
@@ -15,9 +27,11 @@ import net.nabaal.majiir.realtimerender.rendering.ChunkManager;
 import net.nabaal.majiir.realtimerender.rendering.FileChunkSnapshotProvider;
 import net.nabaal.majiir.realtimerender.rendering.NoOpChunkPreprocessor;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
@@ -166,6 +180,94 @@ public class RealtimeRender extends JavaPlugin {
 		for (Chunk chunk : world.getLoadedChunks()) {
 			this.enqueueChunk(chunk);
 		}
+	}
+	
+	public void installRemote(final CommandSender sender) {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				List<File> files = new ArrayList<File>();
+				try {
+					files.addAll(copyJarResourcesRecursively(getDataFolder(), (JarURLConnection) getClass().getResource("/web").openConnection()));
+				} catch (IOException e) {
+					e.printStackTrace();
+					sender.sendMessage(ChatColor.RED + "Failed to install map viewer! See console for details.");
+					log.warning("RealtimeRender: failed to install map viewer! (jar error)");
+					return;
+				}
+				commitProvider.commitFiles(files, "");
+				sender.sendMessage(ChatColor.GREEN + "Map viewer installed.");
+			}
+		});
+		thread.start();
+	}
+
+	private List<File> copyJarResourcesRecursively(File destination, JarURLConnection jarConnection ) throws IOException {
+		List<File> files = new ArrayList<File>();
+	    JarFile jarFile = jarConnection.getJarFile();
+	    for (JarEntry entry : iterable(jarFile.entries())) {
+	        if (entry.getName().startsWith(jarConnection.getEntryName())) {
+	            String fileName = removeStart(entry.getName(), jarConnection.getEntryName());
+	            if (!entry.isDirectory()) {
+	                InputStream entryInputStream = null;
+	                try {
+	                    entryInputStream = jarFile.getInputStream(entry);
+	                    File file = new File(destination, fileName);
+	                    files.add(file);
+	                    copyStream(entryInputStream, new FileOutputStream(file));
+	                } finally {
+	                    entryInputStream.close();
+	                }
+	            } else {
+	            	new File(destination, fileName).mkdirs();
+	            }
+	        }
+	    }
+	    return files;
+	}
+	
+	private void copyStream(InputStream is, OutputStream os) throws IOException {
+		InputStream bis = new BufferedInputStream(is);
+		OutputStream bos = new BufferedOutputStream(os);
+		try {
+			byte[] b = new byte[512];
+			int len;
+			while ((len = bis.read(b)) > 0) {
+				bos.write(b, 0, len);
+			}
+		} finally {
+			bis.close();
+			bos.close();
+		}
+	}
+	
+	private <T> Iterable<T> iterable(final Enumeration<T> en) {
+		return new Iterable<T>() {
+			@Override
+			public Iterator<T> iterator() {
+				return new Iterator<T>() {
+					@Override
+					public boolean hasNext() {
+						return en.hasMoreElements();
+					}
+					@Override
+					public T next() {
+						return en.nextElement();
+					}
+					@Override
+					public void remove() {
+						throw new UnsupportedOperationException();
+					}
+				};
+			}
+		};
+	}
+	
+	private String removeStart(String full, String start) {
+		if (full.startsWith(start)) {
+			return full.substring(start.length());
+		}
+		return full;
 	}
 	
 	// TODO TODO

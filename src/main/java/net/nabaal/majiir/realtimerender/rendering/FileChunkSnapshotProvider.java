@@ -18,6 +18,7 @@ import java.util.zip.DeflaterOutputStream;
 import java.util.zip.InflaterInputStream;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
+import net.nabaal.majiir.realtimerender.RealtimeRender;
 import net.nabaal.majiir.realtimerender.image.FilePattern;
 
 public class FileChunkSnapshotProvider {
@@ -46,10 +47,8 @@ public class FileChunkSnapshotProvider {
 				ostream.close();
 			}
 		} catch (FileNotFoundException e) {
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			RealtimeRender.getLogger().warning("RealtimeRender: error reading chunk " + chunk + ": " + e);
 		}
 		return tile;
 	}
@@ -66,8 +65,8 @@ public class FileChunkSnapshotProvider {
 			} finally {
 				ostream.close();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			RealtimeRender.getLogger().warning("RealtimeRender: error writing chunk " + Coordinate.fromSnapshot(snapshot) + ": " + e);
 		}
 	}
 	

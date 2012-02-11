@@ -3,7 +3,6 @@ package net.nabaal.majiir.realtimerender;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -46,7 +45,8 @@ public class RealtimeRender extends JavaPlugin {
 	private int zoomsIn;
 	private int zoomsOut;
 	
-	private boolean redoZooms = false; 
+	private boolean redoZooms = false;
+	private File options;
 	
 	@Override
 	public void onDisable() {	
@@ -104,28 +104,22 @@ public class RealtimeRender extends JavaPlugin {
 		
 		getCommand("map").setExecutor(new CommandManager(this));
 		
-		File options = new File(getDataFolder(), "options.json");
-		JSONSerializer serializer = new JSONSerializer();
-		serializer.exclude("class");
+		options = new File(getDataFolder(), "options.json");
+		FileWriter writer = null;
 		try {
-			serializer.serialize(new Object() {
-				public int minZoom = -1 * zoomsIn;
-				public int maxZoom = zoomsOut;
-				public Object spawn = new Object() {
-					public int x = world.getSpawnLocation().getBlockX();
-					public int y = world.getSpawnLocation().getBlockY();
-				};
-			}, new FileWriter(options));
+			writer = new FileWriter(options);
+			new JSONSerializer().exclude("class", "spawn.class", "spawn.level").serialize(new MapOptions(zoomsIn * -1, zoomsOut, world.getSpawnLocation()), writer);
+			writer.close();
 		} catch (IOException e) {
 			log.warning(String.format("%s: failed to write options file!", this.getDescription().getName()));
 		}
-		commitProvider.commitFiles(Arrays.asList(new File[] { options }));
 		
 		log.info(String.format("%s: enabled.", this.getDescription().getName()));
 	}
 	
 	public void registerCommitPlugin(CommitProvider provider) {
 		commitProvider.registerProvider(provider);
+		provider.commitFiles(Arrays.asList(new File[] { options }));
 	}
 	
 	public ChunkManager getChunkManager() {

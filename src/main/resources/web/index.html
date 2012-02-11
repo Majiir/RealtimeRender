@@ -142,7 +142,10 @@
 			return layerPoint;
 		}
 
-		var params = { minZoom: -2, maxZoom: 4, spawn: new L.Point(-168, 91) };
+		var params;
+		$.getJSON("options.json", function(data) {
+			params = data;
+		});
 
 		var map = new L.Map('map', {zoom: params.maxZoom, center: new L.LatLng(0, 0), worldCopyJump: false, crs: L.CRS.Direct});
 		

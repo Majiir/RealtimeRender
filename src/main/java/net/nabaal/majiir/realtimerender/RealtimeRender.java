@@ -119,7 +119,7 @@ public class RealtimeRender extends JavaPlugin {
 	
 	public void registerCommitPlugin(CommitProvider provider) {
 		commitProvider.registerProvider(provider);
-		provider.commitFiles(Arrays.asList(new File[] { options }));
+		provider.commitFiles(Arrays.asList(new File[] { options }), "");
 	}
 	
 	public ChunkManager getChunkManager() {
@@ -147,7 +147,7 @@ public class RealtimeRender extends JavaPlugin {
 	}
 	
 	public void commit(Iterable<File> files) {
-		commitProvider.commitFiles(files);
+		commitProvider.commitFiles(files, "tiles");
 	}
 	
 	public static Logger getLogger() {

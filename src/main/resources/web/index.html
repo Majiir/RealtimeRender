@@ -82,7 +82,8 @@
 			L.Control.Coordinates = L.Class.extend({
 				
 				_refresh: function() {
-					this._container.innerHTML = '<div><span class="label">X:</span> <span class="value">' + this._coordinate.x + '</span></div><div><span class="label">Z:</span> <span class="value">' + this._coordinate.y + '</span></div>';
+					this._labelX.textContent = this._coordinate.x;
+					this._labelY.textContent = this._coordinate.y;
 				},
 	
 				initialize: function () {
@@ -90,6 +91,18 @@
 	
 					this._container = L.DomUtil.create('div', 'leaflet-control-coordinates');
 					L.DomEvent.disableClickPropagation(this._container);
+					
+					var row = $('<div>');
+					row.append('<span class="label">X: </span>');
+					this._labelX = L.DomUtil.create('span', 'value');
+					row.append(this._labelX);
+					$(this._container).append(row);
+					
+					row = $('<div>');
+					row.append('<span class="label">Z: </span>');
+					this._labelY = L.DomUtil.create('span', 'value');
+					row.append(this._labelY);
+					$(this._container).append(row);
 					
 					this._refresh();
 				},

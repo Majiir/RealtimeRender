@@ -3,7 +3,7 @@
   <groupId>net.nabaal.majiir</groupId>
   <artifactId>realtimerender</artifactId>
   <name>RealtimeRender</name>
-  <version>0.0.1</version>
+  <version>0.1</version>
   <packaging>jar</packaging>
   <dependencies>
     <dependency>

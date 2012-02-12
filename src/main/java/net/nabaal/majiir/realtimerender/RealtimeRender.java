@@ -3,7 +3,10 @@ package net.nabaal.majiir.realtimerender;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -19,6 +22,7 @@ import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -102,6 +106,8 @@ public class RealtimeRender extends JavaPlugin {
 			log.warning("RealtimeRender: discover interval must be greater than zero. (check config.yml)");
 		}
 		
+		config.getConfigurationSection("markers"); // TODO TODO TODO
+		
 		getCommand("map").setExecutor(new CommandManager(this));
 		
 		options = new File(getDataFolder(), "options.json");
@@ -166,6 +172,33 @@ public class RealtimeRender extends JavaPlugin {
 		for (Chunk chunk : world.getLoadedChunks()) {
 			this.enqueueChunk(chunk);
 		}
+	}
+	
+	private List<MarkerGroup> loadMarkerGroups(ConfigurationSection config) {
+		List<MarkerGroup> groups = new ArrayList<MarkerGroup>();
+		for (Entry<String, Object> entry : config.getValues(false).entrySet()) {
+			if (!config.isList(entry.getKey())) {
+				log.warning("RealtimeRender: could not read marker list for marker group \"" + entry.getKey() + "\"");
+				continue;
+			}
+			List<Marker> markers = new ArrayList<Marker>();
+			for (Object m : config.getList(entry.getKey())) {
+				if (!(m instanceof ConfigurationSection)) {
+					log.warning("RealtimeRender: could not read marker config section for marker group \"" + entry.getKey() + "\"");
+					continue;
+				}
+				/*
+				 * We might have a problem.
+				 * 
+				 * YAML is more forgiving about key names than Bukkit's configuration classes. I don't
+				 * want to access the same YAML file with a different library, because I feel that
+				 * might violate the separation of responsibilities created by the config classes. I
+				 * should see how Bukkit handles this and try a more verbose YAML format if that
+				 * doesn't work.
+				 */
+			}
+		}
+		return groups;
 	}
 	
 	// TODO TODO

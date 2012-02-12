@@ -76,7 +76,10 @@ public class ChunkManager {
 			List<Future<?>> futures = new ArrayList<Future<?>>();
 			for (Coordinate chunk : chunks) {
 				if (chunk.zoomOut(3).equals(tile)) {
-					futures.add(executor.submit(new RenderChunkTask(chunkRenderer, provider.getSnapshot(chunk))));
+					ChunkSnapshot snapshot = provider.getSnapshot(chunk);
+					if (snapshot != null) {
+						futures.add(executor.submit(new RenderChunkTask(chunkRenderer, snapshot)));
+					}
 				}
 			}
 			for (Future<?> future : futures) {

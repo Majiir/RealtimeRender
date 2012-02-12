@@ -17,11 +17,13 @@ import org.jscience.mathematics.vector.Float64Vector;
 public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 	
 	private final NormalMap normalMap;
+	private final NormalMap structureMap;
 	private final ImageProvider imageProvider;
 	private final ColorPalette colorPalette;
 	
-	public DiffuseShadedChunkRenderer(ImageProvider imageProvider, NormalMap normalMap, ColorPalette colorPalette) {				
+	public DiffuseShadedChunkRenderer(ImageProvider imageProvider, NormalMap normalMap, NormalMap structureMap, ColorPalette colorPalette) {				
 		this.normalMap = normalMap;
+		this.structureMap = structureMap;
 		this.imageProvider = imageProvider;
 		this.colorPalette = colorPalette;
 	}
@@ -32,22 +34,29 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		Graphics2D g = (Graphics2D) image.getGraphics();
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
-				int ymax = chunkSnapshot.getHighestBlockYAt(x, z);
 				// TODO: Handle cases where we can start at an opaque non-terrain block
-				for (int y = getTerrainHeight(chunkSnapshot, x, z); y <= ymax; y++) {
-					Color color;
+				for (int y = TerrainHelper.getTerrainHeight(x, z, chunkSnapshot); y <= chunkSnapshot.getHighestBlockYAt(x, z); y++) {
 					Material material = Material.getMaterial(chunkSnapshot.getBlockTypeId(x, y, z));
-					color = getMaterialColor(material, chunkSnapshot, x, y, z);
-					g.setColor(color);
-					g.fillRect(x, z, 1, 1);
+					Color color = getMaterialColor(material, chunkSnapshot, x, y, z);
 					
 					if (TerrainHelper.isTerrain(material)) {
-						double shading = computeDiffuseShading(chunkSnapshot, x, z);
+						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.normalMap);
 						if (shading >= 0) {
-							g.setColor(computeShadeColor(shading));
-							g.fillRect(x, z, 1, 1);
+							color = tintOrShadeColor(color, shading, 1.0);
+						}
+					} else if (TerrainHelper.isStructure(material)) {
+						double shading = computeDiffuseShading(chunkSnapshot, x, z, this.structureMap);
+						if (shading >= 0) {
+							if (material.equals(Material.LEAVES)) {
+								color = tintOrShadeColor(color, shading, 0.3);
+							} else {
+								color = tintOrShadeColor(color, shading, 1.0);
+							}
 						}
 					}
+					
+					g.setColor(color);
+					g.fillRect(x, z, 1, 1);
 				}
 			}
 		}
@@ -77,35 +86,42 @@ public class DiffuseShadedChunkRenderer implements ChunkRenderer {
 		return new Color(color.getRed(), color.getGreen(), color.getBlue(), a);
 	}
 	
-	private static Color computeShadeColor(double shading) {
-		if (shading < 0.5) {
-			return new Color(0, 0, 0, (int) Math.floor((1 - (shading * 2)) * 255));
-		} else if (shading < 1.0) {
-			return new Color(255, 255, 255, (int) Math.floor(((shading * 2) - 1) * 255));
+	private static Color tintOrShadeColor(Color color, double shading, double intensity) {
+		shading = Math.min(Math.max(shading, 0), 1);
+		if (shading > 0.5) {
+			return tintColor(color, ((shading * 2) - 1) * intensity);
 		} else {
-			return new Color(255, 255, 255, 255);
+			return shadeColor(color, (1 - (shading * 2)) * intensity);
 		}
 	}
 	
-	private double computeDiffuseShading(ChunkSnapshot chunkSnapshot, int x, int z) {	
-		Float64Vector n = this.normalMap.getNormal(Coordinate.fromSnapshot(chunkSnapshot).zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, z, Coordinate.LEVEL_BLOCK)));
+	private static Color shadeColor(Color color, double shade) {
+		return new Color(
+				(int)(color.getRed() * (1.0 - shade)),
+				(int)(color.getGreen() * (1.0 - shade)),
+				(int)(color.getBlue() * (1.0 - shade)),
+				color.getAlpha()
+			);
+	}
+	
+	private static Color tintColor(Color color, double shade) {
+		int r = color.getRed();
+		int g = color.getGreen();
+		int b = color.getBlue();
+		r += (int)((255 - r) * shade);
+		g += (int)((255 - g) * shade);
+		b += (int)((255 - b) * shade);
+		return new Color(r, g, b, color.getAlpha());
+	}
+	
+	private static double computeDiffuseShading(ChunkSnapshot chunkSnapshot, int x, int z, NormalMap nm) {	
+		Float64Vector n = nm.getNormal(Coordinate.fromSnapshot(chunkSnapshot).zoomIn(Coordinate.OFFSET_BLOCK_CHUNK).plus(new Coordinate(x, z, Coordinate.LEVEL_BLOCK)));
 		Float64Vector light = Float64Vector.valueOf(-1, -1, -1);
 		if (n == null) {
 			return -1;
 		}
 		double shading = n.times(light).divide((n.norm().times(light.norm()))).doubleValue();
 		return ((shading + 1) * 0.4) + 0.15;
-	}
-	
-	private static int getTerrainHeight(ChunkSnapshot chunkSnapshot, int x, int z) {
-		int y = chunkSnapshot.getHighestBlockYAt(x, z);
-		Material material;
-		do {
-			y--;
-			int id = chunkSnapshot.getBlockTypeId(x, y, z);
-			material = Material.getMaterial(id);
-		} while (!TerrainHelper.isTerrain(material) && (y > 0));
-		return y;
 	}
 
 }

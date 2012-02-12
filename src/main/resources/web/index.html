@@ -60,7 +60,9 @@
 	<script src="dist/leaflet.js"></script>
 	<script>
 
-		L.Projection.NoWrap = {
+		$.getJSON("options.json", function(params) {
+		
+			L.Projection.NoWrap = {
 		        project: function (latlng) {
 	  	              return new L.Point(latlng.lng, latlng.lat);
 	        	},
@@ -68,119 +70,132 @@
 		        unproject: function (point, unbounded) {
         		        return new L.LatLng(point.y, point.x, true);
 		        }
-		};
+			};
+	
+			L.CRS.Direct = L.Util.extend({}, L.CRS, {
+			        code: 'Direct',
+	
+			        projection: L.Projection.NoWrap,
+			        transformation: new L.Transformation(1, 0, 1, 0)
+			});
+	
+			L.Control.Coordinates = L.Class.extend({
+				
+				_refresh: function() {
+					this._labelX.textContent = this._coordinate.x;
+					this._labelY.textContent = this._coordinate.y;
+				},
+	
+				initialize: function () {
+					this._coordinate = new L.Point(0, 0);
+	
+					this._container = L.DomUtil.create('div', 'leaflet-control-coordinates');
+					L.DomEvent.disableClickPropagation(this._container);
+					
+					var row = $('<div>');
+					row.append('<span class="label">X: </span>');
+					this._labelX = L.DomUtil.create('span', 'value');
+					row.append(this._labelX);
+					$(this._container).append(row);
+					
+					row = $('<div>');
+					row.append('<span class="label">Z: </span>');
+					this._labelY = L.DomUtil.create('span', 'value');
+					row.append(this._labelY);
+					$(this._container).append(row);
+					
+					this._refresh();
+				},
+	
+				getContainer: function () {
+					return this._container;
+				},
+	
+				getPosition: function () {
+					return L.Control.Position.TOP_RIGHT;
+				},
+	
+				onAdd: function (map) {
+					
+				},
+	
+				setCoordinate: function(point) {
+					this._coordinate = point;
+					this._refresh();
+				}
+	
+	
+			});
+	
+			function layerPointToBlock(layer, layerPoint) {
+				var origin = map.latLngToLayerPoint(new L.LatLng(0, 0));
+				var block = new L.Point(layerPoint.x - origin.x, layerPoint.y - origin.y);
+				var zoom = layer._getOffsetZoom(map.getZoom());
+	
+				if (zoom > 0) {
+					block = new L.Point(block.x << zoom, block.y << zoom);
+				} else {
+					block = new L.Point(block.x >> (zoom * -1), block.y >> (zoom * -1));
+				}
+	
+				return block;
+			}
+	
+			function blockToLayerPoint(layer, block) {
+	
+				var zoom = layer._getOffsetZoom(map.getZoom());
+	
+				if (zoom > 0) {
+					block = new L.Point(block.x >> zoom, block.y >> zoom);
+				} else {
+					block = new L.Point(block.x << (zoom * -1), block.y << (zoom * -1));
+				}
+	
+				var origin = map.latLngToLayerPoint(new L.LatLng(0, 0));
+				var layerPoint = new L.Point(block.x + origin.x, block.y + origin.y);
+	
+				return layerPoint;
+			}
 
-		L.CRS.Direct = L.Util.extend({}, L.CRS, {
-		        code: 'Direct',
-
-		        projection: L.Projection.NoWrap,
-		        transformation: new L.Transformation(1, 0, 1, 0)
-		});
-
-		L.Control.Coordinates = L.Class.extend({
+			var map = new L.Map('map', {zoom: params.maxZoom, center: new L.LatLng(0, 0), worldCopyJump: false, crs: L.CRS.Direct});
 			
-                        _refresh: function() {
-                                this._container.innerHTML = '<div><span class="label">X:</span> <span class="value">' + this._coordinate.x + '</span></div><div><span class="label">Z:</span> <span class="value">' + this._coordinate.y + '</span></div>';
-                        },
-
-			initialize: function () {
-				this._coordinate = new L.Point(0, 0);
-
-				this._container = L.DomUtil.create('div', 'leaflet-control-coordinates');
-				L.DomEvent.disableClickPropagation(this._container);
-				
-				this._refresh();
-			},
-
-			getContainer: function () {
-				return this._container;
-			},
-
-			getPosition: function () {
-				return L.Control.Position.TOP_RIGHT;
-			},
-
-			onAdd: function (map) {
-				
-			},
-
-			setCoordinate: function(point) {
-				this._coordinate = point;
-				this._refresh();
-			}
-
-
-		});
-
-		function layerPointToBlock(layer, layerPoint) {
-			var origin = map.latLngToLayerPoint(new L.LatLng(0, 0));
-			var block = new L.Point(layerPoint.x - origin.x, layerPoint.y - origin.y);
-			var zoom = layer._getOffsetZoom(map.getZoom());
-
-			if (zoom > 0) {
-				block = new L.Point(block.x << zoom, block.y << zoom);
-			} else {
-				block = new L.Point(block.x >> (zoom * -1), block.y >> (zoom * -1));
-			}
-
-			return block;
-		}
-
-		function blockToLayerPoint(layer, block) {
-
-			var zoom = layer._getOffsetZoom(map.getZoom());
-
-			if (zoom > 0) {
-				block = new L.Point(block.x >> zoom, block.y >> zoom);
-			} else {
-				block = new L.Point(block.x << (zoom * -1), block.y << (zoom * -1));
-			}
-
-			var origin = map.latLngToLayerPoint(new L.LatLng(0, 0));
-			var layerPoint = new L.Point(block.x + origin.x, block.y + origin.y);
-
-			return layerPoint;
-		}
-
-		var params = { minZoom: -2, maxZoom: 4, spawn: new L.Point(-168, 91) };
-
-		var map = new L.Map('map', {zoom: params.maxZoom, center: new L.LatLng(0, 0), worldCopyJump: false, crs: L.CRS.Direct});
-		
-		var url = 'tiles/world.{z}.{x}.{y}.png',
-		attrib = 'Map by Majiir\'s <a href="https://github.com/Majiir/RealtimeRender/">RealtimeRender</a>',
-		layer = new L.TileLayer(url, {maxZoom: params.maxZoom - params.minZoom, minZoom: 0, zoomOffset: params.minZoom, attribution: attrib, continuousWorld: true, zoomReverse: true});
-		
-		map.addLayer(layer);
-
-		var layersControl = new L.Control.Layers(null, null, {collapsed: false});
-		map.addControl(layersControl);
-
-		$.getJSON("markers.json", function(data) {
+			var url = 'tiles/world.{z}.{x}.{y}.png',
+			attrib = 'Map by Majiir\'s <a href="https://github.com/Majiir/RealtimeRender/">RealtimeRender</a>',
+			layer = new L.TileLayer(url, {maxZoom: params.maxZoom - params.minZoom, minZoom: 0, zoomOffset: params.minZoom, attribution: attrib, continuousWorld: true, zoomReverse: true});
+			
+			map.addLayer(layer);
 	
-			var markerLayer = new L.LayerGroup();
+			var layersControl = new L.Control.Layers(null, null, {collapsed: false});
+			map.addControl(layersControl);
 	
-			$.each(data, function(index, info) {
-				var marker = new L.Marker(map.layerPointToLatLng(blockToLayerPoint(layer, info.block)));
-				marker.bindPopup("<strong>Label:</strong> " + info.label + "<br/><strong>Location:</strong> " + "(" + info.block.x + ", " + info.block.y + ")");
-				markerLayer.addLayer(marker);
+			$.getJSON("markers.json", function(data) {
+		
+				var markerLayer = new L.LayerGroup();
+		
+				$.each(data, function(index, info) {
+					var marker = new L.Marker(map.layerPointToLatLng(blockToLayerPoint(layer, info.block)));
+					marker.bindPopup("<strong>Label:</strong> " + info.label + "<br/><strong>Location:</strong> " + "(" + info.block.x + ", " + info.block.y + ")");
+					markerLayer.addLayer(marker);
+				});
+			
+				var circle = new L.Circle(map.layerPointToLatLng(blockToLayerPoint(layer, params.spawn)), 410, {color: 'yellow'});
+				circle.bindPopup("<strong>Label:</strong> Spawn Area<br/><strong>Center:</strong> (" + params.spawn.x + ", " + params.spawn.y + ")<br/><strong>Radius:</strong> 16 blocks");
+				markerLayer.addLayer(circle);
+			
+				map.addLayer(markerLayer);
+				layersControl.addOverlay(markerLayer, "Markers");
+		
+			}).fail(function() {
+				layersControl.getContainer().innerHTML = '<span class="error">Error: Could not load markers file!</span>';
+			});
+	
+			var coordinatesControl = new L.Control.Coordinates();
+			map.addControl(coordinatesControl);
+		
+			map.on('mousemove', function(e) {
+				coordinatesControl.setCoordinate(layerPointToBlock(layer, e.layerPoint));
 			});
 		
-			var circle = new L.Circle(map.layerPointToLatLng(blockToLayerPoint(layer, params.spawn)), 410, {color: 'yellow'});
-			circle.bindPopup("<strong>Label:</strong> Spawn Area<br/><strong>Center:</strong> (" + params.spawn.x + ", " + params.spawn.y + ")<br/><strong>Radius:</strong> 16 blocks");
-			markerLayer.addLayer(circle);
-		
-			map.addLayer(markerLayer);
-			layersControl.addOverlay(markerLayer, "Markers");
-	
-		}).fail(function() {
-			layersControl.getContainer().innerHTML = '<span class="error">Error: Could not load markers file!</span>';
-		});
-
-		var coordinatesControl = new L.Control.Coordinates();
-		map.addControl(coordinatesControl);
-	
-		map.on('mousemove', function(e) {
-			coordinatesControl.setCoordinate(layerPointToBlock(layer, e.layerPoint));
 		});
 
 	</script>

@@ -1,6 +1,9 @@
 package net.nabaal.majiir.realtimerender;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -19,6 +22,8 @@ import org.bukkit.configuration.Configuration;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import flexjson.JSONSerializer;
 
 public class RealtimeRender extends JavaPlugin {
 	
@@ -40,7 +45,8 @@ public class RealtimeRender extends JavaPlugin {
 	private int zoomsIn;
 	private int zoomsOut;
 	
-	private boolean redoZooms = false; 
+	private boolean redoZooms = false;
+	private File options;
 	
 	@Override
 	public void onDisable() {	
@@ -98,11 +104,22 @@ public class RealtimeRender extends JavaPlugin {
 		
 		getCommand("map").setExecutor(new CommandManager(this));
 		
+		options = new File(getDataFolder(), "options.json");
+		FileWriter writer = null;
+		try {
+			writer = new FileWriter(options);
+			new JSONSerializer().exclude("class", "spawn.class", "spawn.level").serialize(new MapOptions(zoomsIn * -1, zoomsOut, world.getSpawnLocation()), writer);
+			writer.close();
+		} catch (IOException e) {
+			log.warning(String.format("%s: failed to write options file!", this.getDescription().getName()));
+		}
+		
 		log.info(String.format("%s: enabled.", this.getDescription().getName()));
 	}
 	
 	public void registerCommitPlugin(CommitProvider provider) {
 		commitProvider.registerProvider(provider);
+		provider.commitFiles(Arrays.asList(new File[] { options }), "");
 	}
 	
 	public ChunkManager getChunkManager() {
@@ -130,7 +147,7 @@ public class RealtimeRender extends JavaPlugin {
 	}
 	
 	public void commit(Iterable<File> files) {
-		commitProvider.commitFiles(files);
+		commitProvider.commitFiles(files, "tiles");
 	}
 	
 	public static Logger getLogger() {

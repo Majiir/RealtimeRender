@@ -13,9 +13,9 @@ public class PluginCommitProvider implements CommitProvider {
 	}
 	
 	@Override
-	public void commitFiles(Iterable<File> files) {
+	public void commitFiles(Iterable<File> files, String dir) {
 		for (CommitProvider provider : providers) {
-			provider.commitFiles(files);
+			provider.commitFiles(files, dir);
 		}
 	}
 

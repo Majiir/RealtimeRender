@@ -81,9 +81,9 @@
 	
 			L.Control.Coordinates = L.Class.extend({
 				
-	                        _refresh: function() {
-	                                this._container.innerHTML = '<div><span class="label">X:</span> <span class="value">' + this._coordinate.x + '</span></div><div><span class="label">Z:</span> <span class="value">' + this._coordinate.y + '</span></div>';
-	                        },
+				_refresh: function() {
+					this._container.innerHTML = '<div><span class="label">X:</span> <span class="value">' + this._coordinate.x + '</span></div><div><span class="label">Z:</span> <span class="value">' + this._coordinate.y + '</span></div>';
+				},
 	
 				initialize: function () {
 					this._coordinate = new L.Point(0, 0);

@@ -1,6 +1,6 @@
 name: RealtimeRender
 main: net.nabaal.majiir.realtimerender.RealtimeRender
-version: 0.0.1
+version: ${project.version}
 author: Majiir
 description: Maintains a frequently-updated map render.
 commands:

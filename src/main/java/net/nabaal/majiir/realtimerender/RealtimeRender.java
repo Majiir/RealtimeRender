@@ -108,7 +108,7 @@ public class RealtimeRender extends JavaPlugin {
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(options);
-			new JSONSerializer().exclude("class", "spawn.class", "spawn.level").serialize(new MapOptions(zoomsIn * -1, zoomsOut, world.getSpawnLocation()), writer);
+			new JSONSerializer().exclude("class", "spawn.class", "spawn.level").serialize(new MapOptions(zoomsIn * -1, zoomsOut, world), writer);
 			writer.close();
 		} catch (IOException e) {
 			log.warning(String.format("%s: failed to write options file!", this.getDescription().getName()));

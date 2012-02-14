@@ -106,7 +106,7 @@ public class RealtimeRender extends JavaPlugin {
 			log.warning("RealtimeRender: discover interval must be greater than zero. (check config.yml)");
 		}
 		
-		config.getConfigurationSection("markers"); // TODO TODO TODO
+		loadMarkerGroups(config.getConfigurationSection("markers"));
 		
 		getCommand("map").setExecutor(new CommandManager(this));
 		
@@ -177,28 +177,51 @@ public class RealtimeRender extends JavaPlugin {
 	private List<MarkerGroup> loadMarkerGroups(ConfigurationSection config) {
 		List<MarkerGroup> groups = new ArrayList<MarkerGroup>();
 		for (Entry<String, Object> entry : config.getValues(false).entrySet()) {
-			if (!config.isList(entry.getKey())) {
-				log.warning("RealtimeRender: could not read marker list for marker group \"" + entry.getKey() + "\"");
+			if (!(entry.getValue() instanceof ConfigurationSection)) {
+				log.warning("RealtimeRender: could not read config section for marker group \"" + entry.getKey() + "\"");
 				continue;
 			}
+			ConfigurationSection groupConfig = (ConfigurationSection) entry.getValue();
 			List<Marker> markers = new ArrayList<Marker>();
-			for (Object m : config.getList(entry.getKey())) {
-				if (!(m instanceof ConfigurationSection)) {
-					log.warning("RealtimeRender: could not read marker config section for marker group \"" + entry.getKey() + "\"");
+			for (Entry<String, Object> m : groupConfig.getValues(false).entrySet()) {
+				Marker marker;
+				if (m.getValue() instanceof List<?>) {
+					marker = loadMarker(m.getKey(), (List<?>) m.getValue());
+				} else if (m.getValue() instanceof ConfigurationSection) {
+					marker = loadMarker((ConfigurationSection) m.getValue());
+				} else {
+					log.warning("RealtimeRender: could not read section for marker \"" + m.getKey() + "\"");
 					continue;
 				}
-				/*
-				 * We might have a problem.
-				 * 
-				 * YAML is more forgiving about key names than Bukkit's configuration classes. I don't
-				 * want to access the same YAML file with a different library, because I feel that
-				 * might violate the separation of responsibilities created by the config classes. I
-				 * should see how Bukkit handles this and try a more verbose YAML format if that
-				 * doesn't work.
-				 */
+				if (marker != null) {
+					markers.add(marker);
+				}
 			}
+			groups.add(new MarkerGroup(entry.getKey(), markers));
 		}
 		return groups;
+	}
+	
+	private Marker loadMarker(ConfigurationSection config) {
+		try {
+			return new Marker(config.getName(), new Coordinate(config.getInt("x"), config.getInt("z"), Coordinate.LEVEL_BLOCK));
+		} catch (Exception e) {
+			log.warning("RealtimeRender: could not read parameters for marker \"" + config.getName() + "\"");
+			return null;
+		}
+	}
+	
+	private Marker loadMarker(String label, List<?> xz) {
+		try {
+			if (xz.size() != 2) {
+				log.warning("RealtimeRender: too many coordinates for marker \"" + label + "\"");
+				return null;
+			}
+			return new Marker(label, new Coordinate((Integer) xz.get(0), (Integer) xz.get(1), Coordinate.LEVEL_BLOCK));
+		} catch (Exception e) {
+			log.warning("RealtimeRender: could not read coordinates for marker \"" + label + "\"");
+			return null;
+		}
 	}
 	
 	// TODO TODO

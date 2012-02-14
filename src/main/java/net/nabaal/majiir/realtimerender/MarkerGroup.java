@@ -9,11 +9,9 @@ public class MarkerGroup {
 	private final String label;
 	private final List<Marker> markers = new ArrayList<Marker>();
 	
-	public MarkerGroup(String label, Coordinate location) {
-		if (location.getLevel() != Coordinate.LEVEL_BLOCK) {
-			throw new IllegalArgumentException();
-		}
+	public MarkerGroup(String label, List<Marker> markers) {
 		this.label = label;
+		this.markers.addAll(markers);
 	}
 	
 	public String getLabel() {

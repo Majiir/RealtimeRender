@@ -174,6 +174,9 @@ public class RealtimeRender extends JavaPlugin {
 	
 	private List<MarkerGroup> loadMarkerGroups(ConfigurationSection config) {
 		List<MarkerGroup> groups = new ArrayList<MarkerGroup>();
+		if (config == null) {
+			return groups;
+		}
 		for (Entry<String, Object> entry : config.getValues(false).entrySet()) {
 			if (!(entry.getValue() instanceof ConfigurationSection)) {
 				log.warning("RealtimeRender: could not read config section for marker group \"" + entry.getKey() + "\"");

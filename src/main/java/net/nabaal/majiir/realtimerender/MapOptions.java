@@ -13,9 +13,10 @@ public class MapOptions {
 	private final List<MarkerGroup> markerGroups = new ArrayList<MarkerGroup>();
 	private final Coordinate spawn;
 	
-	public MapOptions(int minZoom, int maxZoom, Location spawn) {
+	public MapOptions(int minZoom, int maxZoom, Location spawn, List<MarkerGroup> markerGroups) {
 		this.minZoom = minZoom;
 		this.maxZoom = maxZoom;
+		this.markerGroups.addAll(markerGroups);
 		this.spawn = new Coordinate(spawn.getBlockX(), spawn.getBlockY(), Coordinate.LEVEL_BLOCK);
 	}
 

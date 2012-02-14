@@ -106,15 +106,13 @@ public class RealtimeRender extends JavaPlugin {
 			log.warning("RealtimeRender: discover interval must be greater than zero. (check config.yml)");
 		}
 		
-		loadMarkerGroups(config.getConfigurationSection("markers"));
-		
 		getCommand("map").setExecutor(new CommandManager(this));
 		
 		options = new File(getDataFolder(), "options.json");
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(options);
-			new JSONSerializer().exclude("class", "spawn.class", "spawn.level").serialize(new MapOptions(zoomsIn * -1, zoomsOut, world.getSpawnLocation()), writer);
+			new JSONSerializer().include("markerGroups", "markerGroups.markers").exclude("class", "*.class", "*.level").serialize(new MapOptions(zoomsIn * -1, zoomsOut, world.getSpawnLocation(), loadMarkerGroups(config.getConfigurationSection("markers"))), writer);
 			writer.close();
 		} catch (IOException e) {
 			log.warning(String.format("%s: failed to write options file!", this.getDescription().getName()));

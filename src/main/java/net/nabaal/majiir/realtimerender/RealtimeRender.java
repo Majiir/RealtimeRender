@@ -3,7 +3,10 @@ package net.nabaal.majiir.realtimerender;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
@@ -19,6 +22,7 @@ import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
 import org.bukkit.configuration.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -108,7 +112,7 @@ public class RealtimeRender extends JavaPlugin {
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(options);
-			new JSONSerializer().exclude("class", "spawn.class", "spawn.level").serialize(new MapOptions(zoomsIn * -1, zoomsOut, world), writer);
+			new JSONSerializer().include("markerGroups", "markerGroups.markers").exclude("class", "*.class", "*.level").serialize(new MapOptions(zoomsIn * -1, zoomsOut, world, loadMarkerGroups(config.getConfigurationSection("markers"))), writer);
 			writer.close();
 		} catch (IOException e) {
 			log.warning(String.format("%s: failed to write options file!", this.getDescription().getName()));
@@ -165,6 +169,59 @@ public class RealtimeRender extends JavaPlugin {
 	public void enqueueLoadedChunks() {
 		for (Chunk chunk : world.getLoadedChunks()) {
 			this.enqueueChunk(chunk);
+		}
+	}
+	
+	private List<MarkerGroup> loadMarkerGroups(ConfigurationSection config) {
+		List<MarkerGroup> groups = new ArrayList<MarkerGroup>();
+		if (config == null) {
+			return groups;
+		}
+		for (Entry<String, Object> entry : config.getValues(false).entrySet()) {
+			if (!(entry.getValue() instanceof ConfigurationSection)) {
+				log.warning("RealtimeRender: could not read config section for marker group \"" + entry.getKey() + "\"");
+				continue;
+			}
+			ConfigurationSection groupConfig = (ConfigurationSection) entry.getValue();
+			List<Marker> markers = new ArrayList<Marker>();
+			for (Entry<String, Object> m : groupConfig.getValues(false).entrySet()) {
+				Marker marker;
+				if (m.getValue() instanceof List<?>) {
+					marker = loadMarker(m.getKey(), (List<?>) m.getValue());
+				} else if (m.getValue() instanceof ConfigurationSection) {
+					marker = loadMarker((ConfigurationSection) m.getValue());
+				} else {
+					log.warning("RealtimeRender: could not read section for marker \"" + m.getKey() + "\"");
+					continue;
+				}
+				if (marker != null) {
+					markers.add(marker);
+				}
+			}
+			groups.add(new MarkerGroup(entry.getKey(), markers));
+		}
+		return groups;
+	}
+	
+	private Marker loadMarker(ConfigurationSection config) {
+		try {
+			return new Marker(config.getName(), new Coordinate(config.getInt("x"), config.getInt("z"), Coordinate.LEVEL_BLOCK));
+		} catch (Exception e) {
+			log.warning("RealtimeRender: could not read parameters for marker \"" + config.getName() + "\"");
+			return null;
+		}
+	}
+	
+	private Marker loadMarker(String label, List<?> xz) {
+		try {
+			if (xz.size() != 2) {
+				log.warning("RealtimeRender: too many coordinates for marker \"" + label + "\"");
+				return null;
+			}
+			return new Marker(label, new Coordinate((Integer) xz.get(0), (Integer) xz.get(1), Coordinate.LEVEL_BLOCK));
+		} catch (Exception e) {
+			log.warning("RealtimeRender: could not read coordinates for marker \"" + label + "\"");
+			return null;
 		}
 	}
 	

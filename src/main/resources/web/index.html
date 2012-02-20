@@ -81,15 +81,28 @@
 	
 			L.Control.Coordinates = L.Class.extend({
 				
-	                        _refresh: function() {
-	                                this._container.innerHTML = '<div><span class="label">X:</span> <span class="value">' + this._coordinate.x + '</span></div><div><span class="label">Z:</span> <span class="value">' + this._coordinate.y + '</span></div>';
-	                        },
+				_refresh: function() {
+					this._labelX.textContent = this._coordinate.x;
+					this._labelY.textContent = this._coordinate.y;
+				},
 	
 				initialize: function () {
 					this._coordinate = new L.Point(0, 0);
 	
 					this._container = L.DomUtil.create('div', 'leaflet-control-coordinates');
 					L.DomEvent.disableClickPropagation(this._container);
+					
+					var row = $('<div>');
+					row.append('<span class="label">X: </span>');
+					this._labelX = L.DomUtil.create('span', 'value');
+					row.append(this._labelX);
+					$(this._container).append(row);
+					
+					row = $('<div>');
+					row.append('<span class="label">Z: </span>');
+					this._labelY = L.DomUtil.create('span', 'value');
+					row.append(this._labelY);
+					$(this._container).append(row);
 					
 					this._refresh();
 				},
@@ -155,26 +168,25 @@
 			var layersControl = new L.Control.Layers(null, null, {collapsed: false});
 			map.addControl(layersControl);
 	
-			$.getJSON("markers.json", function(data) {
+			$.each(params.markerGroups, function(index, group) {
 		
 				var markerLayer = new L.LayerGroup();
 		
-				$.each(data, function(index, info) {
-					var marker = new L.Marker(map.layerPointToLatLng(blockToLayerPoint(layer, info.block)));
-					marker.bindPopup("<strong>Label:</strong> " + info.label + "<br/><strong>Location:</strong> " + "(" + info.block.x + ", " + info.block.y + ")");
+				$.each(group.markers, function(index, info) {
+					var marker = new L.Marker(map.layerPointToLatLng(blockToLayerPoint(layer, info.location)));
+					marker.bindPopup("<strong>Label:</strong> " + info.label + "<br/><strong>Location:</strong> " + "(" + info.location.x + ", " + info.location.y + ")");
 					markerLayer.addLayer(marker);
 				});
 			
-				var circle = new L.Circle(map.layerPointToLatLng(blockToLayerPoint(layer, params.spawn)), 410, {color: 'yellow'});
-				circle.bindPopup("<strong>Label:</strong> Spawn Area<br/><strong>Center:</strong> (" + params.spawn.x + ", " + params.spawn.y + ")<br/><strong>Radius:</strong> 16 blocks");
-				markerLayer.addLayer(circle);
-			
 				map.addLayer(markerLayer);
-				layersControl.addOverlay(markerLayer, "Markers");
+				layersControl.addOverlay(markerLayer, group.label);
 		
-			}).fail(function() {
-				layersControl.getContainer().innerHTML = '<span class="error">Error: Could not load markers file!</span>';
 			});
+			
+			var circle = new L.Circle(map.layerPointToLatLng(blockToLayerPoint(layer, params.spawn)), 410, {color: 'yellow'});
+			circle.bindPopup("<strong>Label:</strong> Spawn Area<br/><strong>Center:</strong> (" + params.spawn.x + ", " + params.spawn.y + ")<br/><strong>Radius:</strong> 16 blocks");
+			map.addLayer(circle)
+			layersControl.addOverlay(circle, "Spawn Area");
 	
 			var coordinatesControl = new L.Control.Coordinates();
 			map.addControl(coordinatesControl);

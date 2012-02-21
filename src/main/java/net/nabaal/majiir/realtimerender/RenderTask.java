@@ -1,5 +1,7 @@
 package net.nabaal.majiir.realtimerender;
 
+import java.io.File;
+
 import net.nabaal.majiir.realtimerender.image.ChangeFilter;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 import net.nabaal.majiir.realtimerender.image.CompositeImageBuilder;
@@ -97,7 +99,7 @@ public class RenderTask implements Runnable {
 		ReadCache nms_rc = (ReadCache) nms;
 		
 		// renders
-		fp = new FileImageProvider(plugin.getDataFolder(), new TileFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
+		fp = new FileImageProvider(new File(plugin.getDataFolder(), "tiles/"), new TileFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
 		ip = fp;
 		rc = new ImageReadCache(ip); 
 		ip = rc;

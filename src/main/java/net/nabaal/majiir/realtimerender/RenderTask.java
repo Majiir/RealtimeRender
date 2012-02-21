@@ -51,7 +51,7 @@ public class RenderTask implements Runnable {
 		plugin.getChunkManager().startBatch();
 		
 		// STAGE ONE: PREPROCESS (HEIGHT MAP)
-		hm = new FileHeightMap(plugin.getDataFolder(), new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName(), Coordinate.LEVEL_TILE), Coordinate.SIZE_TILE);
+		hm = new FileHeightMap(new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName(), Coordinate.LEVEL_TILE), Coordinate.SIZE_TILE);
 		hm = new HeightMapReadCache(hm, Coordinate.SIZE_TILE);
 		ReadCache hm_rc0 = (ReadCache) hm;
 		hm = new HeightMapWriteCache(hm, Coordinate.SIZE_TILE);
@@ -68,7 +68,7 @@ public class RenderTask implements Runnable {
 		hm_wc0.commit();
 		
 		// STAGE ONE: PREPROCESS (STRUCTURE MAP)
-		HeightMap hms = new FileHeightMap(plugin.getDataFolder(), new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName() + ".s", Coordinate.LEVEL_TILE), Coordinate.SIZE_TILE);
+		HeightMap hms = new FileHeightMap(new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName() + ".s", Coordinate.LEVEL_TILE), Coordinate.SIZE_TILE);
 		hms = new HeightMapReadCache(hms, Coordinate.SIZE_TILE);
 		ReadCache hms_rc0 = (ReadCache) hms;
 		hms = new HeightMapWriteCache(hms, Coordinate.SIZE_TILE);
@@ -99,7 +99,7 @@ public class RenderTask implements Runnable {
 		ReadCache nms_rc = (ReadCache) nms;
 		
 		// renders
-		fp = new FileImageProvider(new File(plugin.getDataFolder(), "tiles/"), new TileFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
+		fp = new FileImageProvider(new TileFilePattern(new File(plugin.getDataFolder(), "tiles/"), plugin.getWorld().getName()));
 		ip = fp;
 		rc = new ImageReadCache(ip); 
 		ip = rc;

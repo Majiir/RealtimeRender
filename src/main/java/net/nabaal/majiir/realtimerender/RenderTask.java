@@ -99,7 +99,9 @@ public class RenderTask implements Runnable {
 		ReadCache nms_rc = (ReadCache) nms;
 		
 		// renders
-		fp = new FileImageProvider(new TileFilePattern(new File(plugin.getDataFolder(), "tiles/"), plugin.getWorld().getName()));
+		File tiles = new File(plugin.getDataFolder(), "tiles/");
+		tiles.mkdir();
+		fp = new FileImageProvider(new TileFilePattern(tiles, plugin.getWorld().getName()));
 		ip = fp;
 		rc = new ImageReadCache(ip); 
 		ip = rc;

@@ -197,7 +197,7 @@ public class RealtimeRender extends JavaPlugin {
 					log.warning("RealtimeRender: failed to install map viewer! (jar error)");
 					return;
 				}
-				commitProvider.commitFiles(files, "");
+				commitProvider.commitFiles(files);
 				sender.sendMessage(ChatColor.GREEN + "Map viewer installed.");
 			}
 		});

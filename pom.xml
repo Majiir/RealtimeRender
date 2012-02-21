@@ -37,8 +37,12 @@
       <url>http://jcurl.berlios.de/m2/repo</url>
     </repository>
     <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/artifactory/repo</url>
+      <id>bukkit-rel</id>
+      <url>http://repo.bukkit.org/content/repositories/releases/</url>
+    </repository>
+    <repository>
+      <id>bukkit-snap</id>
+      <url>http://repo.bukkit.org/content/repositories/snapshots/</url>
     </repository>
   </repositories>
   <build>

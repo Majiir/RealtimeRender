@@ -23,7 +23,7 @@ public class FileHeightMap extends HeightMapProvider {
 	
 	private final FilePattern pattern;
 	
-	public FileHeightMap(File directory, FilePattern pattern, int size) {
+	public FileHeightMap(FilePattern pattern, int size) {
 		super(size);
 		this.pattern = pattern;
 	}

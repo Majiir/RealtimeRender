@@ -14,12 +14,10 @@ import net.nabaal.majiir.realtimerender.RealtimeRender;
 
 public class FileImageProvider extends ImageProvider {
 
-	private final File directory;
 	private final FilePattern pattern;
 	private final Set<File> changed = new HashSet<File>();
 
-	public FileImageProvider(File directory, FilePattern pattern) {
-		this.directory = directory;
+	public FileImageProvider(FilePattern pattern) {
 		this.pattern = pattern;
 	}
 	
@@ -60,7 +58,7 @@ public class FileImageProvider extends ImageProvider {
 	
 	@Override
 	public Set<Coordinate> getTiles() {
-		File[] files = directory.listFiles(pattern);
+		File[] files = pattern.getParent().listFiles(pattern);
 		Set<Coordinate> tiles = new HashSet<Coordinate>();
 		for (File file : files) {
 			tiles.add(pattern.getTile(file));

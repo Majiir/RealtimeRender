@@ -97,7 +97,10 @@ public class RealtimeRender extends JavaPlugin {
 		zoomsIn = config.getInt("zoomsIn");
 		zoomsOut = config.getInt("zoomsOut");
 		
-		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(this.getDataFolder(), "world")));
+		File temp = new File(getDataFolder(), "temp/");
+		temp.mkdirs();
+		
+		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(temp, "world")));
 		chunkSaveTask = new ChunkSaveTask(chunkManager);
 		
 		PluginManager pm = this.getServer().getPluginManager();

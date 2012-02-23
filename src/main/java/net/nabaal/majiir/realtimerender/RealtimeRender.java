@@ -30,7 +30,6 @@ import net.nabaal.majiir.realtimerender.rendering.NoOpChunkPreprocessor;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
-import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
@@ -173,17 +172,9 @@ public class RealtimeRender extends JavaPlugin {
 		return log;
 	}
 
-	private static ChunkSnapshot getChunkSnapshot(Chunk chunk) {
-		return chunk.getChunkSnapshot(true, true, true);
-	}
-	
-	public void enqueueChunk(Chunk chunk) {
-		chunkManager.enqueue(getChunkSnapshot(chunk));
-	}
-	
 	public void enqueueLoadedChunks() {
 		for (Chunk chunk : world.getLoadedChunks()) {
-			this.enqueueChunk(chunk);
+			getChunkManager().enqueue(chunk);
 		}
 	}
 	

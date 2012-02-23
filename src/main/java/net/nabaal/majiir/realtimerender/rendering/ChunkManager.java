@@ -15,6 +15,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
@@ -41,9 +42,9 @@ public class ChunkManager {
 		return lock.readLock();
 	}
 	
-	public void enqueue(ChunkSnapshot chunkSnapshot) {
+	public void enqueue(Chunk chunk) {
 		try {
-			incoming.put(chunkSnapshot);
+			incoming.put(chunk.getChunkSnapshot(true, true, true));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

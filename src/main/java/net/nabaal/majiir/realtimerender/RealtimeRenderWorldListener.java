@@ -14,7 +14,7 @@ public class RealtimeRenderWorldListener extends WorldListener {
 	
 	public void onChunkUnload(ChunkUnloadEvent event) {
 		if (event.getWorld().equals(plugin.getWorld())) {
-			plugin.enqueueChunk(event.getChunk());
+			plugin.getChunkManager().enqueue(event.getChunk());
 		}
 	}
 	

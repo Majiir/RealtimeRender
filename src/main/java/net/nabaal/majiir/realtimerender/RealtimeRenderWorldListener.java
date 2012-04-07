@@ -1,10 +1,12 @@
 package net.nabaal.majiir.realtimerender;
 
 import org.bukkit.event.world.ChunkUnloadEvent;
-import org.bukkit.event.world.WorldListener;
 import org.bukkit.event.world.WorldUnloadEvent;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 
-public class RealtimeRenderWorldListener extends WorldListener {
+public class RealtimeRenderWorldListener implements Listener {
 
 	private final RealtimeRender plugin; 
 	
@@ -12,12 +14,14 @@ public class RealtimeRenderWorldListener extends WorldListener {
 		plugin = instance;
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onChunkUnload(ChunkUnloadEvent event) {
 		if (event.getWorld().equals(plugin.getWorld())) {
 			plugin.enqueueChunk(event.getChunk());
 		}
 	}
 	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onWorldUnload(WorldUnloadEvent event) {
 		if (event.getWorld().equals(plugin.getWorld())) {
 			plugin.enqueueLoadedChunks();

@@ -14,6 +14,7 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 	private final double[] biomeRainfall = new double[256];
 	private final double[] biomeTemperature = new double[256];
 	private final byte[] heightMap = new byte[256];
+	private final boolean[] sections = new boolean[16];
 	private final long captureFullTime;
 	private final String worldName;
 	private final int x;
@@ -37,6 +38,10 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 					blockTypes[getArrayIndex(x, y, z)] = (byte) snapshot.getBlockTypeId(x, y, z);
 				}
 			}
+		}
+		
+		for (int sy = 0; sy < 16; sy++) {
+			sections[sy] = snapshot.isSectionEmpty(sy);
 		}
 	}
 	
@@ -113,6 +118,11 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 	@Override
 	public int getZ() {
 		return z;
+	}
+	
+	@Override
+	public boolean isSectionEmpty(int sy) {
+		return sections[sy];
 	}
 	
 	private int getArrayIndex(int x, int z) {

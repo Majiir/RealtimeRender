@@ -35,7 +35,6 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -43,8 +42,7 @@ import flexjson.JSONSerializer;
 
 public class RealtimeRender extends JavaPlugin {
 	
-	// TODO: Plugin-specific logger
-	private static final Logger log = Logger.getLogger("Minecraft");
+	private static Logger log;
 	
 	private final RealtimeRenderWorldListener worldListener = new RealtimeRenderWorldListener(this);
 	
@@ -63,6 +61,10 @@ public class RealtimeRender extends JavaPlugin {
 	
 	private boolean redoZooms = false;
 	private File options;
+	
+	public RealtimeRender() {
+		RealtimeRender.log = this.getLogger(); 
+	}
 	
 	@Override
 	public void onDisable() {	
@@ -102,8 +104,7 @@ public class RealtimeRender extends JavaPlugin {
 		
 		PluginManager pm = this.getServer().getPluginManager();
 		
-		pm.registerEvent(Event.Type.CHUNK_UNLOAD, worldListener, Event.Priority.Monitor, this);
-		pm.registerEvent(Event.Type.WORLD_UNLOAD, worldListener, Event.Priority.Monitor, this);
+		pm.registerEvents(worldListener, this);
 		
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new EnqueueAndRenderTask(this, false, renderLoaded, renderLock), startDelay * 20, intervalDelay * 20);
 		for (int i = 0; i < saveThreads; i++) {
@@ -166,7 +167,7 @@ public class RealtimeRender extends JavaPlugin {
 		commitProvider.commitFiles(files);
 	}
 	
-	public static Logger getLogger() {
+	public static Logger getPluginLogger() {
 		return log;
 	}
 

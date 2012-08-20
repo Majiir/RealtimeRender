@@ -21,11 +21,11 @@ public class FiniteDifferencesNormalMap implements NormalMap {
 		
 		int y = heightMap.getHeight(point);
 		//RealtimeRender.getLogger().info("RealtimeRender: height = '" + y + "' at " + point);
-		if (y > 127) {
+		if (y > 255) {
 			return null;
 		}
 		
-		byte h;
+		int h;
 		h = heightMap.getHeight(point.plus(new Coordinate(-1, 0, Coordinate.LEVEL_BLOCK)));
 		if (HeightMap.isValid(h)) {
 			dx += (y - h);

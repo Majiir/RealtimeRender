@@ -8,13 +8,13 @@ public final class HeightMapTile extends HeightMap implements Serializable {
 
 	private static final long serialVersionUID = 3L;
 	
-	private final byte[] heights;
+	private final int[] heights;
 	private final Coordinate location;
 	
 	public HeightMapTile(Coordinate location, HeightMap source) {
 		this.location = location;
 		int size = getSize();
-		this.heights = new byte[1 << (size * 2)];
+		this.heights = new int[1 << (size * 2)];
 		for (int x = 0; x < (1 << size); x++) {
 			for (int y = 0; y < (1 << size); y++) {
 				this.heights[getArrayCoordinate(x, y)] = source.getHeight(location.zoomIn(size).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK)));
@@ -25,7 +25,7 @@ public final class HeightMapTile extends HeightMap implements Serializable {
 	public HeightMapTile(Coordinate location) {
 		this.location = location;
 		int size = getSize();
-		this.heights = new byte[1 << (size * 2)];
+		this.heights = new int[1 << (size * 2)];
 		for (int x = 0; x < (1 << size); x++) {
 			for (int y = 0; y < (1 << size); y++) {
 				this.heights[getArrayCoordinate(x, y)] = HeightMap.NO_HEIGHT_INFORMATION;
@@ -36,7 +36,7 @@ public final class HeightMapTile extends HeightMap implements Serializable {
 	public HeightMapTile(HeightMapTile other) {
 		this.location = other.getLocation();
 		int size = getSize();
-		this.heights = new byte[1 << (size * 2)];
+		this.heights = new int[1 << (size * 2)];
 		for (int x = 0; x < (1 << size); x++) {
 			for (int y = 0; y < (1 << size); y++) {
 				this.heights[getArrayCoordinate(x, y)] = other.getHeight(location.zoomIn(size).plus(new Coordinate(x, y, Coordinate.LEVEL_BLOCK)));
@@ -53,12 +53,12 @@ public final class HeightMapTile extends HeightMap implements Serializable {
 	}
 
 	@Override
-	public byte getHeight(Coordinate point) {
+	public int getHeight(Coordinate point) {
 		return heights[getArrayCoordinate(point)];
 	}
 	
 	@Override
-	public void setHeight(Coordinate point, byte height) {
+	public void setHeight(Coordinate point, int height) {
 		heights[getArrayCoordinate(point)] = height;
 	}
 	

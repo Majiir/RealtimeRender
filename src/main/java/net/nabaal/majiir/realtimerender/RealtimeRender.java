@@ -62,10 +62,6 @@ public class RealtimeRender extends JavaPlugin {
 	private boolean redoZooms = false;
 	private File options;
 	
-	public RealtimeRender() {
-		RealtimeRender.log = this.getLogger(); 
-	}
-	
 	@Override
 	public void onDisable() {	
 		log.info(String.format("%s: rendering loaded chunks...", this.getDescription().getName()));
@@ -80,6 +76,8 @@ public class RealtimeRender extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		
+		RealtimeRender.log = this.getLogger();
 		
 		if (this.getDataFolder().mkdir()) {
 			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));

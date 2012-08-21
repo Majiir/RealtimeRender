@@ -7,13 +7,13 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 
 	private static final long serialVersionUID = 1L;
 	
-	private final byte[] blockData = new byte[32768];
-	private final byte[] blockLight = new byte[32768];
-	private final byte[] blockTypes = new byte[32768];
+	private final byte[] blockData = new byte[65536];
+	private final byte[] blockLight = new byte[65536];
+	private final byte[] blockTypes = new byte[65536];
 	private final Biome[] biome = new Biome[256];
 	private final double[] biomeRainfall = new double[256];
 	private final double[] biomeTemperature = new double[256];
-	private final byte[] heightMap = new byte[256];
+	private final int[] heightMap = new int[256];
 	private final boolean[] sections = new boolean[16];
 	private final long captureFullTime;
 	private final String worldName;
@@ -31,8 +31,8 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 				biome[getArrayIndex(x, z)] = snapshot.getBiome(x, z);
 				biomeRainfall[getArrayIndex(x, z)] = snapshot.getRawBiomeRainfall(x, z);
 				biomeTemperature[getArrayIndex(x, z)] = snapshot.getRawBiomeTemperature(x, z);
-				heightMap[getArrayIndex(x, z)] = (byte) snapshot.getHighestBlockYAt(x, z);
-				for (int y = 0; y < 128; y++) {
+				heightMap[getArrayIndex(x, z)] = snapshot.getHighestBlockYAt(x, z);
+				for (int y = 0; y < 256; y++) {
 					blockData[getArrayIndex(x, y, z)] = (byte) snapshot.getBlockData(x, y, z);
 					blockLight[getArrayIndex(x, y, z)] = (byte) (snapshot.getBlockEmittedLight(x, y, z) + (snapshot.getBlockSkyLight(x, y, z) << 4));
 					blockTypes[getArrayIndex(x, y, z)] = (byte) snapshot.getBlockTypeId(x, y, z);
@@ -45,7 +45,7 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 		}
 	}
 	
-	public ProcessedChunkSnapshot(int x, int z, String worldName, long captureFullTime, Biome[] biome, double[] biomeRainfall, double[] biomeTemperature, byte[] blocks, byte[] blockData, byte[] blockLight, byte[] blockTypes, byte[] heightMap) {
+	public ProcessedChunkSnapshot(int x, int z, String worldName, long captureFullTime, Biome[] biome, double[] biomeRainfall, double[] biomeTemperature, byte[] blocks, byte[] blockData, byte[] blockLight, byte[] blockTypes, int[] heightMap) {
 		this.x = x;
 		this.z = z;
 		this.worldName = worldName;
@@ -130,7 +130,7 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 	}
 	
 	private int getArrayIndex(int x, int y, int z) {
-		return (getArrayIndex(x, z) << 7) + y;
+		return (getArrayIndex(x, z) << 8) + y;
 	}
 
 }

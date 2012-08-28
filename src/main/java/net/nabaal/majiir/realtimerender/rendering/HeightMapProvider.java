@@ -19,12 +19,12 @@ public abstract class HeightMapProvider extends HeightMap {
 	protected abstract void setHeightMapTile(Coordinate tileLocation, HeightMapTile tile);
 	
 	@Override
-	public final byte getHeight(Coordinate point) {
+	public final int getHeight(Coordinate point) {
 		return this.getHeightMapTile(point.zoomOut(size)).getHeight(point);
 	}
 	
 	@Override
-	public final void setHeight(Coordinate block, byte height) {
+	public final void setHeight(Coordinate block, int height) {
 		Coordinate tileLocation = block.zoomOut(size);
 		HeightMapTile tile = getHeightMapTile(tileLocation);
 		tile.setHeight(block, height);

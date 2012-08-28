@@ -54,20 +54,20 @@ public final class TerrainHelper {
 		return structure.contains(material);
 	}
 	
-	public static byte getTerrainHeight(int x, int z, ChunkSnapshot snapshot) {
-		for (int y = Math.min(snapshot.getHighestBlockYAt(x, z) + 1, 127); y >= 0; y--) {
+	public static int getTerrainHeight(int x, int z, ChunkSnapshot snapshot) {
+		for (int y = Math.min(snapshot.getHighestBlockYAt(x, z) + 1, 255); y >= 0; y--) {
 			if (isTerrain(Material.getMaterial(snapshot.getBlockTypeId(x, y, z)))) {
-				return (byte) y;
+				return y;
 			}
 		}
 		return HeightMap.NO_HEIGHT_INFORMATION;
 	}
 	
-	public static byte getStructureHeight(int x, int z, ChunkSnapshot snapshot) {
-		for (int y = Math.min(snapshot.getHighestBlockYAt(x, z) + 1, 127); y >= 0; y--) {
+	public static int getStructureHeight(int x, int z, ChunkSnapshot snapshot) {
+		for (int y = Math.min(snapshot.getHighestBlockYAt(x, z) + 1, 255); y >= 0; y--) {
 			Material material = Material.getMaterial(snapshot.getBlockTypeId(x, y, z));
 			if (isStructure(material)) {
-				return (byte) y;
+				return y;
 			} else if (isTerrain(material)) {
 				break;
 			}

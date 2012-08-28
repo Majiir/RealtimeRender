@@ -133,7 +133,7 @@ public class DefaultColorPalette implements ColorPalette {
 			water = ImageIO.read(getClass().getResource("/images/watercolor.png"));
 			sand = ImageIO.read(getClass().getResource("/images/sand.png"));
 		} catch (IOException e) {
-			RealtimeRender.getLogger().severe("Failed to load palette resources!");
+			RealtimeRender.getPluginLogger().severe("Failed to load palette resources!");
 		}
 		Map<Biome, MaterialColor> biomes = new HashMap<Biome, MaterialColor>();
 		biomes.put(Biome.SWAMPLAND, new ClimateMaterialColor(swampgrass));

@@ -1,5 +1,7 @@
 package net.nabaal.majiir.realtimerender;
 
+import java.io.File;
+
 import net.nabaal.majiir.realtimerender.image.ChangeFilter;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 import net.nabaal.majiir.realtimerender.image.CompositeImageBuilder;
@@ -48,8 +50,11 @@ public class RenderTask implements Runnable {
 		
 		plugin.getChunkManager().startBatch();
 		
+		File data = new File(plugin.getDataFolder(), "data/");
+		data.mkdir();
+		
 		// STAGE ONE: PREPROCESS (HEIGHT MAP)
-		hm = new FileHeightMap(plugin.getDataFolder(), new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName(), Coordinate.LEVEL_TILE), Coordinate.SIZE_TILE);
+		hm = new FileHeightMap(new SerializedHeightMapFilePattern(data, plugin.getWorld().getName(), Coordinate.LEVEL_TILE), Coordinate.SIZE_TILE);
 		hm = new HeightMapReadCache(hm, Coordinate.SIZE_TILE);
 		ReadCache hm_rc0 = (ReadCache) hm;
 		hm = new HeightMapWriteCache(hm, Coordinate.SIZE_TILE);
@@ -66,7 +71,7 @@ public class RenderTask implements Runnable {
 		hm_wc0.commit();
 		
 		// STAGE ONE: PREPROCESS (STRUCTURE MAP)
-		HeightMap hms = new FileHeightMap(plugin.getDataFolder(), new SerializedHeightMapFilePattern(plugin.getDataFolder(), plugin.getWorld().getName() + ".s", Coordinate.LEVEL_TILE), Coordinate.SIZE_TILE);
+		HeightMap hms = new FileHeightMap(new SerializedHeightMapFilePattern(data, plugin.getWorld().getName() + ".s", Coordinate.LEVEL_TILE), Coordinate.SIZE_TILE);
 		hms = new HeightMapReadCache(hms, Coordinate.SIZE_TILE);
 		ReadCache hms_rc0 = (ReadCache) hms;
 		hms = new HeightMapWriteCache(hms, Coordinate.SIZE_TILE);
@@ -97,7 +102,9 @@ public class RenderTask implements Runnable {
 		ReadCache nms_rc = (ReadCache) nms;
 		
 		// renders
-		fp = new FileImageProvider(plugin.getDataFolder(), new TileFilePattern(plugin.getDataFolder(), plugin.getWorld().getName()));
+		File tiles = new File(plugin.getDataFolder(), "tiles/");
+		tiles.mkdir();
+		fp = new FileImageProvider(new TileFilePattern(tiles, plugin.getWorld().getName()));
 		ip = fp;
 		rc = new ImageReadCache(ip); 
 		ip = rc;
@@ -154,7 +161,7 @@ public class RenderTask implements Runnable {
 		wc1.commit();
 		wc.commit();
 		if (plugin.getRedoZooms()) {
-			RealtimeRender.getLogger().info("RealtimeRender: zooms: rebuilding...");
+			RealtimeRender.getPluginLogger().info("RealtimeRender: zooms: rebuilding...");
 			for (Coordinate tile : fp.getTiles()) {
 				if (tile.getLevel() == Coordinate.LEVEL_TILE) {
 					wc.setImage(tile, rc.getImage(tile));
@@ -162,7 +169,7 @@ public class RenderTask implements Runnable {
 			}
 			wc.commit();
 			plugin.setRedoZooms(false);
-			RealtimeRender.getLogger().info("RealtimeRender: zooms: done!");
+			RealtimeRender.getPluginLogger().info("RealtimeRender: zooms: done!");
 		}
 		for (WriteCache cache : caches) {
 			cache.commit();

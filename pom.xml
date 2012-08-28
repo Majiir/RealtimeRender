@@ -3,13 +3,13 @@
   <groupId>net.nabaal.majiir</groupId>
   <artifactId>realtimerender</artifactId>
   <name>RealtimeRender</name>
-  <version>0.1</version>
+  <version>0.2</version>
   <packaging>jar</packaging>
   <dependencies>
     <dependency>
     <groupId>org.bukkit</groupId>
     <artifactId>bukkit</artifactId>
-    <version>1.0.1-R2-SNAPSHOT</version>
+    <version>1.3.1-R2.0</version>
     <scope>provided</scope>
     </dependency>
     <dependency>
@@ -37,8 +37,12 @@
       <url>http://jcurl.berlios.de/m2/repo</url>
     </repository>
     <repository>
-      <id>bukkit-repo</id>
-      <url>http://repo.bukkit.org/artifactory/repo</url>
+      <id>bukkit-rel</id>
+      <url>http://repo.bukkit.org/content/repositories/releases/</url>
+    </repository>
+    <repository>
+      <id>bukkit-snap</id>
+      <url>http://repo.bukkit.org/content/repositories/snapshots/</url>
     </repository>
   </repositories>
   <build>
@@ -50,6 +54,17 @@
         <includes>
           <include>plugin.yml</include>
         </includes>
+      </resource>
+      <resource>
+        <targetPath>.</targetPath>
+        <filtering>false</filtering>
+        <directory>${basedir}/src/main/resources/</directory>
+        <includes>
+          <include>**</include>
+        </includes>
+        <excludes>
+          <exclude>plugin.yml</exclude>
+        </excludes>
       </resource>
     </resources>
     <plugins>

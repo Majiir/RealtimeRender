@@ -23,7 +23,7 @@ public class FileHeightMap extends HeightMapProvider {
 	
 	private final FilePattern pattern;
 	
-	public FileHeightMap(File directory, FilePattern pattern, int size) {
+	public FileHeightMap(FilePattern pattern, int size) {
 		super(size);
 		this.pattern = pattern;
 	}
@@ -44,7 +44,7 @@ public class FileHeightMap extends HeightMapProvider {
 			}
 		} catch (FileNotFoundException e) {
 		} catch (Exception e) {
-			RealtimeRender.getLogger().warning("RealtimeRender: error reading height map " + tileLocation + ": " + e);
+			RealtimeRender.getPluginLogger().warning("RealtimeRender: error reading height map " + tileLocation + ": " + e);
 		}
 		if (tile == null) {
 			tile = new HeightMapTile(tileLocation);
@@ -66,7 +66,7 @@ public class FileHeightMap extends HeightMapProvider {
 				ostream.close();
 			}
 		} catch (Exception e) {
-			RealtimeRender.getLogger().warning("RealtimeRender: error writing height map " + tileLocation + ": " + e);
+			RealtimeRender.getPluginLogger().warning("RealtimeRender: error writing height map " + tileLocation + ": " + e);
 		}
 	}
 	

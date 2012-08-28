@@ -14,12 +14,10 @@ import net.nabaal.majiir.realtimerender.RealtimeRender;
 
 public class FileImageProvider extends ImageProvider {
 
-	private final File directory;
 	private final FilePattern pattern;
 	private final Set<File> changed = new HashSet<File>();
 
-	public FileImageProvider(File directory, FilePattern pattern) {
-		this.directory = directory;
+	public FileImageProvider(FilePattern pattern) {
 		this.pattern = pattern;
 	}
 	
@@ -34,7 +32,7 @@ public class FileImageProvider extends ImageProvider {
 		} catch (IOException e) {
 			return null;
 		} catch (Exception e) {
-			RealtimeRender.getLogger().warning("RealtimeRender: error reading tile: " + tile);
+			RealtimeRender.getPluginLogger().warning("RealtimeRender: error reading tile: " + tile);
 			return null;
 		}
 	}
@@ -53,14 +51,14 @@ public class FileImageProvider extends ImageProvider {
 			ImageIO.write(image, "png", file);
 			changed.add(file);
 		} catch (Exception e) {
-			RealtimeRender.getLogger().warning("RealtimeRender: error saving tile: " + tile);
+			RealtimeRender.getPluginLogger().warning("RealtimeRender: error saving tile: " + tile);
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
 	public Set<Coordinate> getTiles() {
-		File[] files = directory.listFiles(pattern);
+		File[] files = pattern.getParent().listFiles(pattern);
 		Set<Coordinate> tiles = new HashSet<Coordinate>();
 		for (File file : files) {
 			tiles.add(pattern.getTile(file));

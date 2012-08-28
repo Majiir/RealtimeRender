@@ -1,11 +1,24 @@
 package net.nabaal.majiir.realtimerender;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.JarURLConnection;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
 import net.nabaal.majiir.realtimerender.commit.CommitProvider;
@@ -15,11 +28,13 @@ import net.nabaal.majiir.realtimerender.rendering.ChunkManager;
 import net.nabaal.majiir.realtimerender.rendering.FileChunkSnapshotProvider;
 import net.nabaal.majiir.realtimerender.rendering.NoOpChunkPreprocessor;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.World;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.event.Event;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,8 +42,7 @@ import flexjson.JSONSerializer;
 
 public class RealtimeRender extends JavaPlugin {
 	
-	// TODO: Plugin-specific logger
-	private static final Logger log = Logger.getLogger("Minecraft");
+	private static Logger log;
 	
 	private final RealtimeRenderWorldListener worldListener = new RealtimeRenderWorldListener(this);
 	
@@ -63,6 +77,8 @@ public class RealtimeRender extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		
+		RealtimeRender.log = this.getLogger();
+		
 		if (this.getDataFolder().mkdir()) {
 			log.info(String.format("%s: created plugin data directory.", this.getDescription().getName()));
 		}
@@ -86,8 +102,7 @@ public class RealtimeRender extends JavaPlugin {
 		
 		PluginManager pm = this.getServer().getPluginManager();
 		
-		pm.registerEvent(Event.Type.CHUNK_UNLOAD, worldListener, Event.Priority.Monitor, this);
-		pm.registerEvent(Event.Type.WORLD_UNLOAD, worldListener, Event.Priority.Monitor, this);
+		pm.registerEvents(worldListener, this);
 		
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new EnqueueAndRenderTask(this, false, renderLoaded, renderLock), startDelay * 20, intervalDelay * 20);
 		for (int i = 0; i < saveThreads; i++) {
@@ -108,7 +123,7 @@ public class RealtimeRender extends JavaPlugin {
 		FileWriter writer = null;
 		try {
 			writer = new FileWriter(options);
-			new JSONSerializer().exclude("class", "spawn.class", "spawn.level").serialize(new MapOptions(zoomsIn * -1, zoomsOut, world.getSpawnLocation()), writer);
+			new JSONSerializer().include("markerGroups", "markerGroups.markers").exclude("class", "*.class", "*.level").serialize(new MapOptions(zoomsIn * -1, zoomsOut, world, loadMarkerGroups(config.getConfigurationSection("markers"))), writer);
 			writer.close();
 		} catch (IOException e) {
 			log.warning(String.format("%s: failed to write options file!", this.getDescription().getName()));
@@ -119,7 +134,7 @@ public class RealtimeRender extends JavaPlugin {
 	
 	public void registerCommitPlugin(CommitProvider provider) {
 		commitProvider.registerProvider(provider);
-		provider.commitFiles(Arrays.asList(new File[] { options }), "");
+		provider.commitFiles(Arrays.asList(new File[] { options }));
 	}
 	
 	public ChunkManager getChunkManager() {
@@ -147,10 +162,10 @@ public class RealtimeRender extends JavaPlugin {
 	}
 	
 	public void commit(Iterable<File> files) {
-		commitProvider.commitFiles(files, "tiles");
+		commitProvider.commitFiles(files);
 	}
 	
-	public static Logger getLogger() {
+	public static Logger getPluginLogger() {
 		return log;
 	}
 
@@ -165,6 +180,147 @@ public class RealtimeRender extends JavaPlugin {
 	public void enqueueLoadedChunks() {
 		for (Chunk chunk : world.getLoadedChunks()) {
 			this.enqueueChunk(chunk);
+		}
+	}
+	
+	public void installRemote(final CommandSender sender) {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				List<File> files = new ArrayList<File>();
+				try {
+					files.addAll(copyJarResourcesRecursively(getDataFolder(), (JarURLConnection) getClass().getResource("/web").openConnection()));
+				} catch (IOException e) {
+					e.printStackTrace();
+					sender.sendMessage(ChatColor.RED + "Failed to install map viewer! See console for details.");
+					log.warning("RealtimeRender: failed to install map viewer! (jar error)");
+					return;
+				}
+				commitProvider.commitFiles(files);
+				sender.sendMessage(ChatColor.GREEN + "Map viewer installed.");
+			}
+		});
+		thread.start();
+	}
+
+	private List<File> copyJarResourcesRecursively(File destination, JarURLConnection jarConnection ) throws IOException {
+		List<File> files = new ArrayList<File>();
+	    JarFile jarFile = jarConnection.getJarFile();
+	    for (JarEntry entry : iterable(jarFile.entries())) {
+	        if (entry.getName().startsWith(jarConnection.getEntryName())) {
+	            String fileName = removeStart(entry.getName(), jarConnection.getEntryName());
+	            if (!entry.isDirectory()) {
+	                InputStream entryInputStream = null;
+	                try {
+	                    entryInputStream = jarFile.getInputStream(entry);
+	                    File file = new File(destination, fileName);
+	                    files.add(file);
+	                    copyStream(entryInputStream, new FileOutputStream(file));
+	                } finally {
+	                    entryInputStream.close();
+	                }
+	            } else {
+	            	new File(destination, fileName).mkdirs();
+	            }
+	        }
+	    }
+	    return files;
+	}
+	
+	private void copyStream(InputStream is, OutputStream os) throws IOException {
+		InputStream bis = new BufferedInputStream(is);
+		OutputStream bos = new BufferedOutputStream(os);
+		try {
+			byte[] b = new byte[512];
+			int len;
+			while ((len = bis.read(b)) > 0) {
+				bos.write(b, 0, len);
+			}
+		} finally {
+			bis.close();
+			bos.close();
+		}
+	}
+	
+	private <T> Iterable<T> iterable(final Enumeration<T> en) {
+		return new Iterable<T>() {
+			@Override
+			public Iterator<T> iterator() {
+				return new Iterator<T>() {
+					@Override
+					public boolean hasNext() {
+						return en.hasMoreElements();
+					}
+					@Override
+					public T next() {
+						return en.nextElement();
+					}
+					@Override
+					public void remove() {
+						throw new UnsupportedOperationException();
+					}
+				};
+			}
+		};
+	}
+	
+	private String removeStart(String full, String start) {
+		if (full.startsWith(start)) {
+			return full.substring(start.length());
+		}
+		return full;
+	}
+
+	private List<MarkerGroup> loadMarkerGroups(ConfigurationSection config) {
+		List<MarkerGroup> groups = new ArrayList<MarkerGroup>();
+		if (config == null) {
+			return groups;
+		}
+		for (Entry<String, Object> entry : config.getValues(false).entrySet()) {
+			if (!(entry.getValue() instanceof ConfigurationSection)) {
+				log.warning("RealtimeRender: could not read config section for marker group \"" + entry.getKey() + "\"");
+				continue;
+			}
+			ConfigurationSection groupConfig = (ConfigurationSection) entry.getValue();
+			List<Marker> markers = new ArrayList<Marker>();
+			for (Entry<String, Object> m : groupConfig.getValues(false).entrySet()) {
+				Marker marker;
+				if (m.getValue() instanceof List<?>) {
+					marker = loadMarker(m.getKey(), (List<?>) m.getValue());
+				} else if (m.getValue() instanceof ConfigurationSection) {
+					marker = loadMarker((ConfigurationSection) m.getValue());
+				} else {
+					log.warning("RealtimeRender: could not read section for marker \"" + m.getKey() + "\"");
+					continue;
+				}
+				if (marker != null) {
+					markers.add(marker);
+				}
+			}
+			groups.add(new MarkerGroup(entry.getKey(), markers));
+		}
+		return groups;
+	}
+	
+	private Marker loadMarker(ConfigurationSection config) {
+		try {
+			return new Marker(config.getName(), new Coordinate(config.getInt("x"), config.getInt("z"), Coordinate.LEVEL_BLOCK));
+		} catch (Exception e) {
+			log.warning("RealtimeRender: could not read parameters for marker \"" + config.getName() + "\"");
+			return null;
+		}
+	}
+	
+	private Marker loadMarker(String label, List<?> xz) {
+		try {
+			if (xz.size() != 2) {
+				log.warning("RealtimeRender: too many coordinates for marker \"" + label + "\"");
+				return null;
+			}
+			return new Marker(label, new Coordinate((Integer) xz.get(0), (Integer) xz.get(1), Coordinate.LEVEL_BLOCK));
+		} catch (Exception e) {
+			log.warning("RealtimeRender: could not read coordinates for marker \"" + label + "\"");
+			return null;
 		}
 	}
 	

@@ -25,6 +25,14 @@ public class CommandManager implements CommandExecutor {
 				plugin.setRedoZooms(true);
 				sender.sendMessage(ChatColor.GREEN + "All zoom levels will be regenerated during the next cycle.");
 				return true;
+			} else if (arg.equals("install")) {
+				if (!sender.isOp()) {
+					sender.sendMessage(ChatColor.RED + "You must be an op to do that!");
+					return true;
+				}
+				plugin.installRemote(sender);
+				sender.sendMessage(ChatColor.YELLOW + "Installing map viewer...");
+				return true;
 			}
 		}
 		return false;

@@ -47,7 +47,7 @@ public class FileChunkSnapshotProvider {
 			}
 		} catch (FileNotFoundException e) {
 		} catch (Exception e) {
-			RealtimeRender.getLogger().warning("RealtimeRender: error reading chunk " + chunk + ": " + e);
+			RealtimeRender.getPluginLogger().warning("RealtimeRender: error reading chunk " + chunk + ": " + e);
 		}
 		return tile;
 	}
@@ -65,7 +65,7 @@ public class FileChunkSnapshotProvider {
 				ostream.close();
 			}
 		} catch (Exception e) {
-			RealtimeRender.getLogger().warning("RealtimeRender: error writing chunk " + Coordinate.fromSnapshot(snapshot) + ": " + e);
+			RealtimeRender.getPluginLogger().warning("RealtimeRender: error writing chunk " + Coordinate.fromSnapshot(snapshot) + ": " + e);
 		}
 	}
 	

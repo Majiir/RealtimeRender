@@ -1,11 +1,13 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
+import net.nabaal.majiir.realtimerender.RealtimeRender;
+
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.block.Biome;
 
 public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	
 	private final byte[] blockData = new byte[65536];
 	private final byte[] blockLight = new byte[65536];
@@ -33,9 +35,9 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 				biomeTemperature[getArrayIndex(x, z)] = snapshot.getRawBiomeTemperature(x, z);
 				heightMap[getArrayIndex(x, z)] = snapshot.getHighestBlockYAt(x, z);
 				for (int y = 0; y < 256; y++) {
-					blockData[getArrayIndex(x, y, z)] = (byte) snapshot.getBlockData(x, y, z);
-					blockLight[getArrayIndex(x, y, z)] = (byte) (snapshot.getBlockEmittedLight(x, y, z) + (snapshot.getBlockSkyLight(x, y, z) << 4));
-					blockTypes[getArrayIndex(x, y, z)] = (byte) snapshot.getBlockTypeId(x, y, z);
+					blockData[getArrayIndex(x, y, z)] = intToByte(snapshot.getBlockData(x, y, z));
+					blockLight[getArrayIndex(x, y, z)] = intToByte(snapshot.getBlockEmittedLight(x, y, z) + (snapshot.getBlockSkyLight(x, y, z) << 4));
+					blockTypes[getArrayIndex(x, y, z)] = intToByte(snapshot.getBlockTypeId(x, y, z));
 				}
 			}
 		}
@@ -45,7 +47,15 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 		}
 	}
 	
-	public ProcessedChunkSnapshot(int x, int z, String worldName, long captureFullTime, Biome[] biome, double[] biomeRainfall, double[] biomeTemperature, byte[] blocks, byte[] blockData, byte[] blockLight, byte[] blockTypes, int[] heightMap) {
+	private static byte intToByte(int i) {
+		return (byte) (i - 128);
+	}
+	
+	private static int byteToInt(byte b) {
+		return b + 128;
+	}
+	
+	public ProcessedChunkSnapshot(int x, int z, String worldName, long captureFullTime, Biome[] biome, double[] biomeRainfall, double[] biomeTemperature, byte[] blocks, byte[] blockData, byte[] blockLight, byte[] blockTypes, int[] heightMap, boolean[] sections) {
 		this.x = x;
 		this.z = z;
 		this.worldName = worldName;
@@ -58,6 +68,7 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 		System.arraycopy(blockLight, 0, this.blockLight, 0, blockLight.length);
 		System.arraycopy(blockTypes, 0, this.blockTypes, 0, blockTypes.length);
 		System.arraycopy(heightMap, 0, this.heightMap, 0, heightMap.length);
+		System.arraycopy(sections, 0, this.sections, 0, sections.length);
 	}
 	
 	@Override
@@ -67,22 +78,22 @@ public class ProcessedChunkSnapshot implements SerializableChunkSnapshot {
 
 	@Override
 	public int getBlockData(int x, int y, int z) {
-		return blockData[getArrayIndex(x, y, z)];
+		return byteToInt(blockData[getArrayIndex(x, y, z)]);
 	}
 
 	@Override
 	public int getBlockEmittedLight(int x, int y, int z) {
-		return blockLight[getArrayIndex(x, y, z)] & 0xF;
+		return byteToInt(blockLight[getArrayIndex(x, y, z)]) & 0xF;
 	}
 
 	@Override
 	public int getBlockSkyLight(int x, int y, int z) {
-		return (blockLight[getArrayIndex(x, y, z)] >> 4) & 0xF;
+		return (byteToInt(blockLight[getArrayIndex(x, y, z)]) >> 4) & 0xF;
 	}
 
 	@Override
 	public int getBlockTypeId(int x, int y, int z) {
-		return blockTypes[getArrayIndex(x, y, z)];
+		return byteToInt(blockTypes[getArrayIndex(x, y, z)]) & 0xFF;
 	}
 
 	@Override

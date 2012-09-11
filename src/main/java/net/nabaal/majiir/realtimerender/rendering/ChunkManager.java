@@ -101,7 +101,7 @@ public class ChunkManager {
 		tiles.clear();
 		for (Coordinate chunk : chunks) {
 			if (!provider.getPattern().getFile(chunk).delete()) {
-				RealtimeRender.getLogger().warning("RealtimeRender: could not delete file for chunk: " + chunk);
+				RealtimeRender.getPluginLogger().warning("RealtimeRender: could not delete file for chunk: " + chunk);
 			}
 		}
 		chunks.clear();

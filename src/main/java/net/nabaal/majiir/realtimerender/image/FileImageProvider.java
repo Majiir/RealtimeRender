@@ -32,7 +32,7 @@ public class FileImageProvider extends ImageProvider {
 		} catch (IOException e) {
 			return null;
 		} catch (Exception e) {
-			RealtimeRender.getLogger().warning("RealtimeRender: error reading tile: " + tile);
+			RealtimeRender.getPluginLogger().warning("RealtimeRender: error reading tile: " + tile);
 			return null;
 		}
 	}
@@ -51,7 +51,7 @@ public class FileImageProvider extends ImageProvider {
 			ImageIO.write(image, "png", file);
 			changed.add(file);
 		} catch (Exception e) {
-			RealtimeRender.getLogger().warning("RealtimeRender: error saving tile: " + tile);
+			RealtimeRender.getPluginLogger().warning("RealtimeRender: error saving tile: " + tile);
 			e.printStackTrace();
 		}
 	}

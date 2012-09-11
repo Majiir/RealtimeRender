@@ -1,7 +1,5 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
-import net.nabaal.majiir.realtimerender.RealtimeRender;
-
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.block.Biome;
 

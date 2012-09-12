@@ -108,7 +108,10 @@ public final class Coordinate implements Serializable, Comparable<Coordinate> {
 			return level - other.level;
 		}
 		// TODO: Hilbert Curve comparison
-		return 0;
+		if (x != other.x) {
+			return x - other.x;
+		}
+		return y - other.y;
 	}
 
 }

@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentMap;
 
 import javax.imageio.ImageIO;
 
-import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.RealtimeRender;
 
 import org.bukkit.Material;
@@ -159,45 +158,6 @@ public class DefaultColorPalette implements ColorPalette {
 	@Override
 	public MaterialColor getMaterialColor(Material material) {
 		return colors.get(material);
-	}
-	
-	public static Color setAlpha(Color color, int a) {
-		return new Color(color.getRed(), color.getGreen(), color.getBlue(), a);
-	}
-	
-	public static Color computeShadedColor(Color color, double multiplier) {		
-		int r = color.getRed();
-		int g = color.getGreen();
-		int b = color.getBlue();
-		
-		if (multiplier < 1) {
-			r *= multiplier;
-			g *= multiplier;
-			b *= multiplier;	
-		}
-		
-		r *= multiplier;
-		g *= multiplier;
-		b *= multiplier;
-	
-		r = Math.min(r, 255);
-		g = Math.min(g, 255);
-		b = Math.min(b, 255);
-		
-		r = Math.max(r, 0);
-		g = Math.max(g, 0);
-		b = Math.max(b, 0);
-		
-		return new Color(r, g, b, color.getAlpha());
-	}
-	
-	public static Coordinate getBiomeColorIndex(double rainfall, double temperature) {
-		rainfall *= temperature;
-		int i = (int)((1.0d - temperature) * 255.0d);
-		int j = (int)((1.0d - rainfall) * 255.0d);
-		
-		// TODO: Refactor without using Coordinate
-		return new Coordinate(i, j, Coordinate.LEVEL_BLOCK);
 	}
 
 }

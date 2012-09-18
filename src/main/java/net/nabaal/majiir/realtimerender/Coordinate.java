@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.bukkit.ChunkSnapshot;
 
-public final class Coordinate implements Serializable {
+public final class Coordinate implements Serializable, Comparable<Coordinate> {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -100,6 +100,18 @@ public final class Coordinate implements Serializable {
 		if (x != other.x) { return false; }
 		if (y != other.y) { return false; }
 		return true;
+	}
+
+	@Override
+	public int compareTo(Coordinate other) {
+		if (level != other.level) {
+			return level - other.level;
+		}
+		// TODO: Hilbert Curve comparison
+		if (x != other.x) {
+			return x - other.x;
+		}
+		return y - other.y;
 	}
 
 }

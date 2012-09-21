@@ -54,6 +54,9 @@ public class RealtimeRender extends JavaPlugin {
 	private int startDelay;
 	private int intervalDelay;
 	private int saveThreads;
+	private int idleThreads;
+	private int maxThreads;
+	private int queueSize;
 	private boolean renderLoaded;
 	private int zoomsIn;
 	private int zoomsOut;
@@ -92,6 +95,9 @@ public class RealtimeRender extends JavaPlugin {
 		startDelay = config.getInt("startDelay");
 		intervalDelay = config.getInt("intervalDelay");
 		saveThreads = config.getInt("saveThreads");
+		idleThreads = config.getInt("idleThreads");
+		maxThreads = config.getInt("maxThreads");
+		queueSize = config.getInt("queueSize");
 		renderLoaded = config.getBoolean("renderLoaded");
 		zoomsIn = config.getInt("zoomsIn");
 		zoomsOut = config.getInt("zoomsOut");
@@ -99,7 +105,7 @@ public class RealtimeRender extends JavaPlugin {
 		File temp = new File(getDataFolder(), "temp/");
 		temp.mkdirs();
 		
-		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(temp, "world")));
+		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(temp, "world")), idleThreads, maxThreads, queueSize);
 		chunkSaveTask = new ChunkSaveTask(chunkManager);
 		
 		PluginManager pm = this.getServer().getPluginManager();

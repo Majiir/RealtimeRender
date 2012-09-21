@@ -2,6 +2,9 @@ world: world
 startDelay: 60
 intervalDelay: 120
 saveThreads: 10
+idleThreads: 2
+maxThreads: 8
+queueSize: 128
 renderLoaded: false
 zoomsIn: 1
 zoomsOut: 3

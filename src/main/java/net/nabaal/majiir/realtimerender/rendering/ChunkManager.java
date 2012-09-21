@@ -1,15 +1,15 @@
 package net.nabaal.majiir.realtimerender.rendering;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -25,16 +25,16 @@ import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 public class ChunkManager {
 	
 	private final BlockingQueue<ChunkSnapshot> incoming = new ArrayBlockingQueue<ChunkSnapshot>(200);
-	private final ExecutorService executor = Executors.newCachedThreadPool();
+	private final ExecutorService executor;
 	private final ReadWriteLock lock = new ReentrantReadWriteLock();
 	private final ChunkPreprocessor processor;
 	private final FileChunkSnapshotProvider provider;
-	private final Set<Coordinate> chunks = new HashSet<Coordinate>();
-	private final Set<Coordinate> tiles = new HashSet<Coordinate>();
+	private final SortedSet<Coordinate> chunks = new TreeSet<Coordinate>();
 	
-	public ChunkManager(ChunkPreprocessor processor, FileChunkSnapshotProvider provider) {
+	public ChunkManager(ChunkPreprocessor processor, FileChunkSnapshotProvider provider, int idleThreads, int maxThreads, int queueSize) {
 		this.processor = processor;
 		this.provider = provider;
+		this.executor = new ThreadPoolExecutor(idleThreads, maxThreads, 60, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueSize), new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 	
 	public Lock getLock() {
@@ -66,16 +66,11 @@ public class ChunkManager {
 	public void startBatch() {
 		lock.writeLock().lock();
 		chunks.addAll(provider.getTiles());
-		for (Coordinate chunk : chunks) {
-			tiles.add(chunk.zoomOut(3));
-		}
 	}
 	
 	public void render(final ChunkRenderer chunkRenderer) {
-		for (Coordinate tile : tiles) {
 			List<Future<?>> futures = new ArrayList<Future<?>>();
 			for (Coordinate chunk : chunks) {
-				if (chunk.zoomOut(3).equals(tile)) {
 					final ChunkSnapshot snapshot = provider.getSnapshot(chunk);
 					if (snapshot != null) {
 						futures.add(executor.submit(new Runnable() {
@@ -85,7 +80,6 @@ public class ChunkManager {
 							}
 						}));
 					}
-				}
 			}
 			for (Future<?> future : futures) {
 				try {
@@ -96,11 +90,9 @@ public class ChunkManager {
 					e.printStackTrace();
 				}
 			}
-		}
 	}
 	
 	public void endBatch() {
-		tiles.clear();
 		for (Coordinate chunk : chunks) {
 			if (!provider.getPattern().getFile(chunk).delete()) {
 				RealtimeRender.getPluginLogger().warning("RealtimeRender: could not delete file for chunk: " + chunk);

@@ -51,13 +51,6 @@ public class RealtimeRender extends JavaPlugin {
 	private ChunkSaveTask chunkSaveTask;
 	
 	private World world;
-	private int startDelay;
-	private int intervalDelay;
-	private int saveThreads;
-	private int idleThreads;
-	private int maxThreads;
-	private int queueSize;
-	private boolean renderLoaded;
 	private int zoomsIn;
 	private int zoomsOut;
 	
@@ -91,14 +84,15 @@ public class RealtimeRender extends JavaPlugin {
 		
 		Configuration config = this.getConfig();
 		
+		int startDelay = config.getInt("startDelay");
+		int intervalDelay = config.getInt("intervalDelay");
+		int saveThreads = config.getInt("saveThreads");
+		int idleThreads = config.getInt("idleThreads");
+		int maxThreads = config.getInt("maxThreads");
+		int queueSize = config.getInt("queueSize");
+		boolean renderLoaded = config.getBoolean("renderLoaded");
+		
 		world = this.getServer().getWorld(config.getString("world"));
-		startDelay = config.getInt("startDelay");
-		intervalDelay = config.getInt("intervalDelay");
-		saveThreads = config.getInt("saveThreads");
-		idleThreads = config.getInt("idleThreads");
-		maxThreads = config.getInt("maxThreads");
-		queueSize = config.getInt("queueSize");
-		renderLoaded = config.getBoolean("renderLoaded");
 		zoomsIn = config.getInt("zoomsIn");
 		zoomsOut = config.getInt("zoomsOut");
 		

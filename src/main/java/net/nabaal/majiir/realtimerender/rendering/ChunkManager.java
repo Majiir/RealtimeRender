@@ -20,7 +20,6 @@ import org.bukkit.ChunkSnapshot;
 
 import net.nabaal.majiir.realtimerender.Coordinate;
 import net.nabaal.majiir.realtimerender.RealtimeRender;
-import net.nabaal.majiir.realtimerender.RenderChunkTask;
 import net.nabaal.majiir.realtimerender.image.ChunkRenderer;
 
 public class ChunkManager {
@@ -72,14 +71,19 @@ public class ChunkManager {
 		}
 	}
 	
-	public void render(ChunkRenderer chunkRenderer) {
+	public void render(final ChunkRenderer chunkRenderer) {
 		for (Coordinate tile : tiles) {
 			List<Future<?>> futures = new ArrayList<Future<?>>();
 			for (Coordinate chunk : chunks) {
 				if (chunk.zoomOut(3).equals(tile)) {
-					ChunkSnapshot snapshot = provider.getSnapshot(chunk);
+					final ChunkSnapshot snapshot = provider.getSnapshot(chunk);
 					if (snapshot != null) {
-						futures.add(executor.submit(new RenderChunkTask(chunkRenderer, snapshot)));
+						futures.add(executor.submit(new Runnable() {
+							@Override
+							public void run() {
+								chunkRenderer.render(snapshot);
+							}
+						}));
 					}
 				}
 			}

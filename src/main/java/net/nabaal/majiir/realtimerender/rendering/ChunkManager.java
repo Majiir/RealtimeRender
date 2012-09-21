@@ -72,14 +72,16 @@ public class ChunkManager {
 			List<Future<?>> futures = new ArrayList<Future<?>>();
 			for (Coordinate chunk : chunks) {
 					final ChunkSnapshot snapshot = provider.getSnapshot(chunk);
-					if (snapshot != null) {
+					if (snapshot == null) {
+						RealtimeRender.getPluginLogger().warning("Null chunk given by ChunkSnapshotProvider");
+						continue;
+					}
 						futures.add(executor.submit(new Runnable() {
 							@Override
 							public void run() {
 								chunkRenderer.render(snapshot);
 							}
 						}));
-					}
 			}
 			for (Future<?> future : futures) {
 				try {

@@ -69,29 +69,29 @@ public class ChunkManager {
 	}
 	
 	public void render(final ChunkRenderer chunkRenderer) {
-			List<Future<?>> futures = new ArrayList<Future<?>>();
-			for (Coordinate chunk : chunks) {
-					final ChunkSnapshot snapshot = provider.getSnapshot(chunk);
-					if (snapshot == null) {
-						RealtimeRender.getPluginLogger().warning("Null chunk given by ChunkSnapshotProvider");
-						continue;
-					}
-						futures.add(executor.submit(new Runnable() {
-							@Override
-							public void run() {
-								chunkRenderer.render(snapshot);
-							}
-						}));
+		List<Future<?>> futures = new ArrayList<Future<?>>();
+		for (Coordinate chunk : chunks) {
+			final ChunkSnapshot snapshot = provider.getSnapshot(chunk);
+			if (snapshot == null) {
+				RealtimeRender.getPluginLogger().warning("Null chunk given by ChunkSnapshotProvider");
+				continue;
 			}
-			for (Future<?> future : futures) {
-				try {
-					future.get();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
+			futures.add(executor.submit(new Runnable() {
+				@Override
+				public void run() {
+					chunkRenderer.render(snapshot);
 				}
+			}));
+		}
+		for (Future<?> future : futures) {
+			try {
+				future.get();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
 			}
+		}
 	}
 	
 	public void endBatch() {

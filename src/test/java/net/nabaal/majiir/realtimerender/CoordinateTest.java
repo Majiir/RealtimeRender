@@ -10,10 +10,13 @@ public class CoordinateTest {
 	public void compareTo() {
 		Coordinate[] data = {
 			new Coordinate(16, 0, 3),
+			new Coordinate(-4, 8, 4),
 			new Coordinate(6, 8, -2),
 			new Coordinate(-12, -2, 4),
+			new Coordinate(5, 7, 4),
 			new Coordinate(-3, 5, 0),
 			new Coordinate(7, -5, 3),
+			new Coordinate(5, 8, 4),
 			new Coordinate(4, 20, 3),
 		};
 		
@@ -26,6 +29,9 @@ public class CoordinateTest {
 			new Coordinate(7, -5, 3),
 			new Coordinate(16, 0, 3),
 			new Coordinate(-12, -2, 4),
+			new Coordinate(-4, 8, 4),
+			new Coordinate(5, 7, 4),
+			new Coordinate(5, 8, 4),
 		};
 		  
 		Assert.assertEquals(data, sorted);

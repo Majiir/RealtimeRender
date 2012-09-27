@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import org.bukkit.block.Biome;
 
-public class SimpleMaterialColor implements MaterialColor {
+class SimpleMaterialColor implements MaterialColor {
 
 	private final Color color;
 	

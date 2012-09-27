@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import org.bukkit.block.Biome;
 
-public class TransparentMaterialColor implements MaterialColor {
+class TransparentMaterialColor implements MaterialColor {
 
 	private final MaterialColor source;
 	private final double multiplier;

@@ -8,7 +8,7 @@ import java.util.Random;
 
 import org.bukkit.block.Biome;
 
-public class RandomTextureMaterialColor implements MaterialColor {
+class RandomTextureMaterialColor implements MaterialColor {
 	
 	private final BufferedImage texture;
 	

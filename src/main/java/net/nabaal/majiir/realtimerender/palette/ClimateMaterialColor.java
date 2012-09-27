@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 import org.bukkit.block.Biome;
 
-public class ClimateMaterialColor implements MaterialColor {
+class ClimateMaterialColor implements MaterialColor {
 	
 	private final BufferedImage gradient;
 	private final boolean flip;

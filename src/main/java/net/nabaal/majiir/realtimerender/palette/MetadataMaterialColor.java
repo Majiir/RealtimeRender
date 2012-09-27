@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.bukkit.block.Biome;
 
-public class MetadataMaterialColor implements MaterialColor {
+class MetadataMaterialColor implements MaterialColor {
 	
 	private final ConcurrentMap<Integer, MaterialColor> colors = new ConcurrentHashMap<Integer, MaterialColor>();
 	private final MaterialColor fallback;

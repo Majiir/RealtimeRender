@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 import net.nabaal.majiir.realtimerender.commit.CommitProvider;
 import net.nabaal.majiir.realtimerender.commit.PluginCommitProvider;
 import net.nabaal.majiir.realtimerender.palette.ColorPalette;
-import net.nabaal.majiir.realtimerender.palette.DefaultColorPalette;
+import net.nabaal.majiir.realtimerender.palette.YamlColorPalette;
 import net.nabaal.majiir.realtimerender.rendering.ChunkFilePattern;
 import net.nabaal.majiir.realtimerender.rendering.ChunkManager;
 import net.nabaal.majiir.realtimerender.rendering.FileChunkSnapshotProvider;
@@ -102,7 +102,7 @@ public class RealtimeRender extends JavaPlugin {
 		File temp = new File(getDataFolder(), "temp/");
 		temp.mkdirs();
 		
-		palette = new DefaultColorPalette();
+		palette = new YamlColorPalette(config.getConfigurationSection("palette"));
 		
 		chunkManager = new ChunkManager(new NoOpChunkPreprocessor(), new FileChunkSnapshotProvider(new ChunkFilePattern(temp, "world")), idleThreads, maxThreads, queueSize);
 		chunkSaveTask = new ChunkSaveTask(chunkManager);
